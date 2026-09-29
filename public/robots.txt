@@ -1,0 +1,7 @@
+# NOTE: update the Sitemap URL when deploying to production.
+User-agent: *
+Disallow: /admin
+Disallow: /wp-admin
+Disallow: /wp-login.php
+
+Sitemap: http://localhost/sitemap.xml
