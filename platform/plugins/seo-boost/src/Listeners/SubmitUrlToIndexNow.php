@@ -4,6 +4,7 @@ namespace Botble\SeoBoost\Listeners;
 
 use Botble\Base\Enums\BaseStatusEnum;
 use Botble\Base\Events\CreatedContentEvent;
+use Botble\Base\Events\DeletedContentEvent;
 use Botble\Base\Events\UpdatedContentEvent;
 use Botble\Blog\Models\Post;
 use Botble\Page\Models\Page;
@@ -11,20 +12,29 @@ use Botble\SeoBoost\Services\GoogleIndexingService;
 use Botble\SeoBoost\Services\IndexNowService;
 use Exception;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Support\Facades\Cache;
 
 class SubmitUrlToIndexNow implements ShouldQueue
 {
+    protected const PERMALINK_CACHE_TTL = 604800;
+
     public function __construct(
         protected IndexNowService $indexNowService,
         protected GoogleIndexingService $googleIndexingService
     ) {
     }
 
-    public function handle(CreatedContentEvent|UpdatedContentEvent $event): void
+    public function handle(CreatedContentEvent|UpdatedContentEvent|DeletedContentEvent $event): void
     {
         $model = $event->data;
 
         if (! $model instanceof Post && ! $model instanceof Page) {
+            return;
+        }
+
+        if ($event instanceof DeletedContentEvent) {
+            $this->handleDeleted($model);
+
             return;
         }
 
@@ -53,6 +63,10 @@ class SubmitUrlToIndexNow implements ShouldQueue
             return;
         }
 
+        // Cache the permalink so a later delete can still notify Google
+        // even though the model (and its slug relation) are already gone.
+        Cache::put($this->permalinkCacheKey($model), $url, self::PERMALINK_CACHE_TTL);
+
         // IndexNow engine (Bing, Yandex, Naver, Seznam, Yep).
         $type = $model instanceof Post ? 'post' : 'page';
 
@@ -67,25 +81,65 @@ class SubmitUrlToIndexNow implements ShouldQueue
     }
 
     /**
+     * Google-only URL_DELETED notification (IndexNow's protocol has no
+     * delete; Rank Math likewise only sends deletes to Google).
+     * Requires the permalink captured at the last publish/update.
+     */
+    protected function handleDeleted(Post|Page $model): void
+    {
+        $type = $model instanceof Post ? 'post' : 'page';
+
+        if (setting('seo_boost_google_post_types.' . $type, '1') != '1') {
+            return;
+        }
+
+        $url = (string) Cache::pull($this->permalinkCacheKey($model));
+
+        if ($url === '' || $this->isLocalUrl($url)) {
+            return;
+        }
+
+        $this->googleIndexingService->submitAuto($url, 'delete');
+    }
+
+    protected function permalinkCacheKey(Post|Page $model): string
+    {
+        return 'seo_boost_permalink_' . md5($model::class . '|' . $model->getKey());
+    }
+
+    /**
      * Search engines can never reach loopback/private hosts: submitting
      * those URLs only burns quota and logs SSL/connection noise.
+     * Deliberately DNS-free (a hanging resolver must not block the
+     * queue worker): checks IP literals and reserved names only.
      */
     protected function isLocalUrl(string $url): bool
     {
-        $host = (string) (parse_url($url, PHP_URL_HOST) ?: '');
+        $host = strtolower((string) (parse_url($url, PHP_URL_HOST) ?: ''));
 
-        if ($host === '' || in_array(strtolower($host), ['localhost', 'localhost.localdomain'], true)) {
+        if ($host === '') {
             return true;
         }
 
-        $ip = gethostbyname($host);
+        // Strip brackets from IPv6 literals, e.g. [::1].
+        $host = trim($host, '[]');
 
-        // gethostbyname returns the hostname unchanged when DNS fails;
-        // only treat it as an IP when it actually resolved.
-        if ($ip === $host) {
-            return false;
+        if (in_array($host, ['localhost', 'localhost.localdomain'], true)) {
+            return true;
         }
 
-        return filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) === false;
+        // Reserved suffixes used for local/testing environments.
+        foreach (['.local', '.test', '.localhost', '.invalid'] as $suffix) {
+            if (str_ends_with($host, $suffix)) {
+                return true;
+            }
+        }
+
+        // IP literal: local when loopback, private, link-local or unspecified.
+        if (filter_var($host, FILTER_VALIDATE_IP) !== false) {
+            return filter_var($host, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) === false;
+        }
+
+        return false;
     }
 }

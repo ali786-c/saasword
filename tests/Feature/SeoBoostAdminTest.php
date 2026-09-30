@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use Botble\ACL\Models\User;
 use Botble\Base\Enums\BaseStatusEnum;
+use Botble\Base\Events\DeletedContentEvent;
 use Botble\Base\Events\UpdatedContentEvent;
 use Botble\Blog\Models\Post;
 use Botble\SeoBoost\Models\IndexNowLog;
@@ -35,6 +36,12 @@ class SeoBoostAdminTest extends TestCase
         parent::setUp();
 
         $this->adminDir = config('core.base.general.admin_dir', 'admin');
+
+        // The listener refuses loopback/private URLs (by design); present
+        // the app as a public host so generated permalinks are submittable.
+        // config('app.url') alone does not affect the already-built url().
+        config(['app.url' => 'https://tests.example']);
+        \Illuminate\Support\Facades\URL::forceRootUrl('https://tests.example');
 
         $this->originalKey = setting('seo_boost_api_key');
         $this->originalGoogleKey = (string) setting('seo_boost_google_json_key');
@@ -254,5 +261,111 @@ class SeoBoostAdminTest extends TestCase
             0,
             IndexNowLog::query()->where('url', 'like', '%seoboost-test-listener-2%')->count()
         );
+    }
+
+    protected function permalinkKey(Post $post): string
+    {
+        return 'seo_boost_permalink_' . md5($post::class . '|' . $post->getKey());
+    }
+
+    protected function seedPublishedPermalink(Post $post): void
+    {
+        // Simulate the snapshot the update listener stores on publish.
+        \Illuminate\Support\Facades\Cache::put(
+            $this->permalinkKey($post),
+            url('seoboost-test-' . $post->id),
+            600
+        );
+    }
+
+    public function test_published_delete_sends_google_url_deleted(): void
+    {
+        Setting::set('seo_boost_google_post_types.post', '1')->save();
+        Setting::set('seo_boost_google_enabled', '1')->save();
+
+        $post = $this->createPublishedPostWithSlug('deleted-1');
+        $this->seedPublishedPermalink($post);
+
+        // Token exchange + publish.
+        $this->handler->append(new Response(200, [], json_encode(['access_token' => 'ya29.t'])));
+        $this->handler->append(new Response(200, [], '{}'));
+
+        Setting::set('seo_boost_google_json_key', $this->googleJsonKey())->save();
+
+        event(new DeletedContentEvent(Post::class, request(), $post));
+
+        $log = IndexNowLog::query()->where('engine', 'google')->latest('id')->first();
+
+        $this->assertNotNull($log);
+        $this->assertSame('delete', $log->action);
+        $this->assertSame(url('seoboost-test-' . $post->id), $log->url);
+
+        // Permalink snapshot is consumed.
+        $this->assertFalse(\Illuminate\Support\Facades\Cache::has($this->permalinkKey($post)));
+    }
+
+    public function test_draft_delete_sends_nothing(): void
+    {
+        Setting::set('seo_boost_google_post_types.post', '1')->save();
+        Setting::set('seo_boost_google_enabled', '1')->save();
+
+        $author = $this->admin();
+
+        $draft = Post::create([
+            'name' => 'SeoBoost test draft-del',
+            'content' => '<p>x</p>',
+            'status' => BaseStatusEnum::DRAFT,
+            'author_type' => get_class($author),
+            'author_id' => $author->id,
+        ]);
+
+        // A draft that was never published has no permalink snapshot, so
+        // the delete path has nothing to notify Google about.
+        $this->handler->append(new Response(200, [], json_encode(['access_token' => 'ya29.t'])));
+
+        Setting::set('seo_boost_google_json_key', $this->googleJsonKey())->save();
+
+        event(new DeletedContentEvent(Post::class, request(), $draft));
+
+        $this->assertSame(
+            0,
+            IndexNowLog::query()->where('engine', 'google')->count()
+        );
+    }
+
+    public function test_delete_is_skipped_when_google_engine_disabled(): void
+    {
+        Setting::set('seo_boost_google_post_types.post', '1')->save();
+
+        $post = $this->createPublishedPostWithSlug('deleted-2');
+        $this->seedPublishedPermalink($post);
+
+        Setting::set('seo_boost_google_enabled', '0')->save();
+        Setting::set('seo_boost_google_json_key', $this->googleJsonKey())->save();
+
+        $this->handler->append(new Response(200, [], json_encode(['access_token' => 'ya29.t'])));
+
+        event(new DeletedContentEvent(Post::class, request(), $post));
+
+        $this->assertSame(
+            0,
+            IndexNowLog::query()->where('engine', 'google')->count()
+        );
+    }
+
+    protected function googleJsonKey(): string
+    {
+        $res = openssl_pkey_new(array_merge(
+            ['private_key_bits' => 2048, 'private_key_type' => OPENSSL_KEYTYPE_RSA],
+            $this->opensslOptions()
+        ));
+        openssl_pkey_export($res, $pem, null, $this->opensslOptions());
+
+        return json_encode([
+            'type' => 'service_account',
+            'project_id' => 't',
+            'private_key' => $pem,
+            'client_email' => 'bot@test.iam.gserviceaccount.com',
+        ]);
     }
 }
