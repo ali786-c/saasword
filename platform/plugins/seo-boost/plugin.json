@@ -1,0 +1,11 @@
+{
+    "id": "botble/seo-boost",
+    "name": "SEO Boost",
+    "namespace": "Botble\\SeoBoost\\",
+    "provider": "Botble\\SeoBoost\\Providers\\SeoBoostServiceProvider",
+    "author": "CarreerinPak",
+    "url": "https://careerinpak.com",
+    "version": "1.0.0",
+    "description": "Instant indexing via IndexNow (Bing, Yandex, Naver, Seznam, Yep): auto-submit URLs on publish, API key verification file, submission logging.",
+    "minimum_core_version": "7.3.0"
+}
