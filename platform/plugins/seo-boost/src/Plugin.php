@@ -24,5 +24,8 @@ class Plugin extends PluginOperationAbstract
         Setting::query()
             ->where('key', 'like', 'seo_boost_%')
             ->delete();
+
+        // Invalidate any cached Google OAuth token.
+        \Illuminate\Support\Facades\Cache::flush();
     }
 }

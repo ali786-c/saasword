@@ -7,6 +7,7 @@ use Botble\Base\Enums\BaseStatusEnum;
 use Botble\Base\Events\UpdatedContentEvent;
 use Botble\Blog\Models\Post;
 use Botble\SeoBoost\Models\IndexNowLog;
+use Botble\SeoBoost\Services\GoogleIndexingService;
 use Botble\SeoBoost\Services\IndexNowService;
 use Botble\Setting\Facades\Setting;
 use GuzzleHttp\Client;
@@ -42,6 +43,13 @@ class SeoBoostAdminTest extends TestCase
 
         app()->singleton(IndexNowService::class, function () {
             return new IndexNowService(
+                app(\Botble\SeoBoost\Repositories\Interfaces\IndexNowLogInterface::class),
+                new Client(['handler' => $this->handler])
+            );
+        });
+
+        app()->singleton(GoogleIndexingService::class, function () {
+            return new GoogleIndexingService(
                 app(\Botble\SeoBoost\Repositories\Interfaces\IndexNowLogInterface::class),
                 new Client(['handler' => $this->handler])
             );
@@ -97,6 +105,7 @@ class SeoBoostAdminTest extends TestCase
         $this->actingAs($this->admin())
             ->postJson("/{$this->adminDir}/seo-boost/submit", [
                 'urls' => "https://tests.example/manual-1\nhttps://tests.example/manual-2",
+                'engine_indexnow' => '1',
             ])
             ->assertStatus(200)
             ->assertJson(['error' => false]);
@@ -105,6 +114,65 @@ class SeoBoostAdminTest extends TestCase
 
         $this->assertTrue((bool) $log->is_manual);
         $this->assertStringContainsString('[+1]', $log->url);
+        $this->assertSame('indexnow', $log->engine);
+        $this->assertSame('update', $log->action);
+    }
+
+    public function test_manual_submit_google_engine_only(): void
+    {
+        // Google engine: token exchange + one publish per URL (2 URLs).
+        $this->handler->append(new Response(200, [], json_encode(['access_token' => 'ya29.t'])));
+        $this->handler->append(new Response(200, [], '{}'));
+        $this->handler->append(new Response(200, [], '{}'));
+
+        // The private key is only used for local JWT signing; MockHandler
+        // serves the token response, so the key never reaches Google.
+        $res = openssl_pkey_new(array_merge(
+            ['private_key_bits' => 2048, 'private_key_type' => OPENSSL_KEYTYPE_RSA],
+            $this->opensslOptions()
+        ));
+        openssl_pkey_export($res, $pem, null, $this->opensslOptions());
+
+        $jsonKey = json_encode([
+            'type' => 'service_account',
+            'project_id' => 't',
+            'private_key' => $pem,
+            'client_email' => 'bot@test.iam.gserviceaccount.com',
+        ]);
+
+        Setting::set('seo_boost_google_json_key', $jsonKey)->save();
+
+        $this->actingAs($this->admin())
+            ->postJson("/{$this->adminDir}/seo-boost/submit", [
+                'urls' => "https://tests.example/gm-1\nhttps://tests.example/gm-2",
+                'engine_google' => '1',
+                'action' => 'update',
+            ])
+            ->assertStatus(200)
+            ->assertJson(['error' => false]);
+
+        $googleLogs = IndexNowLog::query()->where('engine', 'google')->get();
+
+        $this->assertCount(2, $googleLogs);
+        $this->assertTrue((bool) $googleLogs->first()->is_manual);
+    }
+
+    protected function opensslOptions(): array
+    {
+        if (PHP_OS_FAMILY !== 'Windows') {
+            return [];
+        }
+
+        foreach ([
+            'C:/Users/Muhammad Aliyan/Downloads/Compressed/php-8.3.33-nts-Win32-vs16-x64/extras/ssl/openssl.cnf',
+            'C:/xampp/php/extras/ssl/openssl.cnf',
+        ] as $candidate) {
+            if (is_file($candidate)) {
+                return ['config' => $candidate];
+            }
+        }
+
+        return [];
     }
 
     public function test_reset_key_endpoint_generates_new_32_hex_key(): void

@@ -6,6 +6,7 @@ use Botble\Base\Facades\PageTitle;
 use Botble\Base\Http\Controllers\BaseSystemController;
 use Botble\SeoBoost\Http\Requests\SubmitUrlsRequest;
 use Botble\SeoBoost\Repositories\Interfaces\IndexNowLogInterface;
+use Botble\SeoBoost\Services\GoogleIndexingService;
 use Botble\SeoBoost\Services\IndexNowService;
 use Botble\SeoBoost\Tables\IndexNowLogTable;
 use Botble\Setting\Facades\Setting;
@@ -16,6 +17,7 @@ class IndexNowController extends BaseSystemController
 {
     public function __construct(
         protected IndexNowService $indexNowService,
+        protected GoogleIndexingService $googleIndexingService,
         protected IndexNowLogInterface $logRepository
     ) {
     }
@@ -34,6 +36,7 @@ class IndexNowController extends BaseSystemController
             'key' => $key,
             'keyFileUrl' => $this->indexNowService->keyFileUrl(),
             'isEnabled' => $this->indexNowService->isEnabled(),
+            'googleConfigured' => $this->googleIndexingService->isConfigured(),
         ]);
     }
 
@@ -50,7 +53,7 @@ class IndexNowController extends BaseSystemController
     }
 
     /**
-     * Manual bulk URL submission.
+     * Manual bulk URL submission across both engines.
      */
     public function submit(SubmitUrlsRequest $request)
     {
@@ -60,6 +63,7 @@ class IndexNowController extends BaseSystemController
         )));
 
         $urls = array_slice($urls, 0, 100);
+        $action = $request->input('action') === 'delete' ? 'delete' : 'update';
 
         if (! $urls) {
             return $this
@@ -68,13 +72,34 @@ class IndexNowController extends BaseSystemController
                 ->setMessage(trans('plugins/seo-boost::seo-boost.no_urls_provided'));
         }
 
-        $submitted = $this->indexNowService->submit($urls, true);
+        $results = [];
+        $anySucceeded = false;
+
+        if ($request->boolean('engine_indexnow')) {
+            $results['indexnow'] = $this->indexNowService->submit($urls, true);
+
+            $anySucceeded = $anySucceeded || $results['indexnow'];
+        }
+
+        if ($request->boolean('engine_google')) {
+            $results['google'] = $this->googleIndexingService->submit($urls, $action, true);
+
+            $anySucceeded = $anySucceeded || $results['google'];
+        }
+
+        if (! $results) {
+            return $this
+                ->httpResponse()
+                ->setError()
+                ->setMessage(trans('plugins/seo-boost::seo-boost.no_engine_selected'));
+        }
 
         return $this
             ->httpResponse()
-            ->setError(! $submitted)
+            ->setError(! $anySucceeded)
+            ->setData($results)
             ->setMessage(
-                $submitted
+                $anySucceeded
                     ? trans('plugins/seo-boost::seo-boost.submitted_successfully', ['count' => count($urls)])
                     : trans('plugins/seo-boost::seo-boost.submission_failed')
             );
@@ -84,7 +109,10 @@ class IndexNowController extends BaseSystemController
     {
         PageTitle::setTitle(trans('plugins/seo-boost::seo-boost.settings_name'));
 
-        return view('plugins/seo-boost::settings');
+        return view('plugins/seo-boost::settings', [
+            'googleConfigured' => $this->googleIndexingService->isConfigured(),
+            'googleAccount' => $this->googleIndexingService->parseJsonKey()['client_email'] ?? '',
+        ]);
     }
 
     public function postSettings(Request $request)
@@ -96,6 +124,23 @@ class IndexNowController extends BaseSystemController
         // Unchecked checkboxes are absent from the request: persist them as '0'.
         foreach (['post', 'page'] as $type) {
             $settings["seo_boost_post_types.$type"] = $request->input("seo_boost_post_types.$type") == 1 ? '1' : '0';
+            $settings["seo_boost_google_post_types.$type"] = $request->input("seo_boost_google_post_types.$type") == 1 ? '1' : '0';
+        }
+
+        // Google-specific toggles and JSON key.
+        $settings['seo_boost_google_enabled'] = $request->boolean('seo_boost_google_enabled') ? '1' : '0';
+
+        if ($request->filled('seo_boost_google_json_key')) {
+            $json = trim((string) $request->input('seo_boost_google_json_key'));
+
+            if ($this->googleIndexingService->parseJsonKey($json) === null) {
+                return $this
+                    ->httpResponse()
+                    ->setError()
+                    ->setMessage(trans('plugins/seo-boost::seo-boost.google_key_invalid'));
+            }
+
+            Setting::set('seo_boost_google_json_key', $json);
         }
 
         Setting::set($settings)->save();
@@ -103,6 +148,26 @@ class IndexNowController extends BaseSystemController
         return $this
             ->httpResponse()
             ->withUpdatedSuccessMessage();
+    }
+
+    /**
+     * Validate the stored/pasted Google key by fetching an access token.
+     */
+    public function testGoogleConnection()
+    {
+        try {
+            $token = $this->googleIndexingService->getAccessToken();
+
+            return $this
+                ->httpResponse()
+                ->setData(['connected' => true])
+                ->setMessage(trans('plugins/seo-boost::seo-boost.google_connection_ok'));
+        } catch (Exception $exception) {
+            return $this
+                ->httpResponse()
+                ->setError()
+                ->setMessage(trans('plugins/seo-boost::seo-boost.google_connection_failed', ['error' => $exception->getMessage()]));
+        }
     }
 
     /**

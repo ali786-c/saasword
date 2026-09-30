@@ -46,6 +46,25 @@ class IndexNowLogTable extends TableAbstract
                     }),
                 YesNoColumn::make('is_manual')
                     ->title(trans('plugins/seo-boost::seo-boost.manual')),
+                FormattedColumn::make('engine')
+                    ->title(trans('plugins/seo-boost::seo-boost.engine'))
+                    ->width(90)
+                    ->renderUsing(function (FormattedColumn $column) {
+                        $engine = $column->getItem()->engine ?: 'indexnow';
+                        $class = $engine === 'google' ? 'danger' : 'primary';
+
+                        return '<span class="badge bg-' . $class . '">' . ucfirst($engine) . '</span>';
+                    }),
+                FormattedColumn::make('action')
+                    ->title(trans('plugins/seo-boost::seo-boost.action_label'))
+                    ->width(90)
+                    ->renderUsing(function (FormattedColumn $column) {
+                        $action = $column->getItem()->action ?: 'update';
+
+                        return $action === 'delete'
+                            ? '<span class="text-danger">' . trans('plugins/seo-boost::seo-boost.action_delete') . '</span>'
+                            : trans('plugins/seo-boost::seo-boost.action_update');
+                    }),
                 CreatedAtColumn::make('created_at')
                     ->title(trans('plugins/seo-boost::seo-boost.submitted_at')),
             ]);

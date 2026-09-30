@@ -23,7 +23,7 @@ class IndexNowService
      * Don't submit the same URL automatically more than once every 5 seconds
      * (mirrors the rapid-save throttle used by WordPress SEO plugins).
      */
-    protected const THROTTLE_SECONDS = 5;
+    public const THROTTLE_SECONDS = 5;
 
     /**
      * Keep the submission history at this many rows.

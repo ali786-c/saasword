@@ -7,14 +7,17 @@ use Botble\Base\Events\CreatedContentEvent;
 use Botble\Base\Events\UpdatedContentEvent;
 use Botble\Blog\Models\Post;
 use Botble\Page\Models\Page;
+use Botble\SeoBoost\Services\GoogleIndexingService;
 use Botble\SeoBoost\Services\IndexNowService;
 use Exception;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 class SubmitUrlToIndexNow implements ShouldQueue
 {
-    public function __construct(protected IndexNowService $indexNowService)
-    {
+    public function __construct(
+        protected IndexNowService $indexNowService,
+        protected GoogleIndexingService $googleIndexingService
+    ) {
     }
 
     public function handle(CreatedContentEvent|UpdatedContentEvent $event): void
@@ -22,13 +25,6 @@ class SubmitUrlToIndexNow implements ShouldQueue
         $model = $event->data;
 
         if (! $model instanceof Post && ! $model instanceof Page) {
-            return;
-        }
-
-        // Respect the per-type auto-submit toggles from the settings page.
-        $type = $model instanceof Post ? 'post' : 'page';
-
-        if (setting('seo_boost_post_types.' . $type, '1') != '1') {
             return;
         }
 
@@ -57,6 +53,16 @@ class SubmitUrlToIndexNow implements ShouldQueue
             return;
         }
 
-        $this->indexNowService->submitAuto($url);
+        // IndexNow engine (Bing, Yandex, Naver, Seznam, Yep).
+        $type = $model instanceof Post ? 'post' : 'page';
+
+        if (setting('seo_boost_post_types.' . $type, '1') == '1') {
+            $this->indexNowService->submitAuto($url);
+        }
+
+        // Google Indexing API engine, with its own toggle.
+        if (setting('seo_boost_google_post_types.' . $type, '1') == '1') {
+            $this->googleIndexingService->submitAuto($url);
+        }
     }
 }

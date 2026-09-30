@@ -63,6 +63,27 @@
                                 ></textarea>
                                 <div class="form-text">{{ trans('plugins/seo-boost::seo-boost.urls_help') }}</div>
                             </div>
+                            <div class="row g-2 mb-3">
+                                <div class="col-sm-6">
+                                    <label class="form-label">{{ trans('plugins/seo-boost::seo-boost.engines_label') }}</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="engine_indexnow" value="1" id="engine-indexnow" checked>
+                                        <label class="form-check-label" for="engine-indexnow">IndexNow (Bing, Yandex…)</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="engine_google" value="1" id="engine-google" @if (! $googleConfigured ?? false) disabled @endif>
+                                        <label class="form-check-label" for="engine-google">Google Indexing API</label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label" for="seo-boost-action">{{ trans('plugins/seo-boost::seo-boost.action_label') }}</label>
+                                    <select class="form-select" name="action" id="seo-boost-action">
+                                        <option value="update">{{ trans('plugins/seo-boost::seo-boost.action_update') }}</option>
+                                        <option value="delete">{{ trans('plugins/seo-boost::seo-boost.action_delete') }}</option>
+                                    </select>
+                                    <div class="form-text">{{ trans('plugins/seo-boost::seo-boost.action_help') }}</div>
+                                </div>
+                            </div>
                             <button type="submit" class="btn btn-primary">{{ trans('plugins/seo-boost::seo-boost.submit_now') }}</button>
                             <a href="{{ route('seo-boost.logs') }}" class="btn btn-outline-secondary">
                                 {{ trans('plugins/seo-boost::seo-boost.history_title') }}

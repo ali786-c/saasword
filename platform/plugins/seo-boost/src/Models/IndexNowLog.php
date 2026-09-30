@@ -15,6 +15,8 @@ class IndexNowLog extends BaseModel
         'status_code',
         'message',
         'is_manual',
+        'engine',
+        'action',
     ];
 
     protected $casts = [
@@ -23,6 +25,8 @@ class IndexNowLog extends BaseModel
         'created_at' => 'datetime',
         'url' => SafeContent::class,
         'message' => SafeContent::class,
+        'engine' => 'string',
+        'action' => 'string',
     ];
 
     protected function isSuccess(): Attribute

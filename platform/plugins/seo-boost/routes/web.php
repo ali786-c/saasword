@@ -30,6 +30,7 @@ Route::group(['namespace' => 'Botble\SeoBoost\Http\Controllers'], function (): v
                 Route::get('settings', [IndexNowController::class, 'getSettings'])->name('settings');
                 Route::post('settings', [IndexNowController::class, 'postSettings'])->name('settings.post');
                 Route::post('reset-key', [IndexNowController::class, 'resetKey'])->name('reset-key');
+                Route::post('google/test', [IndexNowController::class, 'testGoogleConnection'])->name('google.test');
             });
         });
     });

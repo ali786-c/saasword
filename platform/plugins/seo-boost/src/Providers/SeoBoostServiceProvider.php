@@ -11,6 +11,7 @@ use Botble\Base\Traits\LoadAndPublishDataTrait;
 use Botble\SeoBoost\Models\IndexNowLog;
 use Botble\SeoBoost\Repositories\Eloquent\IndexNowLogRepository;
 use Botble\SeoBoost\Repositories\Interfaces\IndexNowLogInterface;
+use Botble\SeoBoost\Services\GoogleIndexingService;
 use Botble\SeoBoost\Services\IndexNowService;
 use Botble\Setting\PanelSections\SettingOthersPanelSection;
 
@@ -25,6 +26,7 @@ class SeoBoostServiceProvider extends ServiceProvider
         });
 
         $this->app->singleton(IndexNowService::class);
+        $this->app->singleton(GoogleIndexingService::class);
     }
 
     public function boot(): void
