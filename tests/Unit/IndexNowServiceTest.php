@@ -21,11 +21,14 @@ class IndexNowServiceTest extends TestCase
 
     protected string $originalKey = '';
 
+    protected string $originalEnabled = '1';
+
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->originalKey = setting('seo_boost_api_key');
+        $this->originalEnabled = (string) setting('seo_boost_enabled', '1');
 
         if (! $this->originalKey) {
             Setting::set('seo_boost_api_key', '1234567890abcdef1234567890abcdef')->save();
@@ -43,8 +46,9 @@ class IndexNowServiceTest extends TestCase
     {
         IndexNowLog::query()->where('url', 'like', 'https://tests.example/%')->delete();
 
-        // Never leak the test key into the site settings.
+        // Never leak the test key or toggle state into the site settings.
         Setting::set('seo_boost_api_key', $this->originalKey)->save();
+        Setting::set('seo_boost_enabled', $this->originalEnabled)->save();
 
         parent::tearDown();
     }
@@ -136,6 +140,34 @@ class IndexNowServiceTest extends TestCase
         $this->assertSame(
             1,
             IndexNowLog::query()->where('url', $url)->count()
+        );
+    }
+
+    public function test_indexnow_throttle_ignores_other_engines_rows(): void
+    {
+        // A Google-only manual submission for the same URL happened just now.
+        IndexNowLog::create([
+            'url' => 'https://tests.example/cross-engine',
+            'status_code' => 200,
+            'message' => 'OK',
+            'is_manual' => true,
+            'engine' => 'google',
+            'action' => 'update',
+        ]);
+
+        // IndexNow must NOT treat that as its own recent submission.
+        $this->handler->append(new Response(200));
+
+        $this->assertTrue($this->service->submitAuto('https://tests.example/cross-engine'));
+
+        // And once IndexNow itself has logged it, its own throttle applies.
+        $this->handler->append(new Response(200));
+
+        $this->assertFalse($this->service->submitAuto('https://tests.example/cross-engine'));
+
+        $this->assertSame(
+            1,
+            IndexNowLog::query()->where('engine', 'indexnow')->where('url', 'https://tests.example/cross-engine')->count()
         );
     }
 

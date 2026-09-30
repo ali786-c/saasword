@@ -153,7 +153,9 @@ class IndexNowService
 
     protected function wasRecentlySubmitted(string $url): bool
     {
-        $latest = $this->logRepository->latestLog();
+        // Scope to this engine's rows: a Google-only submission must not
+        // throttle an IndexNow auto-save (and vice versa).
+        $latest = $this->logRepository->latestLog('indexnow');
 
         return $latest
             && $latest->url === $url

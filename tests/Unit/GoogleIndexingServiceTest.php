@@ -22,9 +22,13 @@ class GoogleIndexingServiceTest extends TestCase
 
     protected string $jsonKey;
 
+    protected string $originalJsonKey = '';
+
     protected function setUp(): void
     {
         parent::setUp();
+
+        $this->originalJsonKey = (string) setting('seo_boost_google_json_key');
 
         $this->jsonKey = json_encode([
             'type' => 'service_account',
@@ -49,7 +53,7 @@ class GoogleIndexingServiceTest extends TestCase
     protected function tearDown(): void
     {
         IndexNowLog::query()->where('url', 'like', 'https://tests.example/%')->delete();
-        Setting::set('seo_boost_google_json_key', '')->save();
+        Setting::set('seo_boost_google_json_key', $this->originalJsonKey)->save();
         Cache::flush();
 
         parent::tearDown();

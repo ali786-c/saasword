@@ -49,7 +49,7 @@ class SubmitUrlToIndexNow implements ShouldQueue
             return;
         }
 
-        if (! $url || str_contains($url, 'localhost')) {
+        if (! $url || $this->isLocalUrl($url)) {
             return;
         }
 
@@ -64,5 +64,28 @@ class SubmitUrlToIndexNow implements ShouldQueue
         if (setting('seo_boost_google_post_types.' . $type, '1') == '1') {
             $this->googleIndexingService->submitAuto($url);
         }
+    }
+
+    /**
+     * Search engines can never reach loopback/private hosts: submitting
+     * those URLs only burns quota and logs SSL/connection noise.
+     */
+    protected function isLocalUrl(string $url): bool
+    {
+        $host = (string) (parse_url($url, PHP_URL_HOST) ?: '');
+
+        if ($host === '' || in_array(strtolower($host), ['localhost', 'localhost.localdomain'], true)) {
+            return true;
+        }
+
+        $ip = gethostbyname($host);
+
+        // gethostbyname returns the hostname unchanged when DNS fails;
+        // only treat it as an IP when it actually resolved.
+        if ($ip === $host) {
+            return false;
+        }
+
+        return filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) === false;
     }
 }

@@ -260,32 +260,6 @@ class GoogleIndexingService
     }
 
     /**
-     * Fetch the indexing metadata for a URL (last crawl type/times).
-     * Returns the decoded JSON or null on failure.
-     */
-    public function getStatus(string $url): ?array
-    {
-        if (! $this->isConfigured()) {
-            return null;
-        }
-
-        try {
-            $token = $this->getAccessToken();
-
-            $response = $this->httpClient()->get(self::API_BASE_URL . '/v3/urlNotifications/metadata', [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . $token,
-                ],
-                'query' => ['url' => $url],
-            ]);
-
-            return json_decode($response->getBody()->getContents(), true);
-        } catch (Exception) {
-            return null;
-        }
-    }
-
-    /**
      * Auto-submit entry point used by the content event listeners.
      * Enforces the per-URL 5-second throttle (mirrors IndexNow behavior).
      */

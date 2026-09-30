@@ -24,6 +24,12 @@ class SeoBoostAdminTest extends TestCase
 
     protected string $adminDir = 'admin';
 
+    protected string $originalGoogleKey = '';
+
+    protected string $originalEnabled = '1';
+
+    protected string $originalGoogleEnabled = '1';
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -31,6 +37,9 @@ class SeoBoostAdminTest extends TestCase
         $this->adminDir = config('core.base.general.admin_dir', 'admin');
 
         $this->originalKey = setting('seo_boost_api_key');
+        $this->originalGoogleKey = (string) setting('seo_boost_google_json_key');
+        $this->originalEnabled = (string) setting('seo_boost_enabled', '1');
+        $this->originalGoogleEnabled = (string) setting('seo_boost_google_enabled', '1');
 
         if (! $this->originalKey) {
             $this->originalKey = '1234567890abcdef1234567890abcdef';
@@ -66,6 +75,11 @@ class SeoBoostAdminTest extends TestCase
         Post::query()->where('name', 'like', 'SeoBoost test %')->delete();
         \Botble\Slug\Models\Slug::query()->where('key', 'like', 'seoboost-test-%')->delete();
         Setting::set('seo_boost_api_key', $this->originalKey)->save();
+
+        // Never leak the test service-account key or toggle state.
+        Setting::set('seo_boost_google_json_key', $this->originalGoogleKey)->save();
+        Setting::set('seo_boost_enabled', $this->originalEnabled)->save();
+        Setting::set('seo_boost_google_enabled', $this->originalGoogleEnabled)->save();
 
         parent::tearDown();
     }

@@ -13,8 +13,11 @@ class IndexNowLogRepository extends RepositoriesAbstract implements IndexNowLogI
         parent::__construct($model);
     }
 
-    public function latestLog(): ?IndexNowLog
+    public function latestLog(?string $engine = null): ?IndexNowLog
     {
-        return $this->model->orderByDesc('created_at')->first();
+        return $this->model
+            ->when($engine !== null, fn ($query) => $query->where('engine', $engine))
+            ->orderByDesc('created_at')
+            ->first();
     }
 }

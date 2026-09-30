@@ -7,5 +7,8 @@ use Botble\Support\Repositories\Interfaces\RepositoryInterface;
 
 interface IndexNowLogInterface extends RepositoryInterface
 {
-    public function latestLog(): ?IndexNowLog;
+    /**
+     * Latest log row for one engine (engines have independent throttles).
+     */
+    public function latestLog(?string $engine = null): ?IndexNowLog;
 }
