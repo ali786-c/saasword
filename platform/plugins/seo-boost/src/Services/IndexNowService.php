@@ -25,6 +25,11 @@ class IndexNowService
      */
     protected const THROTTLE_SECONDS = 5;
 
+    /**
+     * Keep the submission history at this many rows.
+     */
+    public const LOG_LIMIT = 100;
+
     public function __construct(protected IndexNowLogInterface $logRepository, protected ?Client $client = null)
     {
     }
@@ -164,6 +169,24 @@ class IndexNowService
             'message' => Str::limit($message, 480),
             'is_manual' => $isManual,
         ]);
+
+        $this->trimLog();
+    }
+
+    /**
+     * Keep only the most recent LOG_LIMIT submission records.
+     */
+    public function trimLog(): void
+    {
+        $cutoffId = IndexNowLog::query()
+            ->orderByDesc('id')
+            ->skip(self::LOG_LIMIT - 1)
+            ->limit(1)
+            ->value('id');
+
+        if ($cutoffId) {
+            IndexNowLog::query()->where('id', '<', $cutoffId)->delete();
+        }
     }
 
     protected function mapErrorMessage(int $status, string $fallback): string

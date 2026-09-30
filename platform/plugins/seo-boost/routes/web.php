@@ -17,6 +17,19 @@ Route::group(['namespace' => 'Botble\SeoBoost\Http\Controllers'], function (): v
         Route::prefix('seo-boost')->name('seo-boost.')->group(function (): void {
             Route::group(['permission' => 'seo-boost.index'], function (): void {
                 Route::get('/', [IndexNowController::class, 'index'])->name('index');
+                Route::post('submit', [IndexNowController::class, 'submit'])->name('submit');
+            });
+
+            Route::group(['permission' => 'seo-boost.logs'], function (): void {
+                // Serves the history page (GET) and the DataTable AJAX data (POST),
+                // mirroring how core table pages work.
+                Route::match(['get', 'post'], 'logs', [IndexNowController::class, 'getLogs'])->name('logs');
+            });
+
+            Route::group(['permission' => 'seo-boost.settings'], function (): void {
+                Route::get('settings', [IndexNowController::class, 'getSettings'])->name('settings');
+                Route::post('settings', [IndexNowController::class, 'postSettings'])->name('settings.post');
+                Route::post('reset-key', [IndexNowController::class, 'resetKey'])->name('reset-key');
             });
         });
     });

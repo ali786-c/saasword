@@ -138,4 +138,32 @@ class IndexNowServiceTest extends TestCase
             IndexNowLog::query()->where('url', $url)->count()
         );
     }
+
+    public function test_log_is_capped_at_100_rows(): void
+    {
+        for ($i = 0; $i < 105; $i++) {
+            IndexNowLog::create([
+                'url' => 'https://tests.example/cap-' . $i,
+                'status_code' => 200,
+                'message' => 'OK',
+                'is_manual' => false,
+            ]);
+        }
+
+        $this->service->trimLog();
+
+        $this->assertSame(100, IndexNowLog::query()->where('url', 'like', 'https://tests.example/%')->count());
+        $this->assertFalse(IndexNowLog::query()->where('url', 'https://tests.example/cap-0')->exists());
+        $this->assertTrue(IndexNowLog::query()->where('url', 'https://tests.example/cap-104')->exists());
+    }
+
+    public function test_auto_submit_disabled_setting_blocks_submission(): void
+    {
+        Setting::set('seo_boost_enabled', '0')->save();
+
+        $this->handler->append(new Response(200));
+
+        $this->assertFalse($this->service->submitAuto('https://tests.example/disabled'));
+        $this->assertSame(0, IndexNowLog::query()->where('url', 'like', 'https://tests.example/%')->count());
+    }
 }

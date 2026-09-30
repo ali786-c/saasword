@@ -25,6 +25,13 @@ class SubmitUrlToIndexNow implements ShouldQueue
             return;
         }
 
+        // Respect the per-type auto-submit toggles from the settings page.
+        $type = $model instanceof Post ? 'post' : 'page';
+
+        if (setting('seo_boost_post_types.' . $type, '1') != '1') {
+            return;
+        }
+
         // Only fire for published content (drafts/pending are skipped).
         $status = $model->status;
 
