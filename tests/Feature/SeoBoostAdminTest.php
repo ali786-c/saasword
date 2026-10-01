@@ -211,6 +211,100 @@ class SeoBoostAdminTest extends TestCase
         $this->assertSame($newKey, setting('seo_boost_api_key'));
     }
 
+    public function test_bulk_action_dispatches_selected_posts_to_both_engines(): void
+    {
+        // IndexNow: one batch call. Google: token exchange + one publish per URL (2 URLs).
+        $this->handler->append(new Response(200));
+        $this->handler->append(new Response(200, [], json_encode(['access_token' => 'ya29.t'])));
+        $this->handler->append(new Response(200, [], '{}'));
+        $this->handler->append(new Response(200, [], '{}'));
+
+        Setting::set('seo_boost_google_json_key', $this->googleJsonKey())->save();
+        Setting::set('seo_boost_google_enabled', '1')->save();
+
+        $p1 = $this->createPublishedPostWithSlug('bulk-1');
+        $p2 = $this->createPublishedPostWithSlug('bulk-2');
+
+        $this->actingAs($this->admin())
+            ->postJson("/{$this->adminDir}/tables/bulk-actions", [
+                'bulk_action' => '1',
+                'bulk_action_table' => \Botble\Blog\Tables\PostTable::class,
+                'bulk_action_target' => \Botble\SeoBoost\BulkActions\SubmitToIndexingBulkAction::class,
+                'ids' => [(string) $p1->id, (string) $p2->id],
+            ])
+            ->assertStatus(200)
+            ->assertJson(['error' => false]);
+
+        $indexNowLog = IndexNowLog::query()->where('engine', 'indexnow')->latest('id')->first();
+
+        $this->assertNotNull($indexNowLog);
+        $this->assertTrue((bool) $indexNowLog->is_manual);
+        // Batch submissions log the first URL plus a [+N] extra marker.
+        $this->assertStringContainsString('seoboost-test-bulk-1', $indexNowLog->url);
+        $this->assertStringContainsString('[+1]', $indexNowLog->url);
+
+        $googleLogs = IndexNowLog::query()->where('engine', 'google')->latest('id')->take(2)->get();
+
+        $this->assertCount(2, $googleLogs);
+        $this->assertSame('update', $googleLogs->first()->action);
+    }
+
+    public function test_bulk_action_skips_drafts_and_submits_published_only(): void
+    {
+        // IndexNow batch + Google token + one publish (only the published post).
+        $this->handler->append(new Response(200));
+        $this->handler->append(new Response(200, [], json_encode(['access_token' => 'ya29.t'])));
+        $this->handler->append(new Response(200, [], '{}'));
+
+        Setting::set('seo_boost_google_json_key', $this->googleJsonKey())->save();
+
+        $published = $this->createPublishedPostWithSlug('bulk-pub');
+
+        $author = $this->admin();
+
+        $draft = Post::create([
+            'name' => 'SeoBoost test bulk-draft',
+            'content' => '<p>x</p>',
+            'status' => BaseStatusEnum::DRAFT,
+            'author_type' => get_class($author),
+            'author_id' => $author->id,
+        ]);
+
+        $this->actingAs($author)
+            ->postJson("/{$this->adminDir}/tables/bulk-actions", [
+                'bulk_action' => '1',
+                'bulk_action_table' => \Botble\Blog\Tables\PostTable::class,
+                'bulk_action_target' => \Botble\SeoBoost\BulkActions\SubmitToIndexingBulkAction::class,
+                'ids' => [(string) $published->id, (string) $draft->id],
+            ])
+            ->assertStatus(200)
+            ->assertJson(['error' => false]);
+
+        $this->assertSame(
+            1,
+            IndexNowLog::query()->where('engine', 'google')->where('url', 'like', '%bulk-pub%')->count()
+        );
+        $this->assertSame(
+            0,
+            IndexNowLog::query()->where('url', 'like', '%bulk-draft%')->count()
+        );
+    }
+
+    public function test_bulk_action_filter_allows_only_post_and_page_tables(): void
+    {
+        $actions = apply_filters('base_filter_table_bulk_actions', [], app(\Botble\Blog\Tables\PostTable::class));
+
+        $this->assertContains(\Botble\SeoBoost\BulkActions\SubmitToIndexingBulkAction::class, $actions);
+
+        $actions = apply_filters('base_filter_table_bulk_actions', [], app(\Botble\Page\Tables\PageTable::class));
+
+        $this->assertContains(\Botble\SeoBoost\BulkActions\SubmitToIndexingBulkAction::class, $actions);
+
+        $actions = apply_filters('base_filter_table_bulk_actions', [], app(\Botble\Blog\Tables\CategoryTable::class));
+
+        $this->assertNotContains(\Botble\SeoBoost\BulkActions\SubmitToIndexingBulkAction::class, $actions);
+    }
+
     public function test_settings_save_persists_toggles(): void
     {
         $this->actingAs($this->admin())

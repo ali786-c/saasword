@@ -85,7 +85,7 @@ trait HasBulkActions
                     ]);
                 }
             )
-            ->merge(array_merge($this->bulkActions(), $this->bulkActions))
+            ->merge(apply_filters('base_filter_table_bulk_actions', array_merge($this->bulkActions(), $this->bulkActions), $this))
             ->mapWithKeys(function ($action, $key) {
                 if (is_string($action) && class_exists($action) || $action instanceof TableBulkActionAbstract) {
                     $action = $action instanceof TableBulkActionAbstract ? $action : app($action);

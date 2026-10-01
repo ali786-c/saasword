@@ -8,6 +8,9 @@ use Botble\Base\PanelSections\PanelSectionItem;
 use Botble\Base\Supports\DashboardMenuItem;
 use Botble\Base\Supports\ServiceProvider;
 use Botble\Base\Traits\LoadAndPublishDataTrait;
+use Botble\Blog\Tables\PostTable;
+use Botble\Page\Tables\PageTable;
+use Botble\SeoBoost\BulkActions\SubmitToIndexingBulkAction;
 use Botble\SeoBoost\Models\IndexNowLog;
 use Botble\SeoBoost\Repositories\Eloquent\IndexNowLogRepository;
 use Botble\SeoBoost\Repositories\Interfaces\IndexNowLogInterface;
@@ -83,6 +86,20 @@ class SeoBoostServiceProvider extends ServiceProvider
                         ->permissions('seo-boost.settings')
                 );
         });
+
+        // Bulk action: "Submit to instant indexing" on the Posts and Pages
+        // tables. Filtered through the core table hook so each table decides
+        // its own bulk actions; the allowlist keeps unknown models out (the
+        // action only understands Post/Page permalinks).
+        add_filter('base_filter_table_bulk_actions', function (array $actions, $table = null) {
+            if (! in_array($table::class, [PostTable::class, PageTable::class], true)) {
+                return $actions;
+            }
+
+            $actions[] = SubmitToIndexingBulkAction::class;
+
+            return $actions;
+        }, 10, 2);
 
         PanelSectionManager::beforeRendering(function (): void {
             PanelSectionManager::default()

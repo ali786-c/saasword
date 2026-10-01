@@ -56,4 +56,10 @@ return [
     'action_help' => 'Delete applies to the Google engine; IndexNow always submits as update.',
     'no_engine_selected' => 'Please select at least one engine.',
     'engine' => 'Engine',
+
+    'bulk_action_label' => 'Submit to instant indexing',
+    'bulk_action_confirm' => 'Submit the selected URLs to IndexNow (Bing, Yandex, ...) and the Google Indexing API now?',
+    'bulk_action_success' => ':count URL(s) submitted via: :engines. See SEO Boost → history for details.',
+    'bulk_action_nothing_to_submit' => 'Nothing to submit — selected items must be published and have a URL (:skipped skipped).',
+    'bulk_action_failed' => 'Submission failed for :count URL(s). Check the history for details.',
 ];
