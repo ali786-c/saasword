@@ -140,7 +140,26 @@ class ElementorConverter
     {
         $editor = trim((string) ($settings['editor'] ?? ''));
 
+        // Some Elementor builds (and pasted content) store the editor HTML
+        // entity-escaped — decode it once so <strong> etc. render as tags.
+        $editor = $this->decodeEscapedHtml($editor);
+
         return $editor !== '' ? $editor."\n" : '';
+    }
+
+    /**
+     * Decode ONE layer of entity-escaped markup (e.g. "&lt;strong&gt;Posts
+     * ...") so it becomes real HTML again. Only fires when escaped TAGS are
+     * present — literal text about HTML ("use &lt;br&gt; here") without a
+     * recognized tag stays untouched.
+     */
+    protected function decodeEscapedHtml(string $value): string
+    {
+        if (preg_match('/&lt;\/?(strong|b|em|i|p|br|ul|ol|li|a|h[1-6]|span|div|table)\b/i', $value)) {
+            return html_entity_decode($value, ENT_QUOTES, 'UTF-8');
+        }
+
+        return $value;
     }
 
     protected function renderImage(array $settings): string
@@ -192,7 +211,13 @@ class ElementorConverter
             $text = trim((string) ($item['text'] ?? ''));
 
             if ($text !== '') {
-                $lines .= sprintf("<li>%s</li>\n", e($text));
+                // List items are plain text: if escaped markup is present,
+                // decode it once and strip the tags instead of double-escaping.
+                $text = strip_tags($this->decodeEscapedHtml($text));
+
+                if ($text !== '') {
+                    $lines .= sprintf("<li>%s</li>\n", e($text));
+                }
             }
         }
 

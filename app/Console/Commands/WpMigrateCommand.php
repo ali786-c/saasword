@@ -25,7 +25,7 @@ class WpMigrateCommand extends Command
                             {--uploads-path= : Path to a copy of the WP wp-content/uploads directory (images are copied from disk)}
                             {--wp-base-url= : Old site base URL (defaults to --url, used to match image URLs)}
                             {--statuses=publish : Comma-separated WP post statuses to import (e.g. publish,draft)}
-                            {--limit= : Import at most N posts (dry-run friendly)}
+                            {--limit= : Import at most N posts (from the NEWEST, in descending date order)}
                             {--publish : Publish imported content immediately (default: import as drafts)}
                             {--without-media : Skip importing images}
                             {--posts-only : Skip pages, import posts only}

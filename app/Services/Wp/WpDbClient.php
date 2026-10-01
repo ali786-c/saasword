@@ -153,7 +153,7 @@ class WpDbClient
             .' post_excerpt, post_status, post_name, post_type'
             .' FROM '.$this->prefix.'posts'
             ." WHERE post_type = ? AND post_status IN ($placeholders)"
-            .' ORDER BY ID';
+            .' ORDER BY post_date DESC, ID DESC';
 
         $stmt = $pdo->prepare($sql);
         $stmt->execute([$type, ...$statuses]);

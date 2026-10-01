@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\WpImportMapping;
 use Botble\Blog\Models\Category;
 use Botble\Blog\Models\Post;
+use Botble\Blog\Models\Tag;
 use Botble\Page\Models\Page;
 use Botble\Slug\Models\Slug;
 use Illuminate\Support\Facades\DB;
@@ -24,6 +25,14 @@ class WpMigrateFromDbCommandTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+
+        // Wipe content + mapping state (inside the test transaction) so tests
+        // don't depend on whatever previous REAL imports left in the DB —
+        // stale wp_import_mapping rows would remap terms to wrong records.
+        DB::table('wp_import_mapping')->delete();
+        foreach ([Post::class, Page::class, Category::class, Tag::class] as $modelClass) {
+            $modelClass::query()->get()->each->delete(); // eloquent deletes clean slugs/meta via observers
+        }
 
         $connection = config('database.connections.mysql');
 
@@ -246,7 +255,10 @@ SQL);
     {
         $this->runMigration(['--limit' => '1']);
 
-        $this->assertSame(1, Post::query()->whereIn('name', ['Best Jobs 2026', 'Draft Post'])->count());
+        // Newest first: post 88 (2024-08) wins over post 42 (2024-05).
+        $this->assertSame(1, Post::query()->count());
+        $this->assertNotNull(Post::query()->where('name', 'Elementor Post')->first());
+        $this->assertNull(Post::query()->where('name', 'Best Jobs 2026')->first());
     }
 
     public function test_elementor_post_content_is_rebuilt_from_widget_tree(): void
