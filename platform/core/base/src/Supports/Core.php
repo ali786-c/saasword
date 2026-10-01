@@ -184,6 +184,11 @@ final class Core
     {
         LicenseActivating::dispatch($license, $client);
 
+        // [local-build] The license/update server is disabled on this offline
+        // installation, so ANY license data entered in Settings is accepted and
+        // stored locally: the admin panel always shows the product as activated.
+        return $this->activateLicenseLocally($license, $client);
+
         $response = $this->createRequest('activate_license', [
             'product_id' => $this->productId,
             'license_code' => $license,
@@ -745,11 +750,13 @@ final class Core
     private function createRequest(string $path, array $data = [], string $method = 'POST', int $timeoutInSeconds = 300): Response
     {
         // [local-build] License/update server connections are hard-disabled on this
-        // installation (offline self-hosted build, nulled distribution). Returning a
-        // fake failed response so every caller degrades gracefully without network I/O:
-        // verifyLicenseDirectly() => false, checkUpdate() => false, getUpdateSize() => 1,
-        // checkConnection() => false. No request ever leaves this machine.
-        return new Response(new \GuzzleHttp\Psr7\Response(503, ['Content-Type' => 'application/json'], '{}'));
+        // installation (offline self-hosted build, nulled distribution). Throwing a
+        // ConnectionException mimics an unreachable license server, which every
+        // caller already handles gracefully: verifyLicenseDirectly() => true
+        // (offline = licensed), checkUpdate()/getLatestVersion() => false (no updates),
+        // getUpdateSize() => 0, checkConnection() => false. No request ever leaves
+        // this machine and no caller can hang on network I/O.
+        throw new CouldNotConnectToLicenseServerException('License server disabled on this offline installation.');
 
         if (! extension_loaded('curl')) {
             throw new MissingCURLExtensionException();
@@ -896,6 +903,34 @@ final class Core
     public function getLicenseFilePath(): string
     {
         return $this->licenseFilePath;
+    }
+
+    private function activateLicenseLocally(string $license, string $client): bool
+    {
+        $licenseContent = json_encode([
+            'product_id' => $this->productId,
+            'purchase_code' => $license,
+            'client' => $client,
+            'domain' => parse_url(url('/'), PHP_URL_HOST),
+            'activated_at' => Carbon::now()->toIso8601String(),
+            'offline_installation' => true,
+        ]);
+
+        if ($this->isLicenseStoredInDatabase()) {
+            Setting::forceSet('license_file_content', $licenseContent)->save();
+        } else {
+            $this->files->put($this->licenseFilePath, $licenseContent, true);
+        }
+
+        $this->storeLicenseMetadata($license, $client);
+
+        Session::forget("license:{$this->getLicenseCacheKey()}:last_checked_date");
+
+        $this->clearLicenseReminder();
+
+        LicenseActivated::dispatch($license, $client);
+
+        return true;
     }
 
     private function storeLicenseMetadata(string $purchaseCode, string $client): void
