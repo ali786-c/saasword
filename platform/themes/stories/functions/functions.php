@@ -14,6 +14,8 @@ use Botble\Base\Models\MetaBox as MetaBoxModel;
 use Botble\Blog\Forms\CategoryForm;
 use Botble\Blog\Forms\PostForm;
 use Botble\Blog\Models\Category;
+use Botble\Base\Facades\Html;
+use Botble\Media\Facades\RvMedia;
 use Botble\Menu\Facades\Menu;
 use Botble\Theme\Facades\Theme;
 use Botble\Theme\Supports\ThemeSupport;
@@ -142,3 +144,45 @@ if (! function_exists('display_ad')) {
         return AdsManager::display($location, $attributes);
     }
 }
+
+app()->booted(function (): void {
+    // Sitewide structured data (Pakistan-targeted SEO): WebSite schema with
+    // the sitelinks SearchAction + Organization identity on every public
+    // page. Post-level Article schema is handled by the blog plugin.
+    if (! is_plugin_active('blog') || ! defined('THEME_FRONT_HEADER')) {
+        return;
+    }
+
+    add_filter(THEME_FRONT_HEADER, function (?string $html): ?string {
+        $siteUrl = rtrim(url('/'), '/');
+        $siteName = Theme::getSiteTitle() ?: 'CareerInPak';
+
+        $website = [
+            '@context' => 'https://schema.org',
+            '@type' => 'WebSite',
+            'name' => $siteName,
+            'url' => $siteUrl,
+            'inLanguage' => 'en-PK',
+            'potentialAction' => [
+                '@type' => 'SearchAction',
+                'target' => [
+                    '@type' => 'EntryPoint',
+                    'urlTemplate' => $siteUrl . '/search?q={search_term_string}',
+                ],
+                'query-input' => 'required name=search_term_string',
+            ],
+        ];
+
+        $organization = [
+            '@context' => 'https://schema.org',
+            '@type' => 'Organization',
+            'name' => $siteName,
+            'url' => $siteUrl,
+            'logo' => RvMedia::getImageUrl(Theme::getLogo()),
+        ];
+
+        return $html
+            . Html::tag('script', json_encode($website, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), ['type' => 'application/ld+json'])
+            . Html::tag('script', json_encode($organization, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), ['type' => 'application/ld+json']);
+    }, 60);
+});

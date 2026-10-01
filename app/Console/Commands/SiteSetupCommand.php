@@ -9,6 +9,7 @@ use Botble\Menu\Models\Menu;
 use Botble\Menu\Models\MenuLocation;
 use Botble\Menu\Models\MenuNode;
 use Botble\Page\Models\Page;
+use Botble\Setting\Facades\Setting;
 use Botble\Slug\Models\Slug;
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
@@ -65,12 +66,16 @@ class SiteSetupCommand extends Command
         if (! $homeOnly) {
             $this->ensurePakArmyCategory();
             $this->rebuildMainMenu();
+            $this->rebuildQuickLinksMenu();
         }
 
         if (! $menuOnly) {
             $this->setupHomepage();
             $this->flagFeaturedPosts();
         }
+
+        $this->removeGalleriesWidget();
+        $this->setupSeo();
 
         $this->info('Clearing caches...');
         $this->callSilent('optimize:clear');
@@ -79,6 +84,44 @@ class SiteSetupCommand extends Command
         $this->info('✔ Site setup complete. Re-run any time — it is idempotent.');
 
         return self::SUCCESS;
+    }
+
+    /**
+     * The demo Galleries (instagram-style) widget renders in the sidebar
+     * area under the homepage sections — pure demo noise for a jobs site.
+     */
+    protected function removeGalleriesWidget(): void
+    {
+        $deleted = \Botble\Widget\Models\Widget::query()
+            ->where('theme', 'stories')
+            ->where('widget_id', 'GalleriesWidget')
+            ->delete();
+
+        $this->info($deleted ? "Galleries widget removed ({$deleted} row)." : 'Galleries widget already removed.');
+    }
+
+    /**
+     * Pakistan-targeted SEO defaults: site identity, homepage title/meta,
+     * keyword set and the Article schema type for job posts. Idempotent —
+     * only writes values, never clears user edits made afterwards in the
+     * admin UI (they will simply be overwritten if this command is re-run).
+     */
+    protected function setupSeo(): void
+    {
+        $meta = [
+            'site_title' => 'CareerInPak',
+            'seo_title' => 'CareerInPak – Latest Jobs, PPSC, FPSC, Pak Army & Scholarships in Pakistan',
+            'seo_description' => 'Daily updates for government and private jobs in Pakistan: PPSC, FPSC, Pak Army, NADRA, police and scholarship alerts with official online apply links.',
+            'seo_keywords' => 'jobs in pakistan, government jobs 2026, ppsc jobs, fpsc jobs, pak army jobs, nadra jobs, police jobs, scholarships in pakistan, online apply, career in pak',
+        ];
+
+        theme_option()->setOptions($meta)->saveOptions();
+
+        // Blog plugin renders NewsArticle by default; job announcements
+        // are better marked as Article (NewsArticle is for news outlets).
+        Setting::set('blog_post_schema_type', 'Article')->save();
+
+        $this->info('SEO defaults applied (site title, homepage meta, keywords, Article schema).');
     }
 
     protected function ensurePakArmyCategory(): void
@@ -167,6 +210,55 @@ class SiteSetupCommand extends Command
         }
 
         $this->info('Main menu rebuilt: ' . implode(', ', array_keys($this->menuItems)));
+    }
+
+    /**
+     * Footer "Quick links" menu (rendered by CustomMenuWidget): replace the
+     * demo items (Travel, Galleries, ...) with the site's real sections so
+     * no demo page is reachable from the footer navigation.
+     */
+    protected function rebuildQuickLinksMenu(): void
+    {
+        $menu = Menu::query()->firstOrCreate(['name' => 'Quick links']);
+
+        MenuNode::query()->where('menu_id', $menu->id)->delete();
+
+        $items = ['Home' => null, 'Jobs' => 'Jobs', 'PPSC' => 'PPSC', 'FPSC' => 'FPSC', 'Pak Army' => 'Pak Army'];
+
+        $position = 0;
+
+        foreach ($items as $title => $categoryName) {
+            $attributes = [
+                'menu_id' => $menu->id,
+                'parent_id' => 0,
+                'title' => $title,
+                'target' => '_self',
+                'has_child' => 0,
+                'position' => $position++,
+            ];
+
+            if ($categoryName === null) {
+                MenuNode::query()->create($attributes + ['reference_id' => 0, 'reference_type' => null, 'url' => '/']);
+
+                continue;
+            }
+
+            $category = Category::query()->where('name', $categoryName)->first();
+
+            if (! $category) {
+                continue;
+            }
+
+            MenuNode::query()->create(
+                $attributes + [
+                    'reference_id' => $category->id,
+                    'reference_type' => $category::class,
+                    'url' => str_replace(url(''), '', $category->url) ?: '/',
+                ]
+            );
+        }
+
+        $this->info('Quick links menu rebuilt.');
     }
 
     protected function setupHomepage(): void

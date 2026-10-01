@@ -88,6 +88,43 @@ class SiteSetupCommandTest extends TestCase
         $this->assertStringContainsString('[featured-categories', (string) $page->content);
     }
 
+    public function test_site_setup_applies_pakistan_seo_defaults(): void
+    {
+        $this->assertSame(0, $this->artisanExitCode());
+
+        // Site identity + Pakistan-targeted homepage meta.
+        $this->assertSame('CareerInPak', theme_option('site_title'));
+        $this->assertStringContainsString('Pakistan', (string) theme_option('seo_title'));
+        $this->assertStringContainsString('Pakistan', (string) theme_option('seo_description'));
+        $this->assertStringContainsString('ppsc jobs', (string) theme_option('seo_keywords'));
+
+        // Job announcements use Article schema, not NewsArticle.
+        $this->assertSame('Article', setting('blog_post_schema_type'));
+
+        // Demo Galleries widget must be gone from every sidebar area.
+        $this->assertSame(
+            0,
+            \Botble\Widget\Models\Widget::query()
+                ->where('theme', 'stories')
+                ->where('widget_id', 'GalleriesWidget')
+                ->count()
+        );
+
+        // Footer Quick links menu rebuilt with real sections, no demo noise.
+        $quickLinks = Menu::query()->where('name', 'Quick links')->first();
+
+        $this->assertNotNull($quickLinks);
+        $this->assertSame(
+            ['Home', 'Jobs', 'PPSC', 'FPSC', 'Pak Army'],
+            MenuNode::query()
+                ->where('menu_id', $quickLinks->id)
+                ->where('parent_id', 0)
+                ->orderBy('position')
+                ->pluck('title')
+                ->all()
+        );
+    }
+
     public function test_site_setup_is_idempotent(): void
     {
         $this->assertSame(0, $this->artisanExitCode());
