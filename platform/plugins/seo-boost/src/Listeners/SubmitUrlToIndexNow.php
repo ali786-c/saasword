@@ -11,10 +11,15 @@ use Botble\Page\Models\Page;
 use Botble\SeoBoost\Services\GoogleIndexingService;
 use Botble\SeoBoost\Services\IndexNowService;
 use Exception;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Cache;
 
-class SubmitUrlToIndexNow implements ShouldQueue
+/**
+ * Runs synchronously on purpose: queued events carry the live Request
+ * object (with Closures) and fail to serialize when QUEUE_CONNECTION=sync,
+ * which 500s every post save. Both engines dedupe via wasRecentlySubmitted
+ * and no-op instantly when disabled, so sync execution is cheap.
+ */
+class SubmitUrlToIndexNow
 {
     protected const PERMALINK_CACHE_TTL = 604800;
 
