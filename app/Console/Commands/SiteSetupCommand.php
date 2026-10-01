@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Botble\Base\Enums\BaseStatusEnum;
+use Botble\Base\Models\BaseModel;
 use Botble\Blog\Models\Category;
 use Botble\Blog\Models\Post;
 use Botble\Menu\Models\Menu;
@@ -12,6 +13,7 @@ use Botble\Page\Models\Page;
 use Botble\Setting\Facades\Setting;
 use Botble\Slug\Models\Slug;
 use Illuminate\Console\Command;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
@@ -74,10 +76,19 @@ class SiteSetupCommand extends Command
             $this->flagFeaturedPosts();
         }
 
+        $this->setupFooterBranding();
+        $this->publishPolicyPages();
+        $this->rebuildFooterLegalMenu();
+
         $this->removeGalleriesWidget();
         $this->setupSeo();
 
         $this->info('Clearing caches...');
+
+        // The front menu renderer persists its own cache group; flush it or
+        // freshly rebuilt menus keep rendering the old nodes.
+        \Botble\Support\Services\Cache\Cache::make(\Botble\Menu\Models\Menu::class)->flush();
+
         $this->callSilent('optimize:clear');
 
         $this->newLine();
@@ -153,9 +164,43 @@ class SiteSetupCommand extends Command
         $this->info("Category 'Pak Army': ID {$category->id}");
     }
 
+    /**
+     * The language plugin filters menus by a language_meta row on frontend
+     * requests; freshly created menus without one silently vanish from the
+     * site. Mirror the installer's locale code ('en_US').
+     */
+    protected function ensureLanguageMeta(Model $model): void
+    {
+        if (! class_exists(\Botble\Language\Models\LanguageMeta::class)) {
+            return;
+        }
+
+        if (! in_array($model::class, \Botble\Language\Facades\Language::supportedModels())) {
+            return;
+        }
+
+        $code = \Botble\Language\Models\LanguageMeta::query()
+            ->where('reference_type', $model::class)
+            ->value('lang_meta_code') ?: 'en_US';
+
+        \Botble\Language\Models\LanguageMeta::query()->firstOrCreate(
+            [
+                'reference_id' => $model->getKey(),
+                'reference_type' => $model::class,
+                'lang_meta_code' => $code,
+            ],
+            ['lang_meta_origin' => $code]
+        );
+    }
+
     protected function rebuildMainMenu(): void
     {
-        $menu = Menu::query()->firstOrCreate(['name' => 'Main menu']);
+        $menu = Menu::query()->firstOrCreate(
+            ['name' => 'Main menu'],
+            ['status' => BaseStatusEnum::PUBLISHED]
+        );
+
+        $this->ensureLanguageMeta($menu);
 
         // Keep the location binding pointing at this menu (header uses main-menu).
         MenuLocation::query()->updateOrCreate(
@@ -219,7 +264,12 @@ class SiteSetupCommand extends Command
      */
     protected function rebuildQuickLinksMenu(): void
     {
-        $menu = Menu::query()->firstOrCreate(['name' => 'Quick links']);
+        $menu = Menu::query()->firstOrCreate(
+            ['name' => 'Quick links'],
+            ['status' => BaseStatusEnum::PUBLISHED]
+        );
+
+        $this->ensureLanguageMeta($menu);
 
         MenuNode::query()->where('menu_id', $menu->id)->delete();
 
@@ -306,6 +356,163 @@ class SiteSetupCommand extends Command
     protected function categoryId(string $name): ?int
     {
         return Category::query()->where('name', $name)->value('id');
+    }
+
+    /**
+     * Replace the theme's demo footer branding (AliThemes credit, New York
+     * address, placeholder description) with CareerInPak identity.
+     */
+    protected function setupFooterBranding(): void
+    {
+        theme_option()->setOptions([
+            'copyright' => '© :year CareerInPak. All rights reserved.',
+            'designed_by' => '',
+            'site_description' => "CareerInPak is Pakistan's trusted jobs and scholarships portal — daily updates on government jobs, PPSC, FPSC, Pak Army, NADRA, police and scholarships across Pakistan.",
+            'address' => 'Pakistan',
+        ])->saveOptions();
+
+        $this->info('Footer branding updated (copyright, description, address).');
+    }
+
+    /**
+     * Policy/landing pages every Pakistani site needs (AdSense + Ad Network
+     * approval). Imported WP pages keep their real content and are only
+     * published; missing ones are created with CareerInPak templates.
+     * Idempotent via firstOrCreate.
+     */
+    protected function publishPolicyPages(): void
+    {
+        $author = User::query()->first();
+
+        foreach ($this->policyPages() as $name => $template) {
+            // Match by slug, not name: SafeContent stores names HTML-encoded
+            // ("Terms &amp; Conditions"), so name lookups silently miss.
+            $page = Page::query()
+                ->whereHas('slugable', fn ($query) => $query->where('key', Str::slug($name)))
+                ->first();
+
+            if ($page) {
+                $changed = false;
+
+                if ($page->status->getValue() !== BaseStatusEnum::PUBLISHED) {
+                    $page->status = BaseStatusEnum::PUBLISHED;
+                    $changed = true;
+                }
+
+                if (trim(strip_tags((string) $page->content)) === '') {
+                    $page->content = $template;
+                    $changed = true;
+                }
+
+                if ($changed) {
+                    $page->save();
+                    $this->line("  Page '{$name}' published (ID {$page->id}).");
+                }
+            } else {
+                $page = Page::query()->create([
+                    'name' => $name,
+                    'content' => $template,
+                    'status' => BaseStatusEnum::PUBLISHED,
+                    'user_id' => $author?->id ?: 1,
+                ]);
+
+                $this->line("  Page '{$name}' created (ID {$page->id}).");
+            }
+
+            Slug::query()->firstOrCreate(
+                [
+                    'key' => Str::slug($name),
+                    'reference_type' => $page::class,
+                ],
+                [
+                    'reference_id' => $page->id,
+                    'prefix' => '',
+                ]
+            );
+        }
+    }
+
+    protected function policyPages(): array
+    {
+        return [
+            'About Us' => '<h2>About CareerInPak</h2><p>CareerInPak is an independent career information portal for Pakistan. We publish daily updates on government and private jobs, PPSC and FPSC announcements, Pak Army recruitment, scholarships and results.</p>',
+            'Contact Us' => '<h2>Contact CareerInPak</h2><p>Have a question, correction or job advertisement enquiry? Reach us at <strong>info@careerinpak.com</strong> and we will get back to you.</p>',
+            'Privacy Policy' => $this->privacyPolicyContent(),
+            'Terms & Conditions' => '<h2>Terms &amp; Conditions</h2><p>Welcome to CareerInPak. By accessing this website you agree to these terms. Content is provided for general information only; verify all job details from official sources before applying.</p>',
+            'Disclaimer' => '<h2>Disclaimer</h2><p>CareerInPak is not a recruiter and is not affiliated with any government department. Job advertisements are reproduced for information only — always verify from the official advertisement and apply through official channels.</p>',
+            'Editorial and Verification Policy' => '<h2>Editorial and Verification Policy</h2><p>Every job and scholarship post on CareerInPak is checked against its official advertisement before publishing. Sources include departmental websites and mainstream Pakistani newspapers.</p>',
+        ];
+    }
+
+    protected function privacyPolicyContent(): string
+    {
+        return '<h2>Privacy Policy for CareerInPak</h2>'
+            . '<p>At CareerInPak, accessible from https://careerinpak.com, the privacy of our visitors in Pakistan and worldwide is one of our main priorities. This Privacy Policy document describes the types of information that are collected and how we use them.</p>'
+            . '<h3>Information we collect</h3>'
+            . '<p>If you contact us or leave a comment, we may collect your name and email address. Like most websites, our servers also record standard log data such as browser type, pages visited, time of visit and referring page.</p>'
+            . '<h3>Cookies and web beacons</h3>'
+            . '<p>CareerInPak uses cookies to store visitor preferences and optimize the user experience. You can disable cookies through your individual browser options.</p>'
+            . '<h3>Google AdSense and advertising partners</h3>'
+            . '<p>We may use Google AdSense and other advertising partners. Third-party vendors, including Google, use cookies (such as the DoubleClick DART cookie) to serve ads based on your visits to this and other websites. You may opt out of personalized advertising by visiting <a href="https://www.google.com/settings/ads" rel="nofollow noopener" target="_blank">Google Ads Settings</a>.</p>'
+            . '<h3>Analytics</h3>'
+            . '<p>We use analytics tools to understand traffic patterns and improve content. These tools collect aggregated, non-personally-identifying data.</p>'
+            . '<h3>How we use your information</h3>'
+            . '<ul><li>To operate and maintain this website</li><li>To reply to your emails and queries</li><li>To detect and prevent spam or abuse</li><li>To display relevant advertisements</li></ul>'
+            . '<h3>Third-party links</h3>'
+            . '<p>Job posts link to official departmental websites and newspapers. We are not responsible for the privacy practices of those external sites.</p>'
+            . '<h3>Children\'s information</h3>'
+            . '<p>CareerInPak does not knowingly collect any personally identifiable information from children under the age of 13.</p>'
+            . '<h3>Consent</h3>'
+            . '<p>By using our website, you hereby consent to this Privacy Policy and agree to its terms. For questions, contact us at <strong>info@careerinpak.com</strong>.</p>';
+    }
+
+    /**
+     * Footer legal bar: Privacy/Terms/Disclaimer/etc. as a dedicated menu
+     * location so the links stay admin-editable after seeding.
+     */
+    protected function rebuildFooterLegalMenu(): void
+    {
+        $menu = Menu::query()->firstOrCreate(
+            ['name' => 'Footer legal'],
+            ['status' => BaseStatusEnum::PUBLISHED]
+        );
+
+        $this->ensureLanguageMeta($menu);
+
+        \Botble\Menu\Models\MenuLocation::query()->updateOrCreate(
+            ['location' => 'footer-legal'],
+            ['menu_id' => $menu->id]
+        );
+
+        MenuNode::query()->where('menu_id', $menu->id)->delete();
+
+        $position = 0;
+
+        foreach (array_keys($this->policyPages()) as $name) {
+            $page = Page::query()
+                ->whereHas('slugable', fn ($query) => $query->where('key', Str::slug($name)))
+                ->first();
+
+            if (! $page) {
+                continue;
+            }
+
+            $slugKey = $page->slugable->key ?? Str::slug($name);
+
+            MenuNode::query()->create([
+                'menu_id' => $menu->id,
+                'parent_id' => 0,
+                'title' => $name,
+                'target' => '_self',
+                'has_child' => 0,
+                'position' => $position++,
+                'reference_id' => $page->id,
+                'reference_type' => $page::class,
+                'url' => '/' . $slugKey,
+            ]);
+        }
+
+        $this->info('Footer legal menu rebuilt (' . $position . ' links).');
     }
 
     protected function flagFeaturedPosts(): void

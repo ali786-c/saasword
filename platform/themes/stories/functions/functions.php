@@ -46,6 +46,7 @@ app()->booted(function (): void {
     ]);
 
     Menu::addMenuLocation('header-menu', __('Header Navigation'));
+    Menu::addMenuLocation('footer-legal', __('Footer legal links'));
 
     if (is_plugin_active('blog')) {
         CategoryForm::extend(function (CategoryForm $form): void {

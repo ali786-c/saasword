@@ -143,6 +143,58 @@ class SiteSetupCommandTest extends TestCase
         $this->assertSame($homepageId, (int) theme_option('homepage_id'));
     }
 
+    public function test_site_setup_publishes_policy_pages_and_footer_legal_menu(): void
+    {
+        $this->assertSame(0, $this->artisanExitCode());
+
+        // Every standard policy page published and slug-resolvable.
+        foreach ([
+            'about-us',
+            'contact-us',
+            'privacy-policy',
+            'terms-conditions',
+            'disclaimer',
+            'editorial-policy',
+        ] as $slug) {
+            $slugRow = Slug::query()
+                ->where('key', $slug)
+                ->where('reference_type', \Botble\Page\Models\Page::class)
+                ->first();
+
+            $this->assertNotNull($slugRow, "Page slug '{$slug}' must exist");
+
+            $page = Page::query()->find($slugRow->reference_id);
+
+            $this->assertNotNull($page, "Page for slug '{$slug}' must exist");
+            $this->assertSame(
+                'published',
+                $page->status->getValue(),
+                "Policy page '{$page->name}' must be published"
+            );
+            $this->assertGreaterThan(0, mb_strlen(trim(strip_tags((string) $page->content))));
+        }
+
+        // Privacy Policy was missing after the WP import — command creates it.
+        $privacy = Slug::query()->where('key', 'privacy-policy')->first();
+
+        $this->assertNotNull($privacy);
+
+        // Footer legal menu: one node per policy page.
+        $menu = Menu::query()->where('name', 'Footer legal')->firstOrFail();
+
+        $this->assertSame(6, MenuNode::query()->where('menu_id', $menu->id)->count());
+
+        // Menus carry language meta — the language plugin otherwise hides
+        // language-less menus on frontend requests.
+        $this->assertSame(
+            1,
+            \Botble\Language\Models\LanguageMeta::query()
+                ->where('reference_type', Menu::class)
+                ->where('reference_id', $menu->id)
+                ->count()
+        );
+    }
+
     public function test_site_setup_flags_newest_published_posts_as_featured(): void
     {
         $this->assertSame(0, $this->artisanExitCode());
