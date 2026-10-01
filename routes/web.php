@@ -25,7 +25,11 @@ use Illuminate\Support\Facades\Route;
 Route::fallback(function (Request $request) {
     $path = trim(rawurldecode($request->path()), '/');
 
-    if ($path === '' || str_starts_with($path, 'admin') || str_starts_with($path, 'api')) {
+    // Never intercept the admin panel, API or installer — they are real routes,
+    // but if something under them 404s we must not touch it here.
+    $adminDir = config('core.base.general.admin_dir', 'admin');
+
+    if ($path === '' || str_starts_with($path, $adminDir) || str_starts_with($path, 'api') || str_starts_with($path, 'install')) {
         abort(404);
     }
 
