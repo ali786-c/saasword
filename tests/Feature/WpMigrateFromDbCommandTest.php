@@ -104,6 +104,8 @@ SQL);
         $this->server->exec("INSERT INTO wp_term_taxonomy VALUES (3, 3, 'category', 'Job listings'), (4, 4, 'post_tag', '')");
 
         // Post 42: published, sticky, Yoast meta, infected script in content.
+        // Post 88: Elementor-built — post_content is a degraded snapshot, real
+        //          content lives in _elementor_data.
         $this->server->exec("INSERT INTO wp_posts VALUES
             (42, 1, '2024-05-01 10:00:00', '2024-05-01 05:00:00',
              '<p>Hello <script>alert(1)</script>clean world</p>', 'Best Jobs 2026', 'Jobs excerpt',
@@ -113,7 +115,36 @@ SQL);
              'publish', 'about-us', 'page', 0),
             (55, 1, '2024-07-01 09:00:00', '2024-07-01 04:00:00',
              '<p>Draft post body</p>', 'Draft Post', '',
-             'draft', 'draft-post', 'post', 0)");
+             'draft', 'draft-post', 'post', 0),
+            (88, 1, '2024-08-01 09:00:00', '2024-08-01 04:00:00',
+             '<!-- deprecated elementor snapshot -->', 'Elementor Post', '',
+             'publish', 'elementor-post', 'post', 0)");
+
+        $elementorData = json_encode([
+            [
+                'elType' => 'section',
+                'elements' => [
+                    [
+                        'elType' => 'column',
+                        'elements' => [
+                            [
+                                'elType' => 'widget',
+                                'widgetType' => 'heading',
+                                'settings' => ['title' => 'Elementor Heading Works', 'header_size' => 'h2'],
+                            ],
+                            [
+                                'elType' => 'widget',
+                                'widgetType' => 'text-editor',
+                                'settings' => ['editor' => '<p>Built with Elementor.</p>'],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+
+        $stmt = $this->server->prepare('INSERT INTO wp_postmeta (post_id, meta_key, meta_value) VALUES (?, ?, ?)');
+        $stmt->execute([88, '_elementor_data', $elementorData]);
 
         $this->server->exec("INSERT INTO wp_postmeta (post_id, meta_key, meta_value) VALUES
             (42, '_yoast_wpseo_title', '%%title%% %%sep%% CareerInPak'),
@@ -218,6 +249,20 @@ SQL);
         $this->assertSame(1, Post::query()->whereIn('name', ['Best Jobs 2026', 'Draft Post'])->count());
     }
 
+    public function test_elementor_post_content_is_rebuilt_from_widget_tree(): void
+    {
+        $this->runMigration();
+
+        $post = Post::query()->where('name', 'Elementor Post')->first();
+
+        $this->assertNotNull($post, 'elementor post imported');
+
+        // Real HTML rebuilt from _elementor_data — not the degraded snapshot.
+        $this->assertStringContainsString('<h2>Elementor Heading Works</h2>', $post->content);
+        $this->assertStringContainsString('<p>Built with Elementor.</p>', $post->content);
+        $this->assertStringNotContainsString('deprecated elementor snapshot', $post->content);
+    }
+
     public function test_rerun_is_idempotent(): void
     {
         $this->runMigration();
@@ -246,9 +291,9 @@ SQL);
 
         $posts = $client->posts('post', ['publish']);
 
-        $this->assertCount(1, $posts); // draft excluded by default
+        $this->assertCount(2, $posts); // draft (55) excluded by default
 
-        $payload = $posts->first();
+        $payload = $posts->firstWhere('id', 42);
 
         $this->assertSame(42, $payload['id']);
         $this->assertSame('best-jobs-2026', $payload['slug']);

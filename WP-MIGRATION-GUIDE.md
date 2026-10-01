@@ -262,7 +262,23 @@ Ye redirects **tabhi kaam karte hain jab import kiya ho** (mapping table rows im
 
 ---
 
-## 7. Malware Cleanup (Kyunki Purani Site Infected Thi)
+## 7. Elementor Wali Posts (Important!)
+
+Agar purani site ki posts **Elementor builder** se bani hain, to kuch khas baatein:
+
+- Elementor apna asli content `post_content` me **nahi** rakhta — wo `wp_postmeta` ki
+  `_elementor_data` key me JSON tree rakhta hai. `post_content` me sirf ek degraded snapshot hota hai.
+- **REST API mode me Elementor data nahi milta** (API wo meta expose nahi karta) — is liye
+  Elementor sites ke liye **DB mode hi use karo**.
+- DB mode automatically `_elementor_data` ko parse kar ke **proper HTML banata hai**: headings,
+  paragraphs, images, buttons, lists, galleries, video links — sab document order me.
+- Layout grids flatten ho jate hain (2-column design → ek ke neeche ek) — content kuch nahi khota.
+- Jo widgets support nahi (maps, forms, sliders) wo skip hote hain; agar post ka koi output hi na
+  bane to original snapshot fallback hota hai.
+- Import ke baad har Elementor post ko **admin editor me ek dafa khol kar dekho** — formatting
+  waisi hi hai jaise reader ko chahiye (writer ke tools ke baghair).
+
+## 8. Malware Cleanup (Kyunki Purani Site Infected Thi)
 
 Har imported post/page/category ka content is se guzarta hai ([ContentSanitizer](app/Services/Wp/ContentSanitizer.php)):
 
@@ -278,7 +294,7 @@ Har imported post/page/category ka content is se guzarta hai ([ContentSanitizer]
 
 ---
 
-## 8. Masail Aur Unka Hal (Troubleshooting)
+## 9. Masail Aur Unka Hal (Troubleshooting)
 
 **`Could not connect to the WordPress database`**
 - XAMPP MySQL chal raha hai? (`C:\xampp\mysql_start.bat`)
@@ -314,17 +330,18 @@ Har imported post/page/category ka content is se guzarta hai ([ContentSanitizer]
 
 ---
 
-## 9. Testing — Sab Kuch Verified Hai
+## 10. Testing — Sab Kuch Verified Hai
 
 ```bash
 "%PHP%" -d max_execution_time=0 vendor/phpunit/phpunit/phpunit tests/Unit tests/Feature --no-coverage
 ```
 
-**82 tests, 242 assertions — sab green.** Migration ke apne tests:
+**95 tests, 272 assertions — sab green.** Migration ke apne tests:
 
 | Test file | Kya cover karta hai |
 |---|---|
 | `tests/Unit/WpDbClientTest.php` (15) | WP DB rows → REST-shape payloads, Yoast/RankMath meta, template vars (`%%title%%`), safe unserialization |
+| `tests/Unit/ElementorConverterTest.php` (12) | Elementor JSON tree → clean HTML (headings, images, buttons, lists, video links, ordering, fallback) |
 | `tests/Unit/LocalMediaCopierTest.php` (10) | URL → disk path resolution, renditions fallback, any-host matching |
 | `tests/Unit/WpClientTest.php` | REST pagination, error handling |
 | `tests/Unit/ContentSanitizerTest.php` | Malware strip, image rewrite |
@@ -333,12 +350,12 @@ Har imported post/page/category ka content is se guzarta hai ([ContentSanitizer]
 
 ---
 
-## 10. Technical Map (Kya Kahan Hai)
+## 11. Technical Map (Kya Kahan Hai)
 
 ```
 app/Console/Commands/WpMigrateCommand.php   wp:migrate command (dono modes)
-app/Services/Wp/WpClient.php                REST API client (live site)
-app/Services/Wp/WpDbClient.php              WP database reader (offline mode)
+app/Services/Wp/WpClient.php                REST API client (live site)app/Services/Wp/WpDbClient.php                WP database reader (offline mode)
+app/Services/Wp/ElementorConverter.php        Elementor JSON → clean HTML (DB mode me auto)
 app/Services/Wp/WpImporter.php              Common import engine (slugs, dates, SEO, mapping)
 app/Services/Wp/ContentSanitizer.php        Malware cleaner
 app/Services/Wp/MediaDownloader.php         HTTP se images (REST mode)
@@ -362,10 +379,11 @@ Source (REST ya DB) → REST-shape payload → ContentSanitizer (malware clean)
 
 ---
 
-## 11. Quick Checklist (Jaldi Kaam Karne Walon Ke Liye)
+## 12. Quick Checklist (Jaldi Kaam Karne Walon Ke Liye)
 
 - [ ] XAMPP MySQL chal raha hai
 - [ ] Site online hai → **REST mode**; site down hai → **DB mode**
+- [ ] Elementor posts hain? → **DB mode zaroori** (REST me Elementor data nahi aata)
 - [ ] REST: `--limit=5` pehle chalao, drafts admin me check karo
 - [ ] DB: WP DB dump import karo + uploads folder copy rakho
 - [ ] Full import chalao (drafts me)

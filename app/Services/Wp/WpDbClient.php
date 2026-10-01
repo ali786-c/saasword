@@ -28,7 +28,8 @@ class WpDbClient
         protected string $database,
         protected string $username,
         protected string $password,
-        protected string $prefix = 'wp_'
+        protected string $prefix = 'wp_',
+        protected ElementorConverter $elementor = new ElementorConverter()
     ) {
         $this->prefix = rtrim($this->prefix, '_').'_';
     }
@@ -83,13 +84,24 @@ class WpDbClient
 
                 $this->resolveOgImageMeta($meta);
 
-                return $this->buildPostPayload(
+                $payload = $this->buildPostPayload(
                     $row,
                     $meta,
                     $this->postTerms($postId),
                     $this->thumbnail($postId),
                     in_array($postId, $this->stickyIds(), false),
                 );
+
+                // Elementor-built posts: rebuild real HTML from the widget
+                // tree in postmeta (post_content only holds a degraded static
+                // snapshot).
+                $elementorHtml = $this->elementor->convert($meta);
+
+                if ($elementorHtml !== null) {
+                    $payload['content']['rendered'] = $elementorHtml;
+                }
+
+                return $payload;
             });
     }
 
