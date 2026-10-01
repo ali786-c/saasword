@@ -11,6 +11,7 @@
             >
                 <x-core-setting::checkbox
                     name="seo_boost_enabled"
+                    :value="'1'"
                     :label="trans('plugins/seo-boost::seo-boost.auto_submit_enabled')"
                     :checked="setting('seo_boost_enabled', '1') == '1'"
                 />
@@ -39,6 +40,7 @@
             >
                 <x-core-setting::checkbox
                     name="seo_boost_google_enabled"
+                    :value="'1'"
                     :label="trans('plugins/seo-boost::seo-boost.google_enabled_label')"
                     :checked="setting('seo_boost_google_enabled', '1') == '1' && $googleConfigured"
                 />
