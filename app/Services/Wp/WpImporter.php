@@ -29,9 +29,9 @@ use Throwable;
 class WpImporter
 {
     public function __construct(
-        protected WpClient $client,
+        protected WpClient|WpDbClient $client,
         protected ContentSanitizer $sanitizer,
-        protected MediaDownloader $media
+        protected MediaDownloader|LocalMediaCopier|MediaSource $media
     ) {
     }
 
@@ -104,6 +104,8 @@ class WpImporter
             'name' => $term['name'] ?? ('Tag #'.$term['id']),
             'description' => $this->sanitizer->toPlainText($term['description'] ?? ''),
             'status' => BaseStatusEnum::PUBLISHED,
+            'author_id' => $this->authorId(),
+            'author_type' => User::class,
         ]);
 
         $this->createSlug($tag, $term['slug'] ?? null);

@@ -42,6 +42,31 @@ Kya hota hai:
 
 Flow: pehle `--url` ke sath **bina `--publish`** chalao → admin mein drafts review karo → publish karo.
 
+### Phase 1b — Database se import (site OFFLINE hone ke baad bhi)
+
+REST API cutover ke baad mar jati hai — is liye **WordPress ki database se direct import** bhi ready hai (local XAMPP dump ya cPanel DB):
+
+```bash
+# XAMPP: purani WP db ko MySQL mein import karo (phpMyAdmin ya CLI), phir:
+php artisan wp:migrate --from-db --db-name=purani_wp_db \
+  --uploads-path="C:/backups/wp-content/uploads" --wp-base-url=https://purani-site.com
+
+# cPanel DB (remote access ON ho to):
+php artisan wp:migrate --from-db --db-host=... --db-name=... --db-user=... --db-pass=... \
+  --uploads-path=/home/user/wp-content/uploads --wp-base-url=https://purani-site.com
+
+# Extra options:
+#   --statuses=publish,draft   (default sirf publish)
+#   --limit=10                 (test ke liye 10 posts pehle)
+#   --publish / --posts-only / --pages-only / --without-media / --no-terms
+```
+
+Kya milta hai (REST wale jaisa hi):
+- Posts + pages + categories + tags, slugs aur dates preserve
+- Yoast/RankMath meta DB postmeta se read hote hain (`%%title%%` jaise template vars expand hote hain)
+- Images disk se copy hoti hain (`--uploads-path` ka uploads copy) — **internet ki zaroorat nahi**
+- Wahi malware sanitizer + wahi `wp_import_mapping` resume-safety
+
 ## Phase 2 — SEO Preservation
 
 - WP permalinks `/%postname%/` the → slugs 1:1 match (kuch nahi karna)
