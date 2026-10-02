@@ -102,6 +102,7 @@ class SiteSetupCommand extends Command
         }
 
         $this->setupFooterBranding();
+        $this->setupLogosAndFavicon();
         $this->publishPolicyPages();
         $this->rebuildFooterLegalMenu();
 
@@ -411,6 +412,49 @@ class SiteSetupCommand extends Command
         ])->saveOptions();
 
         $this->info('Footer branding updated (copyright, description, address).');
+    }
+
+    /**
+     * Copy & configure CareerInPak SVG logo and favicon assets.
+     */
+    protected function setupLogosAndFavicon(): void
+    {
+        $themeImgDir = platform_path('themes/stories/public/images');
+        $targetDir = public_path('storage/logos');
+
+        if (! file_exists($targetDir)) {
+            mkdir($targetDir, 0755, true);
+        }
+
+        $filesMap = [
+            'logo.svg' => 'careerinpak-logo.svg',
+            'logo-footer.svg' => 'careerinpak-logo-footer.svg',
+            'favicon.svg' => 'favicon.svg',
+        ];
+
+        foreach ($filesMap as $themeFile => $storageFile) {
+            $src = $themeImgDir . '/' . $themeFile;
+            $dst = $targetDir . '/' . $storageFile;
+            if (file_exists($src)) {
+                copy($src, $dst);
+            }
+        }
+
+        $logoPath = 'logos/careerinpak-logo.svg';
+        $logoFooterPath = 'logos/careerinpak-logo-footer.svg';
+        $faviconPath = 'logos/favicon.svg';
+
+        theme_option()->setOptions([
+            'logo' => $logoPath,
+            'logo_footer' => $logoFooterPath,
+            'favicon' => $faviconPath,
+        ])->saveOptions();
+
+        \Botble\Setting\Facades\Setting::set('favicon', $faviconPath)
+            ->set('admin_favicon', $faviconPath)
+            ->save();
+
+        $this->info('SVG Logo & Favicon configured (careerinpak-logo.svg, favicon.svg).');
     }
 
     /**
