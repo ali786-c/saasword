@@ -18,22 +18,25 @@ class CreateDemoJobCommand extends Command
 
     public function handle(): int
     {
-        $this->info('Generating high-value demo job post using 11-section JobPostTemplateService...');
+        $this->info('Generating high-value demo job post using updated 11-section JobPostTemplateService...');
 
         $title = 'NADRA Scanning Operator Jobs 2026 - 150 Vacancies Available';
         $slugKey = Str::slug('NADRA Scanning Operator Jobs 2026 150 Vacancies Available');
 
         $jobData = [
-            'organization' => 'National Database & Registration Authority (NADRA)',
-            'job_type' => 'Contract / Full-Time',
-            'city' => 'Lahore, Islamabad, Karachi & Major Cities',
-            'education' => 'Intermediate (F.A / F.Sc / I.Com / ICS) or Bachelor',
-            'vacancies' => '150 Positions',
-            'deadline' => 'October 25, 2026',
-            'apply_method' => 'Online via NADRA Careers Portal',
+            'posted_on' => 'September 28, 2026',
+            'city' => 'Lahore',
+            'education' => 'Intermediate',
+            'vacancies' => 'Multiple',
+            'apply_method' => 'Online',
+            'organization' => 'NADRA',
+            'salary' => '40,000 / Month + Incentive',
             'official_source_url' => 'https://careers.nadra.gov.pk',
             'official_apply_url' => 'https://careers.nadra.gov.pk',
-            'last_checked_date' => date('F d, Y'),
+            'last_checked' => 'September 28, 2026',
+            'deadline' => 'October 25, 2026',
+            'also_apply_title' => 'Scholarship at Polytechnic di Torino University Italy 2025',
+            'also_apply_url' => '/category/jobs',
             'job_description' => '<p>The <strong>National Database & Registration Authority (NADRA)</strong> has officially announced recruitment for <strong>Scanning Operators</strong> across multiple regional offices in Pakistan for 2026. This announcement provides contract employment for male and female candidates holding Intermediate or Bachelor qualifications with basic computer typing skills.</p><p>Eligible candidates from Lahore, Rawalpindi, Islamabad, Karachi, Peshawar, and Quetta are encouraged to review the eligibility criteria, age limits, and online application process below before submitting their forms before the deadline.</p>',
             'who_can_apply' => '<p>Male and female citizens of Pakistan holding a valid CNIC and domicile of the respective district can apply. Fresh Intermediate (FA/FSc/ICS) candidates with typing speed of at least 30 WPM and basic computer knowledge are eligible. Age limit is 18 to 28 years (with official age relaxation as per government rules).</p>',
             'eligibility_criteria' => '<ul>
@@ -47,8 +50,8 @@ class CreateDemoJobCommand extends Command
                     'name' => 'Scanning Operator',
                     'vacancies' => '100',
                     'education' => 'Intermediate / ICS',
-                    'scale' => 'Contract (Rs. 45,000/month)',
-                    'location' => 'Regional Offices',
+                    'scale' => 'Contract (Rs. 40,000/month + Incentive)',
+                    'location' => 'Lahore',
                     'age_limit' => '18 - 28 Years',
                 ],
                 [
@@ -56,7 +59,7 @@ class CreateDemoJobCommand extends Command
                     'vacancies' => '50',
                     'education' => 'Bachelor (BA / BSc / Computer Science)',
                     'scale' => 'Contract (Rs. 55,000/month)',
-                    'location' => 'Headquarters & Regions',
+                    'location' => 'Lahore & Regional Offices',
                     'age_limit' => '20 - 30 Years',
                 ],
             ],
@@ -123,7 +126,7 @@ class CreateDemoJobCommand extends Command
             ]
         );
 
-        $this->info("✔ Demo Job Post Created Successfully!");
+        $this->info("✔ Demo Job Post Updated Successfully!");
         $this->line("  Title: {$post->name}");
         $this->line("  URL: " . url($slugKey));
 
