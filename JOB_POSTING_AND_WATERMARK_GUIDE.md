@@ -120,17 +120,30 @@ Barae meharbani nayi post publish karte waqt is checklist ko zaroor verify karai
 
 ## 🚀 5. Live Production Deployment Commands (cPanel)
 
-Jab aap code ya database live cPanel par deploy karain, terminal par ye commands chalayein:
+Jab aap code ya database live cPanel par deploy karain, terminal par ye command chalayein:
 
 ```bash
-cd ~/careerinpak.com
-git fetch origin main
-git reset --hard origin/main
-php artisan cms:site-setup
-php artisan cms:generate-watermark --text=careerinpak.com
-php artisan cms:media:insert-watermark
-php artisan optimize:clear
+cd ~/careerinpak.com && git fetch origin main && git reset --hard origin/main && php artisan cms:site-setup && php artisan cms:convert-images-to-webp && php artisan cms:generate-watermark --text=careerinpak.com && php artisan cms:media:insert-watermark && php artisan cms:enable-litespeed-cache && php artisan tinker --execute="\App\Services\LlmsTxtService::generate();" && php artisan optimize:clear
 ```
+
+---
+
+## 🤖 6. AI Pair-Posting Workflow & Quality Checkpoints
+
+CareerInPak par post publishing ka **2-Step Workflow**:
+
+1. **Step 1 (Raw Input):** Aap sirf job ka raw data ya ad picture/link AI Assistant ko dein.
+2. **Step 2 (Auto Generation & Push):** AI Assistant automatic 11-section template engine (`JobPostTemplateService::render($jobData)`) use kar ke post create karega, SEO & AdSense rules enforce karega, Git push karega, aur aap ko cPanel deploy command provide karega.
+
+### ✅ Mandatory Quality Checkpoints (Every Post Must Satisfy):
+- [x] **Crisp Black Text (`#111111`):** High contrast body text with bold highlights.
+- [x] **Red Banner Headings:** Solid red (`#e53935`) background with left blue border accent (`5px solid #007bff`).
+- [x] **Dynamic Deadline Notice Box:** Active light blue (`#eef7ff`) countdown vs. Expired light red (`#fdf2f2`) alert box.
+- [x] **Google Jobs Schema (`schema.org/JobPosting`):** Embedded JSON-LD script for rich snippets.
+- [x] **Clean Thumbnails + Watermarked Full Ad Image:** Automatic `careerinpak.com` watermark on main ad picture only.
+- [x] **Automatic WebP Conversion:** Next-Gen WebP encoding for ultra-fast loading.
+- [x] **Dynamic `llms.txt` Feed:** Real-time update of AI agent discoverability file.
+- [x] **Git Pushed & Live cPanel Command:** Clean git sync and copy-paste live server deployment command.
 
 ---
 

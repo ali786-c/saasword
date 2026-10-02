@@ -541,3 +541,36 @@ Do not leave files like:
 - `temp-publish-job.php`
 - `temp-inspect-posting-flow.php`
 - temporary schema scripts
+
+## 16. AI Pair-Posting Protocol (Local-to-cPanel Workflow)
+
+To publish any job post efficiently, follow this exact 2-Step Workflow:
+
+### Step 1: User Provides Raw Job Data
+The user provides basic raw job information (e.g., job title, ad picture, organization, deadline, key positions, or official link).
+
+### Step 2: AI Automated Post Generation & Publishing
+The AI assistant takes the raw input and automatically:
+1. Formats the post using `JobPostTemplateService::render($jobData)`.
+2. Enforces all 11-section SEO & AdSense compliance rules:
+   - High-contrast body text (`#111111`) with bold entity highlights.
+   - Red banner headings (`#e53935`) with white text and left blue accent border (`5px solid #007bff`).
+   - Dynamic Last Date / Expiry Box (Active light blue `#eef7ff` with countdown vs. Expired light red `#fdf2f2` with ❌ alert).
+   - Google Jobs `schema.org/JobPosting` JSON-LD structured data block.
+   - Bilingual English body text + Urdu RTL Nastaliq box for "How to Apply".
+   - Official advertisement picture with automatic `careerinpak.com` watermark (thumbnails stay 100% clean).
+3. Creates the post locally in the database and flushes cache.
+4. Auto-commits and pushes changes to GitHub (`origin/main`).
+5. Updates dynamic `llms.txt` and `llms-full.txt` feeds.
+6. Provides the user with the 1-line cPanel deployment command to sync live server.
+
+### AI Pair-Posting Quality Checkpoints:
+- [x] **Crisp Black Text (`#111111`):** High readability with bold entity highlights.
+- [x] **Red Banner Headings:** Solid red (`#e53935`) background with left blue border accent (`5px solid #007bff`).
+- [x] **Dynamic Deadline Notice Box:** Active light blue (`#eef7ff`) countdown vs. Expired light red (`#fdf2f2`) alert box.
+- [x] **Google Jobs Schema (`schema.org/JobPosting`):** Embedded JSON-LD script for search engine rich snippets.
+- [x] **Clean Thumbnails + Watermarked Full Ad Image:** Automatic `careerinpak.com` watermark on main ad picture only.
+- [x] **Automatic WebP Conversion:** Next-Gen WebP encoding for ultra-fast image loading.
+- [x] **Dynamic `llms.txt` Feed:** Real-time update of AI agent discoverability file upon post creation.
+- [x] **Git Pushed & Live cPanel Command:** Clean git sync and copy-paste live server deployment command.
+
