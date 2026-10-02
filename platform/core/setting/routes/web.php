@@ -90,6 +90,12 @@ Route::group(['namespace' => 'Botble\Setting\Http\Controllers'], function (): vo
                     'permission' => 'settings.media',
                     'middleware' => 'preventDemo',
                 ]);
+
+                Route::post('watermark-preview', [
+                    'as' => 'media.watermark-preview',
+                    'uses' => 'MediaSettingController@watermarkPreview',
+                    'permission' => 'settings.media',
+                ]);
             });
 
             Route::prefix('license')->name('license.')->group(function (): void {

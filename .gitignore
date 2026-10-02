@@ -27,6 +27,7 @@ __MACOSX
 public/vendor/core
 !public/vendor/core/core/media/js/media.js
 !public/vendor/core/core/media/js/integrate.js
+!public/vendor/core/core/setting/js/media.js
 
 _ide_helper.php
 yarn.lock

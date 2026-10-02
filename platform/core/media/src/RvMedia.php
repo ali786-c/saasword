@@ -776,6 +776,101 @@ class RvMedia
         return true;
     }
 
+    public function generateWatermarkObject(int $imageWidth = 800, array $overrideParams = [])
+    {
+        $type = $overrideParams['media_watermark_type'] ?? setting('media_watermark_type', 'image');
+
+        if ($type === 'text') {
+            $text = $overrideParams['media_watermark_text'] ?? setting('media_watermark_text', config('app.name'));
+            if (empty($text)) {
+                $text = config('app.name');
+            }
+
+            $color = $overrideParams['media_watermark_text_color'] ?? setting('media_watermark_text_color', '#ffffff');
+            $size = (int) ($overrideParams['media_watermark_text_size'] ?? setting('media_watermark_text_size', 28));
+            $svgWidth = (int) max(100, strlen($text) * $size * 0.7 + 40);
+            $svgHeight = (int) max(40, $size * 1.6 + 20);
+
+            $svg = '<svg xmlns="http://www.w3.org/2000/svg" width="' . $svgWidth . '" height="' . $svgHeight . '">
+                <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="' . $color . '" font-size="' . $size . '" font-family="Arial, sans-serif" font-weight="bold">' . htmlspecialchars($text) . '</text>
+            </svg>';
+
+            try {
+                $watermark = $this->imageManager()->read($svg);
+            } catch (Throwable) {
+                return null;
+            }
+        } else {
+            $watermarkImage = $overrideParams['media_watermark_source'] ?? setting('media_watermark_source', $this->getConfig('watermark.source'));
+            if (! $watermarkImage) {
+                return null;
+            }
+
+            $watermarkPath = $this->getRealPath($watermarkImage);
+
+            try {
+                if ($this->isUsingCloud()) {
+                    $watermarkContent = null;
+                    try {
+                        $watermarkContent = Storage::get($watermarkImage);
+                    } catch (Throwable) {
+                        $watermarkContent = @file_get_contents($watermarkPath);
+                    }
+                    if (! $watermarkContent) {
+                        return null;
+                    }
+                    $watermark = $this->imageManager()->read($watermarkContent);
+                } else {
+                    if (! File::exists($watermarkPath)) {
+                        return null;
+                    }
+                    $watermark = $this->imageManager()->read($watermarkPath);
+                }
+            } catch (Throwable) {
+                return null;
+            }
+
+            $sizePercent = (int) ($overrideParams['media_watermark_size'] ?? setting('media_watermark_size', $this->getConfig('watermark.size')));
+            $watermarkSize = (int) round($imageWidth * ($sizePercent / 100), 2);
+
+            $watermark->scale($watermarkSize);
+        }
+
+        $watermarkAngle = (int) ($overrideParams['media_watermark_angle'] ?? setting('media_watermark_angle', 0));
+        if ($watermarkAngle !== 0) {
+            $watermark->rotate($watermarkAngle);
+        }
+
+        return $watermark;
+    }
+
+    public function generateWatermarkPreview(array $params = []): ?string
+    {
+        try {
+            $sampleImage = $this->imageManager()->create(800, 500)->fill('#2c3e50');
+
+            $watermark = $this->generateWatermarkObject(800, $params);
+            if (! $watermark) {
+                return null;
+            }
+
+            $position = $params['media_watermark_position'] ?? setting('media_watermark_position', $this->getConfig('watermark.position'));
+            $posX = (int) ($params['media_watermark_position_x'] ?? setting('media_watermark_position_x', setting('watermark_position_x') ?: $this->getConfig('watermark.x')));
+            $posY = (int) ($params['media_watermark_position_y'] ?? setting('media_watermark_position_y', setting('watermark_position_y') ?: $this->getConfig('watermark.y')));
+            $opacity = (int) ($params['media_watermark_opacity'] ?? setting('media_watermark_opacity', setting('watermark_opacity') ?: $this->getConfig('watermark.opacity')));
+
+            $sampleImage->place($watermark, $position, $posX, $posY, $opacity);
+
+            $encoded = $sampleImage->encode(new AutoEncoder());
+
+            return 'data:image/jpeg;base64,' . base64_encode((string) $encoded);
+        } catch (Throwable $exception) {
+            BaseHelper::logError($exception);
+
+            return null;
+        }
+    }
+
     public function insertWatermark(string $image, bool $force = false): bool
     {
         if (! $image) {
@@ -786,43 +881,28 @@ class RvMedia
             return false;
         }
 
-        $watermarkImage = setting('media_watermark_source', $this->getConfig('watermark.source'));
-
-        if (! $watermarkImage) {
-            return false;
-        }
-
-        $watermarkPath = $this->getRealPath($watermarkImage);
-
         try {
             if ($this->isUsingCloud()) {
-                $watermarkContent = null;
                 $imageContent = null;
-
                 try {
-                    $watermarkContent = Storage::get($watermarkImage);
                     $imageContent = Storage::get($image);
                 } catch (Throwable $exception) {
                     BaseHelper::logError($exception);
-
-                    $watermarkContent = @file_get_contents($watermarkPath);
                     $imageContent = @file_get_contents($this->getRealPath($image));
                 }
 
-                if (! $watermarkContent || ! $imageContent) {
+                if (! $imageContent) {
                     return false;
                 }
 
-                $watermark = $this->imageManager()->read($watermarkContent);
                 $imageSource = $this->imageManager()->read($imageContent);
             } else {
-                if (! File::exists($watermarkPath)) {
+                $realPath = $this->getRealPath($image);
+                if (! File::exists($realPath)) {
                     return false;
                 }
 
-                $watermark = $this->imageManager()->read($watermarkPath);
-
-                $imageSource = $this->imageManager()->read($this->getRealPath($image));
+                $imageSource = $this->imageManager()->read($realPath);
             }
         } catch (Throwable $exception) {
             BaseHelper::logError($exception);
@@ -830,22 +910,9 @@ class RvMedia
             return false;
         }
 
-        // 10% less than an actual image (play with this value)
-        // Watermark will be 10 less than the actual width of the image
-        $watermarkSize = (int) round(
-            $imageSource->width() * ((int) setting(
-                'media_watermark_size',
-                $this->getConfig('watermark.size')
-            ) / 100),
-            2
-        );
-
-        // Resize watermark width keep height auto
-        $watermark->scale($watermarkSize);
-
-        $watermarkAngle = (int) setting('media_watermark_angle', 0);
-        if ($watermarkAngle !== 0) {
-            $watermark->rotate($watermarkAngle);
+        $watermark = $this->generateWatermarkObject($imageSource->width());
+        if (! $watermark) {
+            return false;
         }
 
         $imageSource->place(

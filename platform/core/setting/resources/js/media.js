@@ -71,4 +71,33 @@ $(() => {
             $(el).prop('checked', checked)
         })
     })
+
+    $(document).on('click', '#btn-preview-watermark', (event) => {
+        event.preventDefault()
+
+        const $btn = $(event.currentTarget)
+        const $form = $btn.closest('form')
+        const previewUrl = '/admin/settings/media/watermark-preview'
+
+        Botble.showButtonLoading($btn)
+
+        $httpClient
+            .make()
+            .withButtonLoading($btn)
+            .postForm(previewUrl, new FormData($form[0]))
+            .then(({ data }) => {
+                if (data.data && data.data.preview) {
+                    $('#watermark-preview-img').attr('src', data.data.preview)
+                    $('#watermark-preview-card').removeClass('d-none').show()
+                } else if (data.message) {
+                    Botble.showError(data.message)
+                }
+            })
+            .catch((err) => {
+                Botble.showError(err.response?.data?.message || 'Error generating preview')
+            })
+            .finally(() => {
+                Botble.hideButtonLoading($btn)
+            })
+    })
 })

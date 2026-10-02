@@ -97,4 +97,20 @@ class MediaSettingController extends SettingController
                 'next' => $offset + $limit,
             ]);
     }
+
+    public function watermarkPreview(Request $request): BaseHttpResponse
+    {
+        $previewDataUrl = RvMedia::generateWatermarkPreview($request->all());
+
+        if (! $previewDataUrl) {
+            return $this
+                ->httpResponse()
+                ->setError()
+                ->setMessage('Unable to generate watermark preview. Please check watermark settings.');
+        }
+
+        return $this
+            ->httpResponse()
+            ->setData(['preview' => $previewDataUrl]);
+    }
 }

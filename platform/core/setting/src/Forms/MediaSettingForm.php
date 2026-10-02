@@ -642,6 +642,18 @@ class MediaSettingForm extends SettingForm
                     )
             )
             ->add('row_1', HtmlField::class, HtmlFieldOption::make()->content('<div class="row">'))
+            ->add('media_watermark_type', SelectField::class, [
+                'label' => 'Watermark Type',
+                'selected' => setting('media_watermark_type', 'image'),
+                'choices' => [
+                    'image' => 'Image Logo Watermark',
+                    'text' => 'Text Watermark',
+                ],
+                'attr' => [
+                    'id' => 'media_watermark_type_select',
+                ],
+                'colspan' => 6,
+            ])
             ->add(
                 'media_watermark_source',
                 MediaImageField::class,
@@ -651,6 +663,38 @@ class MediaSettingForm extends SettingForm
                     ->value(setting('media_watermark_source'))
                     ->colspan(6)
             )
+            ->add('media_watermark_text', TextField::class, [
+                'label' => 'Watermark Text',
+                'value' => setting('media_watermark_text', config('app.name')),
+                'attr' => [
+                    'placeholder' => 'Enter text for watermark...',
+                ],
+                'help_block' => [
+                    'text' => 'Text to overlay on images when Watermark Type is set to Text',
+                ],
+                'colspan' => 6,
+            ])
+            ->add('media_watermark_text_color', TextField::class, [
+                'label' => 'Watermark Text Color (HEX)',
+                'value' => setting('media_watermark_text_color', '#ffffff'),
+                'attr' => [
+                    'placeholder' => '#ffffff',
+                ],
+                'help_block' => [
+                    'text' => 'Hex color code, e.g. #ffffff (white) or #ff0000 (red)',
+                ],
+                'colspan' => 3,
+            ])
+            ->add('media_watermark_text_size', NumberField::class, [
+                'label' => 'Watermark Font Size (px)',
+                'value' => setting('media_watermark_text_size', 28),
+                'attr' => [
+                    'placeholder' => '28',
+                    'min' => 10,
+                    'max' => 200,
+                ],
+                'colspan' => 3,
+            ])
             ->add('media_watermark_size', NumberField::class, [
                 'label' => trans('core/setting::setting.media.watermark_size'),
                 'value' => setting('media_watermark_size', RvMedia::getConfig('watermark.size')),
@@ -725,6 +769,27 @@ class MediaSettingForm extends SettingForm
                 ],
                 'colspan' => 3,
             ])
+            ->add(
+                'media_watermark_preview_html',
+                HtmlField::class,
+                HtmlFieldOption::make()
+                    ->content('
+                        <div class="col-12 my-3">
+                            <button type="button" class="btn btn-info text-white me-2" id="btn-preview-watermark">
+                                <i class="fa fa-eye me-1"></i> Live Watermark Preview
+                            </button>
+                            <div class="mt-3 text-center d-none" id="watermark-preview-card">
+                                <div class="card p-3 shadow-sm border text-start">
+                                    <h6 class="card-title fw-bold mb-2"><i class="fa fa-image me-1"></i> Watermark Preview</h6>
+                                    <div class="position-relative d-inline-block text-center bg-dark p-2 rounded">
+                                        <img id="watermark-preview-img" src="" class="img-fluid rounded border" style="max-height: 350px;" alt="Watermark Preview" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    ')
+                    ->colspan(6)
+            )
             ->add(
                 'media_watermark_warning',
                 AlertField::class,
