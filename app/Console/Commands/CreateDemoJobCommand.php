@@ -127,6 +127,25 @@ class CreateDemoJobCommand extends Command
             ]
         );
 
+        if (class_exists(\Botble\Language\Models\LanguageMeta::class)) {
+            $langCode = class_exists(\Botble\Language\Facades\Language::class)
+                ? \Botble\Language\Facades\Language::getDefaultLanguageCode()
+                : 'en_US';
+
+            \Botble\Language\Models\LanguageMeta::query()->firstOrCreate(
+                [
+                    'reference_id' => $post->id,
+                    'reference_type' => $post::class,
+                ],
+                [
+                    'lang_meta_code' => $langCode ?: 'en_US',
+                ]
+            );
+        }
+
+        \Botble\Support\Services\Cache\Cache::make(Post::class)->flush();
+        $this->callSilent('optimize:clear');
+
         $this->info("✔ Demo Job Post Updated Successfully!");
         $this->line("  Title: {$post->name}");
         $this->line("  URL: " . url($slugKey));
