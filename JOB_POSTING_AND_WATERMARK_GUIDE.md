@@ -93,6 +93,20 @@ Jab bhi aap koi **Advertisement Picture** upload karenge:
 2. **Full Advertisement Picture (Modal View / High-Res View):** Full-size original advertisement image par automatic **bottom-right** corner mein `careerinpak.com` watermark stamp ho jata hai.
 3. **Fully Automatic Process:** Aap ko sirf image upload karni hai, thumbnail clean rahega aur main full ad image par watermark automatically lag jaye ga.
 
+### 📐 Recommended Image Dimensions & Specifications:
+
+1. **Post Featured Image / Thumbnail (Best for Google & Social Shares):**
+   * **Dimensions:** `1200 x 630` pixels (Landscape 16:9 / 1.91:1 ratio)
+   * **Why:** This is the standard size for Google Search, Facebook OpenGraph, and Twitter/X Cards. It prevents awkward cropping on post cards.
+
+2. **Official Newspaper Advertisement Image (Full Job Ad View):**
+   * **Dimensions:** `1000 x 1400` pixels (Portrait 4:5 ratio)
+   * **Why:** Newspaper job ads are long vertically. Portrait size keeps text clear and readable.
+
+3. **Format & Compression:**
+   * **Upload Format:** JPG or PNG (System **automatically converts to WebP** for 80% size reduction!).
+   * **Ideal Size:** Under `1 MB` before upload.
+
 ### 💻 CLI Commands for Watermark Management:
 
 ```bash
