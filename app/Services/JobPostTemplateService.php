@@ -5,7 +5,8 @@ namespace App\Services;
 class JobPostTemplateService
 {
     /**
-     * Render the full 11-section Job Post Template HTML with guaranteed inline red/blue banner headings.
+     * Render the full 11-section Job Post Template HTML with guaranteed inline red/blue banner headings,
+     * dynamic expiry notice boxes, crisp black text, and schema.org/JobPosting JSON-LD.
      *
      * @param array $data Structured job data
      * @return string Validated HTML string
@@ -22,7 +23,7 @@ class JobPostTemplateService
         $officialSourceUrl = e($data['official_source_url'] ?? 'https://careers.nadra.gov.pk');
         $officialApplyUrl = e($data['official_apply_url'] ?? $officialSourceUrl);
         $lastChecked = e($data['last_checked'] ?? $data['last_checked_date'] ?? date('F d, Y'));
-        $deadline = e($data['deadline'] ?? 'See Official Advt');
+        $deadline = e($data['deadline'] ?? 'October 30, 2026');
 
         $jobDescription = $data['job_description'] ?? '';
         $whoCanApply = $data['who_can_apply'] ?? '';
@@ -55,6 +56,36 @@ class JobPostTemplateService
         $summaryHStyle = 'background-color: #e53935 !important; border-left: 5px solid #007bff !important; color: #ffffff !important; padding: 10px 16px !important; font-size: 17px !important; font-weight: 700 !important; border-radius: 4px !important; margin-bottom: 18px !important; display: block !important;';
         $alsoStyle = 'background-color: #e53935 !important; border-left: 5px solid #007bff !important; color: #ffffff !important; padding: 12px 20px !important; font-size: 16px !important; font-weight: 700 !important; border-radius: 4px !important; margin: 25px 0 !important; display: block !important;';
 
+        // Dynamic Deadline / Expiry Notice Box Calculator (Pic 2 & Pic 3 Style)
+        $deadlineTime = strtotime($deadline);
+        $todayTime = strtotime(date('Y-m-d'));
+        $deadlineBox = '';
+
+        if ($deadlineTime !== false) {
+            $daysRemaining = (int) round(($deadlineTime - $todayTime) / (60 * 60 * 24));
+            if ($daysRemaining >= 0) {
+                // Active Notice Box (Pic 3 Style)
+                $deadlineBox = "
+                <div class=\"job-deadline-box active-notice mb-4\" style=\"background-color: #eef7ff; border: 1px solid #cce5ff; border-left: 5px solid #007bff; border-radius: 6px; padding: 16px 20px;\">
+                    <div class=\"d-flex align-items-center mb-1\">
+                        <span style=\"font-size: 20px; margin-right: 10px;\">📅</span>
+                        <strong style=\"color: #004085; font-size: 16px;\">Last Date to Apply: {$deadline}</strong>
+                    </div>
+                    <p class=\"mb-0\" style=\"margin-left: 32px; font-size: 14px; color: #111111 !important;\">You have <strong style=\"color: #004085;\">{$daysRemaining} days</strong> remaining to submit your application.</p>
+                </div>";
+            } else {
+                // Expired Notice Box (Pic 2 Style)
+                $deadlineBox = "
+                <div class=\"job-deadline-box expired-notice mb-4\" style=\"background-color: #fdf2f2; border: 1px solid #f8d7da; border-left: 5px solid #d32f2f; border-radius: 6px; padding: 16px 20px;\">
+                    <div class=\"d-flex align-items-center mb-1\">
+                        <span style=\"font-size: 20px; margin-right: 10px; color: #d32f2f; font-weight: bold;\">❌</span>
+                        <strong style=\"color: #721c24; font-size: 16px;\">This Job Has Expired</strong>
+                    </div>
+                    <p class=\"mb-0\" style=\"margin-left: 32px; font-size: 14px; color: #111111 !important;\">Last date was <strong>{$deadline}</strong>. <a href=\"/category/jobs\" style=\"color: #007bff; text-decoration: underline; font-weight: bold;\">View Latest Jobs 2026 →</a></p>
+                </div>";
+            }
+        }
+
         // Build Vacant Positions Table Rows
         $positionRows = '';
         if (is_array($positions) && ! empty($positions)) {
@@ -67,7 +98,7 @@ class JobPostTemplateService
                 $posLoc = e($pos['location'] ?? $location);
                 $posAge = e($pos['age_limit'] ?? '18-35 Years');
 
-                $positionRows .= "<tr>
+                $positionRows .= "<tr style=\"color: #111111;\">
                     <td>{$sr}</td>
                     <td style=\"font-weight: 700;\">{$name}</td>
                     <td><span class=\"badge bg-info text-dark\">{$posVacancies}</span></td>
@@ -84,7 +115,7 @@ class JobPostTemplateService
         if (is_array($documents)) {
             foreach ($documents as $doc) {
                 $docText = e($doc);
-                $documentItems .= "<li class=\"list-group-item d-flex align-items-center py-2\">
+                $documentItems .= "<li class=\"list-group-item d-flex align-items-center py-2\" style=\"color: #111111;\">
                     <span class=\"mr-2 text-success\">✔</span> {$docText}
                 </li>";
             }
@@ -95,7 +126,7 @@ class JobPostTemplateService
         if (is_array($mistakes)) {
             foreach ($mistakes as $mis) {
                 $misText = e($mis);
-                $mistakeItems .= "<li class=\"mb-1\">{$misText}</li>";
+                $mistakeItems .= "<li class=\"mb-1\" style=\"color: #111111;\">{$misText}</li>";
             }
         }
 
@@ -106,7 +137,7 @@ class JobPostTemplateService
             $selectionBlock = "
             <div class=\"job-section mb-4\">
                 <div style=\"{$hStyle}\">7. Official Selection Process</div>
-                <ol class=\"pl-4 text-secondary\" style=\"line-height: 1.8;\">
+                <ol class=\"pl-4\" style=\"line-height: 1.8; color: #111111 !important;\">
                     " . (is_array($selectionProcess) ? "<li>{$selText}</li>" : "<li>{$selText}</li>") . "
                 </ol>
             </div>";
@@ -119,8 +150,8 @@ class JobPostTemplateService
             $adImageBlock = "
             <div class=\"job-section mb-4 text-center\">
                 <div style=\"{$hStyle}\" class=\"text-left\">9. Official Job Advertisement</div>
-                <div class=\"p-2 border rounded bg-white shadow-sm d-inline-block mw-100 mb-3\">
-                    <img src=\"{$safeAdUrl}\" alt=\"Official Job Advertisement\" class=\"img-fluid rounded\" style=\"max-height: 700px; width: auto;\">
+                <div class=\"p-2 border rounded bg-white shadow-sm d-inline-block mw-100 mb-3\" style=\"min-height: 350px; contain: layout;\">
+                    <img src=\"{$safeAdUrl}\" alt=\"Official Job Advertisement\" class=\"img-fluid rounded\" width=\"800\" height=\"1000\" loading=\"lazy\" style=\"max-height: 700px; width: auto; height: auto; aspect-ratio: 4 / 5;\">
                 </div>
                 <div>
                     <a href=\"{$safeAdUrl}\" download target=\"_blank\" class=\"btn btn-outline-primary font-weight-bold btn-sm\">
@@ -139,12 +170,57 @@ class JobPostTemplateService
             </div>";
         }
 
+        // Generate schema.org/JobPosting JSON-LD for Google Jobs SEO
+        $isoPosted = date('Y-m-d', strtotime($postedOn) ?: time());
+        $isoValidThrough = $deadlineTime ? date('Y-m-d', $deadlineTime) : date('Y-m-d', strtotime('+30 days'));
+        $cleanDesc = e(strip_tags($jobDescription));
+
+        $schemaJson = json_encode([
+            '@context' => 'https://schema.org/',
+            '@type' => 'JobPosting',
+            'title' => e($data['title'] ?? $organization . ' Jobs 2026'),
+            'description' => $cleanDesc,
+            'identifier' => [
+                '@type' => 'PropertyValue',
+                'name' => $organization,
+                'value' => md5($organization . $postedOn),
+            ],
+            'datePosted' => $isoPosted,
+            'validThrough' => $isoValidThrough,
+            'employmentType' => 'FULL_TIME',
+            'hiringOrganization' => [
+                '@type' => 'Organization',
+                'name' => $organization,
+                'sameAs' => $officialSourceUrl,
+            ],
+            'jobLocation' => [
+                '@type' => 'Place',
+                'address' => [
+                    '@type' => 'PostalAddress',
+                    'addressLocality' => $location,
+                    'addressCountry' => 'PK',
+                ],
+            ],
+            'baseSalary' => [
+                '@type' => 'MonetaryAmount',
+                'currency' => 'PKR',
+                'value' => [
+                    '@type' => 'QuantitativeValue',
+                    'value' => $salary,
+                    'unitText' => 'MONTH',
+                ],
+            ],
+        ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+
+        $schemaBlock = "<script type=\"application/ld+json\">\n{$schemaJson}\n</script>";
+
         // Build Full HTML
         return <<<HTML
-<div class="job-post-template font-sans">
+{$schemaBlock}
+<div class="job-post-template font-sans" style="color: #111111 !important;">
 
   <!-- 1. Job Summary Box -->
-  <div class="job-summary-box" style="background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 20px; margin-bottom: 25px; box-shadow: 0 3px 10px rgba(0,0,0,0.04);">
+  <div class="job-summary-box" style="background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 20px; margin-bottom: 25px; box-shadow: 0 3px 10px rgba(0,0,0,0.04); color: #111111 !important;">
     <div style="{$summaryHStyle}">📋 Job Summary</div>
     <div class="row" style="font-size: 15px; line-height: 1.8;">
       <div class="col-md-6 mb-2"><strong>Posted on:</strong> {$postedOn}</div>
@@ -159,10 +235,12 @@ class JobPostTemplateService
     </div>
   </div>
 
+  {$deadlineBox}
+
   <!-- 2. Job Description -->
   <div class="job-section mb-4">
     <div style="{$hStyle}">1. Job Description</div>
-    <div class="job-text lead-sm text-secondary" style="line-height: 1.8;">
+    <div class="job-text lead-sm" style="line-height: 1.8; color: #111111 !important; font-size: 16px;">
       {$jobDescription}
     </div>
   </div>
@@ -175,7 +253,7 @@ class JobPostTemplateService
   <!-- 3. Who Can Apply -->
   <div class="job-section mb-4">
     <div style="{$hStyle}">2. Who Can Apply</div>
-    <div class="job-text text-secondary" style="line-height: 1.8;">
+    <div class="job-text" style="line-height: 1.8; color: #111111 !important; font-size: 16px;">
       {$whoCanApply}
     </div>
   </div>
@@ -183,7 +261,7 @@ class JobPostTemplateService
   <!-- 4. Eligibility Criteria -->
   <div class="job-section mb-4">
     <div style="{$hStyle}">3. Eligibility Criteria</div>
-    <div class="job-text text-secondary" style="line-height: 1.8;">
+    <div class="job-text" style="line-height: 1.8; color: #111111 !important; font-size: 16px;">
       {$eligibilityCriteria}
     </div>
   </div>
@@ -192,7 +270,7 @@ class JobPostTemplateService
   <div class="job-section mb-4">
     <div style="{$hStyle}">4. Vacant Positions</div>
     <div class="table-responsive">
-      <table class="table table-bordered table-striped align-middle">
+      <table class="table table-bordered table-striped align-middle" style="color: #111111 !important;">
         <thead style="background-color: #5869DA; color: #ffffff;">
           <tr>
             <th>Sr #</th>
@@ -224,7 +302,7 @@ class JobPostTemplateService
   <div class="job-section mb-4">
     <div style="{$hStyle}">6. Application Mistakes to Avoid</div>
     <div class="p-3 border-left border-warning bg-light rounded" style="border-left-width: 5px !important;">
-      <ul class="mb-0 text-dark small" style="line-height: 1.7;">
+      <ul class="mb-0 small" style="line-height: 1.7; color: #111111 !important;">
         {$mistakeItems}
       </ul>
     </div>
@@ -239,7 +317,7 @@ class JobPostTemplateService
       <span dir="rtl">درخواست جمع کروانے کا طریقہ</span>
     </div>
     <div class="p-4 bg-light border rounded">
-      <div dir="rtl" style="text-align: right; font-family: 'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', 'Segoe UI', Tahoma, sans-serif; font-size: 17px; line-height: 2.2;" class="text-dark">
+      <div dir="rtl" style="text-align: right; font-family: 'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', 'Segoe UI', Tahoma, sans-serif; font-size: 17px; line-height: 2.2; color: #111111 !important;">
         {$howToApplyUrdu}
       </div>
     </div>
@@ -250,7 +328,7 @@ class JobPostTemplateService
   <!-- 10. Official Source & Verification -->
   <div class="job-section mb-4">
     <div style="{$hStyle}">10. Official Source & Verification</div>
-    <div class="p-4 border rounded bg-white text-center shadow-sm">
+    <div class="p-4 border rounded bg-white text-center shadow-sm" style="color: #111111 !important;">
       <p class="small text-muted mb-3">CareerInPak collected this information from the official advertisement or official portal. Candidates should verify the details from the official source before applying. If you find an error, contact us at <a href="mailto:info@careerinpak.com">info@careerinpak.com</a>.</p>
       <div class="d-flex justify-content-center flex-wrap gap-2">
         <a href="{$officialApplyUrl}" target="_blank" rel="nofollow noopener" class="btn btn-danger btn-lg font-weight-bold px-4 py-2 text-white">

@@ -1,0 +1,22 @@
+# CareerInPak — Pakistan Government & Private Jobs Portal
+
+> CareerInPak provides authentic daily updates for government jobs, PPSC, FPSC, NTS, Defence, Banking, and Private sector vacancies across Pakistan.
+
+## Primary Job Categories & Resources
+
+- [Federal Government Jobs](https://careerinpak.com/category/federal-jobs): Federal Board of Revenue (FBR), FPSC, Ministries, and Pak Army recruitment announcements.
+- [Punjab Public Service Commission Jobs](https://careerinpak.com/category/ppsc): PPSC advertisement notices, Assistant Director, Sub Inspector, and Punjab government vacancies.
+- [Sindh Public Service Commission Jobs](https://careerinpak.com/category/spsc): SPSC announcements, Karachi, Hyderabad, and Sukkur government opportunities.
+- [Khyber Pakhtunkhwa Jobs](https://careerinpak.com/category/kppsc): KPPSC recruitment tests, Peshawar, and regional government posts.
+- [Banking Sector Jobs](https://careerinpak.com/category/banking): State Bank of Pakistan (SBP), National Bank (NBP), Habib Bank (HBL), and commercial banking schemes.
+- [Testing Agencies (NTS / PTS / OTS)](https://careerinpak.com/category/nts): National Testing Service, PTS, and OTS online application forms and roll number slips.
+
+## Machine-Readable Resources & Feeds
+
+- [XML Sitemap Index](https://careerinpak.com/sitemap.xml): Machine-readable index of all job posts, categories, and tags.
+- [RSS Feed](https://careerinpak.com/feed): Live RSS 2.0 feed of latest published job alerts.
+- [Full Text Documentation](https://careerinpak.com/llms-full.txt): Comprehensive structural specification for AI agents.
+
+## Core Features & Guidelines
+
+- [Job Posting & Watermark SOP](https://careerinpak.com/JOB_POSTING_AND_WATERMARK_GUIDE.md): Technical standard operating procedure for job publishing and automated image watermarking.

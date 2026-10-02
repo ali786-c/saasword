@@ -1,0 +1,35 @@
+# CareerInPak — Pakistan Government & Private Jobs Portal (Full Documentation)
+
+> CareerInPak is a leading career information portal delivering authentic daily job updates, official recruitment advertisements, syllabus details, and application procedures across Pakistan.
+
+## About CareerInPak
+
+CareerInPak aggregates, verifies, and publishes official hiring notifications from Pakistani federal and provincial government departments, public sector organizations (PAEC, KRL, NESCOM), armed forces, commercial banks, and private enterprises.
+
+## Primary Job Portals & Categories
+
+- [Federal Government Jobs](https://careerinpak.com/category/federal-jobs): Federal Board of Revenue (FBR), FPSC, Ministries, and Pak Army recruitment announcements.
+- [Punjab Public Service Commission Jobs](https://careerinpak.com/category/ppsc): PPSC advertisement notices, Assistant Director, Sub Inspector, and Punjab government vacancies.
+- [Sindh Public Service Commission Jobs](https://careerinpak.com/category/spsc): SPSC announcements, Karachi, Hyderabad, and Sukkur government opportunities.
+- [Khyber Pakhtunkhwa Jobs](https://careerinpak.com/category/kppsc): KPPSC recruitment tests, Peshawar, and regional government posts.
+- [Banking Sector Jobs](https://careerinpak.com/category/banking): State Bank of Pakistan (SBP), National Bank (NBP), Habib Bank (HBL), and commercial banking schemes.
+- [Testing Agencies (NTS / PTS / OTS)](https://careerinpak.com/category/nts): National Testing Service, PTS, and OTS online application forms and roll number slips.
+
+## Standard Job Post Structure
+
+Every job post published on CareerInPak includes:
+1. **Job Summary Table:** Quick reference for Posted Date, City, Required Education, Vacancies, Salary Range, and Official Source.
+2. **Dynamic Expiry Notice Box:** Real-time countdown for active applications and red alert badge for expired jobs.
+3. **Job Description & Who Can Apply:** Detailed eligibility criteria, domicile requirements, and age relaxation limits.
+4. **Vacant Positions Table:** Structured breakdown of job titles, pay scales (BPS/SPS), required qualifications, and seat counts.
+5. **Application Mistakes to Avoid:** Guidelines to prevent application rejection.
+6. **Selection Process:** Step-by-step recruitment procedure from screening test to interview.
+7. **Bilingual How to Apply:** Step-by-step instructions in English and Urdu (RTL Nastaliq typography).
+8. **Official Newspaper Advertisement Image:** High-resolution viewable and downloadable official newspaper clip with automated `careerinpak.com` watermark.
+9. **Google Jobs Schema (`schema.org/JobPosting`):** Embedded JSON-LD structured data for Google Search Jobs Rich Snippets.
+
+## Technical Feeds & Resources
+
+- [Sitemap](https://careerinpak.com/sitemap.xml): Complete URL sitemap index.
+- [RSS Feed](https://careerinpak.com/feed): Live RSS feed of latest job alerts.
+- [Job Posting Guide](https://careerinpak.com/JOB_POSTING_AND_WATERMARK_GUIDE.md): Technical SOP for publishing and watermarking.

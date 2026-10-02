@@ -15,7 +15,7 @@
                 <div class="entry-meta align-items-center meta-2 font-small color-muted">
                     @if ($post->author && $post->author->id)
                         <p class="mb-5">
-                            <span class="author-avatar"><img class="img-circle" src="{{ $post->author->avatar_url }}" alt="{{ $post->author->name }}" loading="lazy"></span>
+                            <span class="author-avatar"><img class="img-circle" src="{{ $post->author->avatar_url }}" alt="{{ $post->author->name }}" width="32" height="32" loading="lazy"></span>
                                 {{ __('By') }} <span class="author-name font-weight-bold">{{ $post->author->name }}</span>
                         </p>
                     @endif
@@ -48,8 +48,8 @@
         </div>
     </div>
     @if ($post->image)
-        <figure class="image mb-30 m-auto text-center border-radius-10">
-            <img class="border-radius-10" src="{{ RvMedia::getImageUrl($post->image) }}" alt="{{ $post->name }}" loading="lazy">
+        <figure class="image mb-30 m-auto text-center border-radius-10" style="min-height: 250px; contain: layout;">
+            <img class="border-radius-10" src="{{ RvMedia::getImageUrl($post->image) }}" alt="{{ $post->name }}" width="1200" height="630" loading="lazy" style="max-width: 100%; height: auto; aspect-ratio: 1200 / 630;">
         </figure>
     @endif
     <article class="entry-wraper mb-50">
