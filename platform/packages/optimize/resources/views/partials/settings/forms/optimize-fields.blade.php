@@ -30,7 +30,16 @@
             :checked="setting('media_convert_image_to_webp', true)"
             helper-text="Automatically converts uploaded PNG, JPG, and JPEG images to high-compression .webp format to boost Google PageSpeed performance."
         />
+        <div class="mt-3 pt-2 border-top">
+            <button type="button" onclick="if(confirm('Convert all existing JPG/PNG images in Media Library to WebP format now?')) { document.getElementById('form-convert-webp-action').submit(); }" class="btn btn-warning btn-sm font-weight-bold">
+                🔄 Convert All Existing Media Images to WebP Now
+            </button>
+        </div>
     </div>
+
+<form id="form-convert-webp-action" action="{{ route('optimize.settings.convert-webp') }}" method="POST" class="d-none">
+    @csrf
+</form>
 
     <h5 class="font-weight-bold mb-2">🧹 PageSpeed & HTML Minification Controls</h5>
 

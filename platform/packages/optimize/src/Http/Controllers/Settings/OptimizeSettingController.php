@@ -20,4 +20,12 @@ class OptimizeSettingController extends SettingController
     {
         return $this->performUpdate($request->validated());
     }
+
+    public function convertWebp(): BaseHttpResponse
+    {
+        \Illuminate\Support\Facades\Artisan::call('cms:convert-images-to-webp');
+
+        return $this->httpResponse()
+            ->setMessage('All existing images in Media Library have been converted to WebP format successfully!');
+    }
 }

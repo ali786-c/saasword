@@ -16,6 +16,12 @@ Route::group(['namespace' => 'Botble\Optimize\Http\Controllers'], function (): v
                 'uses' => 'Settings\OptimizeSettingController@update',
                 'permission' => 'optimize.settings',
             ]);
+
+            Route::post('optimize/convert-webp', [
+                'as' => 'optimize.settings.convert-webp',
+                'uses' => 'Settings\OptimizeSettingController@convertWebp',
+                'permission' => 'optimize.settings',
+            ]);
         });
     });
 });
