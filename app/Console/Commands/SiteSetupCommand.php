@@ -15,6 +15,7 @@ use Botble\Slug\Models\Slug;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use Botble\Base\Models\MetaBox as MetaBoxModel;
 
 use Botble\ACL\Models\User;
 
@@ -57,6 +58,31 @@ class SiteSetupCommand extends Command
      */
     protected array $homepageSections = [
         'single' => 'Jobs',
+    ];
+
+    /**
+     * Keyword-rich SEO copy blocks under the homepage grid. Each block gets
+     * its own h2 + paragraph targeting a distinct keyword cluster, then an
+     * internal-link list over every published category (slug-derived
+     * anchors: "PPSC Jobs 2026", "Pak Army Jobs"...) and the policy pages.
+     */
+    protected array $homepageSeoBlocks = [
+        [
+            'heading' => 'Latest Jobs in Pakistan 2026',
+            'text' => 'CareerInPak brings you the latest jobs in Pakistan 2026 from every corner of the country. Our team tracks announcements from federal and provincial departments, banks, universities and private companies, then publishes each listing with the official advertisement, eligibility criteria and a direct online apply link. Whether you are searching for today jobs in Pakistan or planning your next career move, this page is updated daily so you never miss a deadline.',
+        ],
+        [
+            'heading' => 'Government Jobs 2026 — PPSC, FPSC, NADRA & More',
+            'text' => 'Government jobs in Pakistan remain the most demanded career path, offering job security, allowances and a clear promotion track. We list every major announcement — PPSC jobs, FPSC jobs, NADRA jobs, police jobs, railway jobs and WAPDA jobs — with age limits, education requirements, domicile rules and test preparation guidance so you can apply with confidence.',
+        ],
+        [
+            'heading' => 'Pak Army Jobs & Forces Recruitment',
+            'text' => 'Joining the Pakistan Armed Forces is a matter of pride. From Pak Army jobs for soldiers and officers to Pakistan Navy and PAF recruitment, we publish registration dates, physical test standards, merit lists and final selection updates for every batch across all recruitment centres in Pakistan.',
+        ],
+        [
+            'heading' => 'Scholarships for Pakistani Students 2026',
+            'text' => 'Education should never stop because of money. We collect national and international scholarships for Pakistani students 2026 — HEC scholarships, fully funded masters and PhD programmes, and undergraduate admissions with fee waivers — including deadlines, required documents and step-by-step application instructions.',
+        ],
     ];
 
     public function handle(): int
@@ -324,6 +350,8 @@ class SiteSetupCommand extends Command
         $page->content = $this->buildHomepageContent();
         $page->save();
 
+        $this->saveSeoTextMeta($page);
+
         theme_option()->setOption('homepage_id', $page->id)->saveOptions();
 
         $this->info("Homepage set: Page '{$page->name}' (ID {$page->id})");
@@ -331,16 +359,16 @@ class SiteSetupCommand extends Command
 
     protected function buildHomepageContent(): string
     {
-        // Featured posts section acts as the hero (replaces about-banner).
-        $content = '[featured-posts title="Featured posts"][/featured-posts]';
+        // Hero: Most Recent Jobs (big card with manual arrows) + Latest
+        // Jobs column — replaces the old featured-posts carousel.
+        $content = '[recent-jobs-hero title="Most Recent Jobs" latest_title="Latest Jobs"][/recent-jobs-hero]';
 
-        if ($single = $this->categoryId($this->homepageSections['single'])) {
-            $content .= "[blog-categories-posts category_id=\"{$single}\"][/blog-categories-posts]";
-        }
+        // All recent jobs in a plain grid (no auto-scroll).
+        $content .= '[recent-jobs-grid title="Recent Jobs" limit="8"][/recent-jobs-grid]';
 
-        // End-of-page category blocks (Scholarships/Govt Jobs/Blog triple +
-        // featured categories) intentionally removed: homepage now ends
-        // after the Jobs section.
+        // SEO text block: keyword-rich intro + internal links to every
+        // category and policy page (crawlable, edits survive re-runs).
+        $content .= '[homepage-seo-text][/homepage-seo-text]';
 
         return $content;
     }
@@ -348,6 +376,25 @@ class SiteSetupCommand extends Command
     protected function categoryId(string $name): ?int
     {
         return Category::query()->where('name', $name)->value('id');
+    }
+
+    /**
+     * Persist the SEO text blocks (headings + copy) as homepage page meta.
+     * The [homepage-seo-text] shortcode renders them; storing the copy here
+     * (not hardcoded in the theme) keeps it editable and re-runnable.
+     */
+    protected function saveSeoTextMeta(Page $page): void
+    {
+        MetaBoxModel::query()->updateOrCreate(
+            [
+                'reference_id' => $page->id,
+                'reference_type' => $page::class,
+                'meta_key' => 'homepage_seo_blocks',
+            ],
+            ['meta_value' => $this->homepageSeoBlocks]
+        );
+
+        $this->info('Homepage SEO text section saved (' . count($this->homepageSeoBlocks) . ' blocks).');
     }
 
     /**

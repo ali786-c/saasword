@@ -73,7 +73,8 @@ class SiteSetupCommandTest extends TestCase
             $this->assertStringNotContainsString('http', (string) $node->url, 'Menu URLs must be relative, not absolute');
         }
 
-        // 3. Homepage: featured-posts hero present, about-banner gone.
+        // 3. Homepage: recent-jobs hero + grid + SEO text present;
+        // about-banner and end-of-page category blocks gone.
         $homepageId = (int) theme_option('homepage_id');
 
         $this->assertGreaterThan(0, $homepageId);
@@ -81,13 +82,22 @@ class SiteSetupCommandTest extends TestCase
         $page = Page::query()->find($homepageId);
 
         $this->assertNotNull($page);
-        $this->assertStringContainsString('[featured-posts', (string) $page->content);
+        $this->assertStringContainsString('[recent-jobs-hero', (string) $page->content);
+        $this->assertStringContainsString('[recent-jobs-grid', (string) $page->content);
+        $this->assertStringContainsString('[homepage-seo-text', (string) $page->content);
         $this->assertStringNotContainsString('about-banner', (string) $page->content);
-        $this->assertStringContainsString('[blog-categories-posts', (string) $page->content);
-
-        // End-of-page category blocks removed: homepage ends after Jobs.
+        $this->assertStringNotContainsString('[featured-posts', (string) $page->content);
+        $this->assertStringNotContainsString('[blog-categories-posts', (string) $page->content);
         $this->assertStringNotContainsString('[categories-with-posts', (string) $page->content);
         $this->assertStringNotContainsString('[featured-categories', (string) $page->content);
+
+        // 4. SEO text blocks persisted as page meta for the shortcode.
+        // (single=false: the value IS the array of blocks.)
+        $blocks = $page->getMetaData('homepage_seo_blocks', false);
+
+        $this->assertIsArray($blocks);
+        $this->assertCount(4, $blocks);
+        $this->assertSame('Latest Jobs in Pakistan 2026', $blocks[0]['heading']);
     }
 
     public function test_site_setup_applies_pakistan_seo_defaults(): void

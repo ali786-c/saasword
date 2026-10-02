@@ -3,6 +3,7 @@
 use Botble\Ads\Facades\AdsManager;
 use Botble\Ads\Models\Ads;
 use Botble\Base\Enums\BaseStatusEnum;
+use Botble\Base\Facades\BaseHelper;
 use Botble\Base\Forms\FieldOptions\SelectFieldOption;
 use Botble\Base\Forms\Fields\MediaImageField;
 use Botble\Base\Forms\Fields\NumberField;
@@ -246,6 +247,127 @@ app('events')->listen(RouteMatched::class, function (): void {
                     ],
                     'default_value' => 8,
                 ]);
+        });
+
+        // CareerInPak homepage: hero (big most-recent card with manual
+        // arrows + stacked latest column) and a plain grid of recent jobs.
+        add_shortcode('recent-jobs-hero', __('Recent jobs hero'), __('Most recent jobs: big card with arrows + latest jobs column'), function ($shortcode) {
+            $posts = get_latest_posts(4, [], ['slugable', 'categories', 'categories.slugable', 'author', 'metadata']);
+
+            if ($posts->isEmpty()) {
+                return null;
+            }
+
+            return Theme::partial('short-codes.recent-jobs-hero', [
+                'title' => $shortcode->title ?: __('Most Recent Jobs'),
+                'latestTitle' => $shortcode->latest_title ?: __('Latest Jobs'),
+                'posts' => $posts,
+            ]);
+        });
+
+        shortcode()->setAdminConfig('recent-jobs-hero', function ($attributes) {
+            return ShortcodeForm::createFromArray($attributes)
+                ->withLazyLoading()
+                ->add('title', TextField::class, [
+                    'label' => __('Title'),
+                    'attr' => [
+                        'placeholder' => __('Title'),
+                    ],
+                ])
+                ->add('latest_title', TextField::class, [
+                    'label' => __('Latest column title'),
+                    'attr' => [
+                        'placeholder' => __('Latest Jobs'),
+                    ],
+                ]);
+        });
+
+        add_shortcode('recent-jobs-grid', __('Recent jobs grid'), __('Recent jobs grid (all latest posts)'), function ($shortcode) {
+            $limit = (int) $shortcode->limit ?: 8;
+
+            $posts = get_latest_posts($limit, [], ['slugable', 'categories', 'categories.slugable', 'author', 'metadata']);
+
+            // "View all" points at the Jobs category page when it exists.
+            $viewAllUrl = Category::query()
+                ->where('name', 'Jobs')
+                ->where('status', BaseStatusEnum::PUBLISHED)
+                ->first()
+                ?->url ?: route('public.index');
+
+            return Theme::partial('short-codes.recent-jobs-grid', [
+                'title' => $shortcode->title ?: __('Recent Jobs'),
+                'posts' => $posts,
+                'viewAllUrl' => $viewAllUrl,
+            ]);
+        });
+
+        shortcode()->setAdminConfig('recent-jobs-grid', function ($attributes) {
+            return ShortcodeForm::createFromArray($attributes)
+                ->withLazyLoading()
+                ->add('title', TextField::class, [
+                    'label' => __('Title'),
+                    'attr' => [
+                        'placeholder' => __('Title'),
+                    ],
+                ])
+                ->add('limit', NumberField::class, [
+                    'label' => __('Limit'),
+                    'attr' => [
+                        'placeholder' => __('Limit'),
+                    ],
+                    'default_value' => 8,
+                ]);
+        });
+
+        // SEO text section: keyword-rich copy blocks (stored as page meta
+        // by cms:site-setup) + internal links to categories and policy
+        // pages. Edits made in the page editor survive command re-runs.
+        add_shortcode('homepage-seo-text', __('Homepage SEO text'), __('SEO text blocks with internal links'), function ($shortcode) {
+            $page = null;
+
+            if ($homepageId = (int) theme_option('homepage_id')) {
+                $page = \Botble\Page\Models\Page::query()->find($homepageId);
+            }
+
+            // NOTE: single=false — the meta value is an ARRAY of blocks,
+            // single=true would return only the first block.
+            $blocks = $page
+                ? $page->getMetaData('homepage_seo_blocks', false)
+                : [];
+
+            if (! is_array($blocks) || $blocks === []) {
+                return null;
+            }
+
+            // The site's real sections only — WP-import demo categories
+            // (Travel, Food, Games, Uncategorized...) must not leak into
+            // the internal-link list.
+            $sections = ['Jobs', 'Govt Jobs', 'PPSC', 'FPSC', 'Pak Army', 'Scholarships'];
+
+            $categories = Category::query()
+                ->where('status', BaseStatusEnum::PUBLISHED)
+                ->whereIn('name', $sections)
+                ->with('slugable')
+                ->get()
+                ->sortBy(fn (Category $category) => array_search($category->name, $sections))
+                ->values();
+
+            $pages = \Botble\Page\Models\Page::query()
+                ->wherePublished()
+                ->whereHas('slugable')
+                ->with('slugable')
+                ->get();
+
+            return Theme::partial('short-codes.homepage-seo-text', [
+                'blocks' => collect($blocks),
+                'categories' => $categories,
+                'pages' => $pages,
+            ]);
+        });
+
+        shortcode()->setAdminConfig('homepage-seo-text', function ($attributes) {
+            return ShortcodeForm::createFromArray($attributes)
+                ->withLazyLoading();
         });
 
         add_shortcode('blog-list', __('Blog list'), __('Add blog posts list'), function ($shortcode) {
