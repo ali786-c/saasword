@@ -14,7 +14,6 @@ use Botble\Setting\Facades\Setting;
 use Botble\Slug\Models\Slug;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
 use Botble\ACL\Models\User;
@@ -27,7 +26,8 @@ use Botble\ACL\Models\User;
  *     (menu nodes reference real categories with RELATIVE urls so the same
  *     data works on localhost and production)
  *  3. Homepage: Featured posts section as the hero (about-banner removed),
- *     then per-category post sections and featured categories
+ *     followed by the Jobs category post section (end-of-page category
+ *     blocks removed — they pushed real job posts below the fold)
  *  4. 5 newest published posts flagged as featured (hero carousel needs them)
  *
  * Safe to re-run: uses firstOrCreate everywhere and wipes only the menu
@@ -53,11 +53,10 @@ class SiteSetupCommand extends Command
     ];
 
     /**
-     * Homepage sections below the hero: [section => category name(s)].
+     * Homepage sections below the hero: [section => category name].
      */
     protected array $homepageSections = [
         'single' => 'Jobs',
-        'triple' => ['Scholarships', 'Govt Jobs', 'Blog'],
     ];
 
     public function handle(): int
@@ -339,20 +338,9 @@ class SiteSetupCommand extends Command
             $content .= "[blog-categories-posts category_id=\"{$single}\"][/blog-categories-posts]";
         }
 
-        $triple = collect($this->homepageSections['triple'])
-            ->map(fn (string $name) => $this->categoryId($name))
-            ->filter()
-            ->all();
-
-        if ($triple) {
-            $content .= '[categories-with-posts'
-                . ' category_id_1="' . Arr::get($triple, 0, 0) . '"'
-                . ' category_id_2="' . Arr::get($triple, 1, 0) . '"'
-                . ' category_id_3="' . Arr::get($triple, 2, 0) . '"'
-                . '][/categories-with-posts]';
-        }
-
-        $content .= '[featured-categories title="Categories"][/featured-categories]';
+        // End-of-page category blocks (Scholarships/Govt Jobs/Blog triple +
+        // featured categories) intentionally removed: homepage now ends
+        // after the Jobs section.
 
         return $content;
     }
