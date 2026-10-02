@@ -80,9 +80,6 @@
                                 @endif
                             @endif
                             <button class="search-icon d-inline"><span class="mr-15 text-muted font-small text-nowrap"><i class="elegant-icon icon_search mr-5"></i>{{ __('Search') }}</span></button>
-                            @if (theme_option('action_button_text') && theme_option('action_button_url'))
-                                <a href="{{ url(theme_option('action_button_url')) }}" class="btn btn-radius bg-primary text-white ml-15 font-small box-shadow text-nowrap">{{ theme_option('action_button_text') }}</a>
-                            @endif
                         </div>
                     </div>
                 </div>

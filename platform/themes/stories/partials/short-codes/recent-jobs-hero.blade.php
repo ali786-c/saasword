@@ -46,22 +46,27 @@
                 </div>
 
                 @foreach($posts->skip(3)->take(2) as $post)
-                    <a class="latest-job-card" href="{{ $post->url }}" title="{{ $post->name }}" style="background-image: url({{ RvMedia::getImageUrl($post->image, null, false, RvMedia::getDefaultImage()) }})">
-                        <span class="latest-job-card__categories">
-                            @foreach($post->categories->take(2) as $category)
-                                <span class="latest-job-card__badge">{{ $category->name }}</span>
-                            @endforeach
-                        </span>
-                        <span class="latest-job-card__body">
-                            <h4 class="latest-job-card__title">{{ $post->name }}</h4>
-                            <span class="latest-job-card__meta">
-                                {{ Theme::formatDate($post->created_at) }}
-                                @if ($post->author && $post->author->id)
-                                    / {{ $post->author->name }}
-                                @endif
-                            </span>
-                        </span>
-                    </a>
+                    <article class="position-relative post-thumb mb-30">
+                        <div class="thumb-overlay img-hover-slide border-radius-10" style="background-image: url({{ RvMedia::getImageUrl($post->image, null, false, RvMedia::getDefaultImage()) }})">
+                            <a class="img-link" href="{{ $post->url }}" title="{{ $post->name }}"></a>
+                            <div class="post-content-overlay text-white ml-30 mr-30 pb-30">
+                                <div class="entry-meta meta-0 font-small mb-10">
+                                    @foreach($post->categories->take(2) as $category)
+                                        <a href="{{ $category->url }}"><span class="post-cat {{ random_color() }} text-uppercase">{{ $category->name }}</span></a>
+                                    @endforeach
+                                </div>
+                                <h4 class="h5 post-title font-weight-900 mb-10">
+                                    <a class="text-white" href="{{ $post->url }}">{{ $post->name }}</a>
+                                </h4>
+                                <div class="entry-meta meta-1 font-small text-white">
+                                    <span class="post-on">{{ Theme::formatDate($post->created_at) }}</span>
+                                    @if ($post->author && $post->author->id)
+                                        <span class="post-by has-dot">{{ $post->author->name }}</span>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </article>
                 @endforeach
             </div>
         </div>
