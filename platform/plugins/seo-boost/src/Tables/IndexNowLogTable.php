@@ -13,6 +13,8 @@ class IndexNowLogTable extends TableAbstract
 {
     public function setup(): void
     {
+        $this->hasOperations = false;
+
         $this
             ->model(IndexNowLog::class)
             ->setView('plugins/seo-boost::table')
