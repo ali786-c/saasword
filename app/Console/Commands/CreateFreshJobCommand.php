@@ -12,110 +12,143 @@ use Illuminate\Support\Str;
 
 class CreateFreshJobCommand extends Command
 {
-    protected $signature = 'cms:create-fresh-job';
+    protected $signature = 'cms:create-fresh-job {--type=fbr : Type of job to create (fbr, ppsc, paec)}';
 
     protected $description = 'Create a brand new fresh job post using the updated 11-section template engine';
 
     public function handle(): int
     {
-        $this->info('Creating fresh new job post using 11-section JobPostTemplateService...');
+        $type = $this->option('type') ?? 'fbr';
+        $this->info("Creating fresh job post ({$type}) using 11-section JobPostTemplateService...");
 
-        $title = 'PPSC Jobs 2026 - Punjab Public Service Commission Advertisement No 18';
-        $slugKey = Str::slug('PPSC Jobs 2026 Punjab Public Service Commission Advertisement No 18');
-
-        $jobData = [
-            'posted_on' => 'October 02, 2026',
-            'city' => 'Lahore, Rawalpindi, Multan & Punjab',
-            'education' => 'Bachelor / Master / LLB',
-            'vacancies' => '245 Positions',
-            'apply_method' => 'Online via PPSC Portal',
-            'organization' => 'Punjab Public Service Commission (PPSC)',
-            'salary' => 'BPS-16 to BPS-18 (Rs. 60,000 - 120,000/Month)',
-            'official_source_url' => 'https://www.ppsc.gop.pk',
-            'official_apply_url' => 'https://www.ppsc.gop.pk',
-            'last_checked' => 'October 02, 2026',
-            'deadline' => 'October 30, 2026',
-            'ad_image_url' => '/storage/news/2.jpg',
-            'also_apply_title' => 'FPSC Jobs 2026 - Federal Public Service Commission Consolidated Advt',
-            'also_apply_url' => '/category/fpsc',
-            'job_description' => '<p>The <strong>Punjab Public Service Commission (PPSC)</strong> has officially published Advertisement No. 18 for 2026, inviting online applications for <strong>245 permanent and contract posts</strong> across multiple Punjab government departments including Police, Housing, Agriculture, and Disaster Management.</p><p>Male, female, and transgender candidates holding Punjab domicile with relevant Bachelor, Master, or LLB qualifications are eligible to apply through the official PPSC online portal before the closing date.</p>',
-            'who_can_apply' => '<p>Candidates having Punjab domicile can apply. Male, female, and transgender applicants meeting the required academic qualification, age limit, and physical standards (where applicable) are eligible. General age relaxation of up to 5 years for males and 8 years for females is included in accordance with Punjab Government notification policy.</p>',
-            'eligibility_criteria' => '<ul>
-                <li><strong>Education:</strong> Graduate / Master / LLB from a HEC recognized university in relevant discipline.</li>
-                <li><strong>Age Limit:</strong> 21 to 35 years for Assistant Director posts; 20 to 28 years for Sub-Inspector posts (General relaxation applicable).</li>
-                <li><strong>Domicile:</strong> Any district of Punjab province.</li>
-                <li><strong>Registration Fee:</strong> Rs. 600 PPSC test fee payable via JazzCash, EasyPaisa, or ATM/Internet Banking using PSID.</li>
-            </ul>',
-            'vacant_positions' => [
-                [
-                    'name' => 'Assistant Director (Planning & Development)',
-                    'vacancies' => '25',
-                    'education' => 'Master / BS (4-Years) Economics / Stat',
-                    'scale' => 'BS-17 (Regular)',
-                    'location' => 'Lahore',
-                    'age_limit' => '21 - 33 Years',
+        if ($type === 'paec') {
+            $title = 'Pakistan Atomic Energy Commission PAEC Jobs 2026 - Scientific Officer & Tech-I';
+            $slugKey = Str::slug('Pakistan Atomic Energy Commission PAEC Jobs 2026 Scientific Officer Tech I');
+            $jobData = [
+                'posted_on' => 'August 01, 2026',
+                'city' => 'Islamabad, Rawalpindi, Karachi',
+                'education' => 'BS / MSc / DAE / Matric',
+                'vacancies' => '85 Positions',
+                'apply_method' => 'Online via Career Portal',
+                'organization' => 'Pakistan Atomic Energy Commission (PAEC)',
+                'salary' => 'SPS-04 to SPS-08 (Rs. 50,000 - 150,000/Month)',
+                'official_source_url' => 'https://www.paec.gov.pk/careers',
+                'official_apply_url' => 'https://www.paec.gov.pk/careers',
+                'last_checked' => 'August 01, 2026',
+                'deadline' => 'August 27, 2026', // Expired date!
+                'ad_image_url' => '/storage/news/3.jpg',
+                'also_apply_title' => 'NESCOM Jobs 2026 - National Engineering & Scientific Commission',
+                'also_apply_url' => '/category/nescom',
+                'job_description' => '<p>The <strong>Pakistan Atomic Energy Commission (PAEC)</strong> invites applications from highly motivated Pakistani citizens for various technical and scientific positions under Public Sector Organization (PO Box 1114).</p><p>Selected candidates will be offered competitive pay packages, medical facilities, and government quarter allowances as per SPS scale rules.</p>',
+                'who_can_apply' => '<p>Pakistani citizens from all provinces (Punjab, Sindh, KPK, Balochistan, AJK, GB) possessing requisite educational degrees, first division in academic career, and meeting physical fitness standards.</p>',
+                'eligibility_criteria' => '<ul>
+                    <li><strong>Scientific Officer (SPS-08):</strong> BS / MSc Physics / Chemistry / Electronics (1st Div).</li>
+                    <li><strong>Tech-I (SPS-04):</strong> 3-Years DAE (Mechanical / Electrical / Chemical) from recognized Board of Technical Education.</li>
+                    <li><strong>Junior Assistant-I (SPS-04):</strong> B.Com / BBA / BCs (1st Div) with computer literacy.</li>
+                    <li><strong>Age Limit:</strong> 18 to 35 Years.</li>
+                </ul>',
+                'vacant_positions' => [
+                    ['name' => 'Scientific Officer (Physics/Electronics)', 'vacancies' => '15', 'education' => 'BS / MSc (1st Div)', 'scale' => 'SPS-08', 'location' => 'Islamabad', 'age_limit' => '18 - 35 Years'],
+                    ['name' => 'Tech-I (Electrical / Mechanical)', 'vacancies' => '45', 'education' => '3-Years DAE (1st Div)', 'scale' => 'SPS-04', 'location' => 'Rawalpindi / Karachi', 'age_limit' => '18 - 35 Years'],
+                    ['name' => 'Junior Assistant-I (Admin)', 'vacancies' => '25', 'education' => 'B.Com / BBA / BCs', 'scale' => 'SPS-04', 'location' => 'Islamabad', 'age_limit' => '18 - 35 Years'],
                 ],
-                [
-                    'name' => 'Sub Inspector (Service Quota & Open Merit)',
-                    'vacancies' => '150',
-                    'education' => 'Graduate (BA / BSc / BS)',
-                    'scale' => 'BS-14 (Regular)',
-                    'location' => 'All Punjab Regions',
-                    'age_limit' => '20 - 28 Years',
+                'documents_required' => [
+                    'Original CNIC and Domicile Certificate',
+                    'All Educational Degrees & Transcripts from Matric to Highest Degree',
+                    'PEC Registration / Technical Board Diploma',
+                    'NOC from current employer (if government servant)',
                 ],
-                [
-                    'name' => 'Assistant Engineer (Civil)',
-                    'vacancies' => '70',
-                    'education' => 'B.Sc Engineering (Civil) + PEC Reg.',
-                    'scale' => 'BS-17 (Contract)',
-                    'location' => 'Punjab Housing Dept',
-                    'age_limit' => '21 - 35 Years',
+                'mistakes_to_avoid' => [
+                    'Do not submit duplicate online forms.',
+                    'Candidates with 2nd division in final degree are not eligible for SPS-08 posts.',
                 ],
-            ],
-            'documents_required' => [
-                'Original CNIC and Domicile Certificate of Punjab',
-                'Matric, Intermediate, Graduation / Master Degree & Transcripts',
-                'PEC Registration Certificate for Engineering posts',
-                'Equivalence Certificate from HEC (if foreign or private degree)',
-                'PSID Paid Fee Receipt copy (Rs. 600)',
-            ],
-            'mistakes_to_avoid' => [
-                'Do not wait for the closing date (October 30, 2026) to avoid online portal server overload.',
-                'Do not deposit fee using old manual challan — PPSC accepts PSID e-Payment only.',
-                'Do not claim wrong domicile or age relaxation category during online data entry.',
-                'Ensure your photo and CNIC upload scans are clear and under 25KB.',
-            ],
-            'selection_process' => [
-                'Online application submission on ppsc.gop.pk using PSID e-Payment.',
-                'PPSC Written Competitive Examination / MCQ Screening Test (100 Marks).',
-                'Physical endurance and measurement test (for Police Sub-Inspector posts).',
-                'Shortlist of candidates on 1:5 ratio for Psychological Assessment & Interview.',
-                'Final Merit List publication and department recommendation letter.',
-            ],
-            'how_to_apply_urdu' => '<ol>
-                <li>سب سے پہلے PPSC کی آن لائن پورٹل <strong>www.ppsc.gop.pk</strong> پر جائیں۔</li>
-                <li>مطلوبہ پوسٹ منتخب کریں اور سسٹم کے ذریعے 17 ہندسوں پر مشتمل PSID نمبر حاصل کریں۔</li>
-                <li>جاز کیش، ایزی پیسہ یا اپنے موبائل بینکنگ ایپ کے ذریعے 600 روپے فیس ادا کریں۔</li>
-                <li>شناختی کارڈ نمبر، سی این آئی سی کی تصویر اور پاسپورٹ سائز فوٹو اپ لوڈ کریں۔</li>
-                <li>تعلیمی معلومات، ڈگری مارکس اور ڈومیسائل کی تفصیلات درست درج کر کے درخواست حتمی جمع (Submit) کریں۔</li>
-            </ol>',
-        ];
+                'selection_process' => [
+                    'Online application submission on official career portal.',
+                    'Written screening test for shortlisting.',
+                    'Interview by PAEC Selection Board.',
+                ],
+                'how_to_apply_urdu' => '<ol>
+                    <li>سرکاری پورٹل پر آن لائن فارم پر کریں۔</li>
+                    <li>اپنی تمام تعلیمی اسناد اور کمپیوٹرائزڈ شناختی کارڈ کی کاپی سکین کر کے اپ لوڈ کریں۔</li>
+                    <li>درخواست کی حتمی تاریخ 27 اگست 2026 تھی۔ (یہ جاب ایکسپائر ہو چکی ہے)۔</li>
+                </ol>',
+            ];
+        } else {
+            // Default FBR Job (Active)
+            $title = 'FBR Jobs 2026 - Federal Board of Revenue Inspector Inland Revenue & DEO 350+ Vacancies';
+            $slugKey = Str::slug('FBR Jobs 2026 Federal Board of Revenue Inspector Inland Revenue DEO 350 Vacancies');
+            $jobData = [
+                'posted_on' => 'October 02, 2026',
+                'city' => 'Islamabad, Lahore, Karachi, Peshawar, Quetta',
+                'education' => 'Bachelor / Master / Intermediate / Matric',
+                'vacancies' => '350+ Positions',
+                'apply_method' => 'Online via FPSC & FBR Portal',
+                'organization' => 'Federal Board of Revenue (FBR)',
+                'salary' => 'BPS-11 to BPS-16 (Rs. 45,000 - 95,000/Month)',
+                'official_source_url' => 'https://www.fbr.gov.pk',
+                'official_apply_url' => 'https://www.fpsc.gov.pk',
+                'last_checked' => 'October 02, 2026',
+                'deadline' => 'October 25, 2026', // Active date!
+                'ad_image_url' => '/storage/news/1.jpg',
+                'also_apply_title' => 'State Bank of Pakistan SBP Officers Training Scheme 2026',
+                'also_apply_url' => '/category/banking',
+                'job_description' => '<p>The <strong>Federal Board of Revenue (FBR)</strong> has announced recruitment for <strong>350+ vacant posts</strong> across its Regional Tax Offices (RTOs) and Customs Collectorates nationwide. Opportunities include <strong>Inspector Inland Revenue (BPS-16)</strong>, <strong>Data Entry Operator (BPS-14)</strong>, <strong>Stenotypist (BPS-14)</strong>, and <strong>Upper Division Clerk (BPS-11)</strong>.</p><p>Both male and female candidates holding valid CNIC and provincial domicile of Punjab, Sindh, KPK, Balochistan, AJK, and FATA/GB are invited to submit online applications before the last date.</p>',
+                'who_can_apply' => '<p>Citizens of Pakistan having valid domicile of any province/region can apply. Female quota (15%), Minority quota (5%), and Disabled quota (2%) will be strictly observed in accordance with Federal Government rules. General age relaxation of 5 years is admissible to all applicants.</p>',
+                'eligibility_criteria' => '<ul>
+                    <li><strong>Inspector Inland Revenue (BPS-16):</strong> Second Class or Grade "C" Bachelor Degree with Economics, Business Administration, Commerce, Accounting, Statistics or Law.</li>
+                    <li><strong>Data Entry Operator (DEO - BPS-14):</strong> Bachelor Degree in Computer Science / Physics / Math / Stat with minimum typing speed of 10,000 key depressions per hour.</li>
+                    <li><strong>Stenotypist (BPS-14):</strong> Intermediate (FA/FSc) with 80/40 wpm shorthand/typing speed and computer literacy.</li>
+                    <li><strong>Age Limit:</strong> 20 to 28 years (+ 5 years general age relaxation = 33 years max).</li>
+                </ul>',
+                'vacant_positions' => [
+                    ['name' => 'Inspector Inland Revenue', 'vacancies' => '180', 'education' => 'Bachelor (Economics / BBA / B.Com / LLB)', 'scale' => 'BS-16 (Regular)', 'location' => 'All FBR Regional Offices', 'age_limit' => '20 - 33 Years'],
+                    ['name' => 'Data Entry Operator (DEO)', 'vacancies' => '95', 'education' => 'BCS / BSc (Computer Science)', 'scale' => 'BS-14 (Regular)', 'location' => 'Islamabad, Lahore, Karachi', 'age_limit' => '18 - 30 Years'],
+                    ['name' => 'Stenotypist', 'vacancies' => '50', 'education' => 'Intermediate + Shorthand (80 wpm)', 'scale' => 'BS-14 (Regular)', 'location' => 'All Regional Collectorates', 'age_limit' => '18 - 30 Years'],
+                    ['name' => 'Upper Division Clerk (UDC)', 'vacancies' => '25', 'education' => 'Intermediate (FA / FSc / I.Com)', 'scale' => 'BS-11 (Regular)', 'location' => 'Headquarters Islamabad', 'age_limit' => '18 - 30 Years'],
+                ],
+                'documents_required' => [
+                    'Original CNIC card copy',
+                    'Domicile Certificate of relevant district/province',
+                    'Educational Certificates (Matric, Inter, Bachelor) & Marksheets',
+                    'Computer / Shorthand Course Certificate (for DEO and Stenotypist posts)',
+                    'Passport size recent photographs with blue background',
+                ],
+                'mistakes_to_avoid' => [
+                    'Do not submit incomplete online forms or omit typing speed credentials.',
+                    'Ensure your email address and mobile number are active for SMS roll number alerts.',
+                    'Do not pay any fee to unauthorized private agencies — FBR/FPSC recruitment is conducted strictly on merit.',
+                ],
+                'selection_process' => [
+                    'Online registration on the FPSC / FBR official recruitment web portal.',
+                    'MCQs Screening Test / Professional Typing & Skill Test for Stenotypists/DEOs.',
+                    'Document verification and shortlisting of qualified candidates.',
+                    'Panel Interview and final appointment letter issuance by FBR Head Office.',
+                ],
+                'how_to_apply_urdu' => '<ol>
+                    <li>ایف بی آر (FBR) یا FPSC کی سرکاری ویب سائٹ پر جائیں۔</li>
+                    <li>اپنا این آئی سی اور پاسورڈ درج کر کے آن لائن پروفائل بنائیں۔</li>
+                    <li>مطلوبہ پوسٹ (مثلاً انسپکٹر ان لینڈ ریونیو یا ڈیٹا انٹری آپریٹر) کا انتخاب کریں۔</li>
+                    <li>تعلیمی معلومات، ٹائپنگ سپیڈ اور ڈومیسائل کی تفصیلات احتیاط سے پر کریں۔</li>
+                    <li>درخواست کی حتمی تاریخ <strong>25 اکتوبر 2026</strong> سے پہلے آن لائن submit کریں۔</li>
+                </ol>',
+            ];
+        }
 
         $content = JobPostTemplateService::render($jobData);
 
-        $category = Category::query()->where('name', 'PPSC')->first()
+        $category = Category::query()->where('name', 'Federal Jobs')->first()
             ?: Category::query()->where('name', 'Jobs')->first()
             ?: Category::query()->first();
 
         $post = Post::query()->updateOrCreate(
             ['name' => $title],
             [
-                'description' => 'PPSC Jobs 2026 Advertisement 18 announced for 245 Assistant Director, Sub Inspector & Civil Engineer vacancies across Punjab. Check eligibility, age limit, syllabus and apply online at ppsc.gop.pk.',
+                'description' => "FBR Jobs 2026 announced for 350+ Inspector Inland Revenue, Data Entry Operator, Stenotypist and UDC positions. Check eligibility, age limit, salary details and apply online before last date.",
                 'content' => $content,
                 'status' => BaseStatusEnum::PUBLISHED,
                 'is_featured' => 1,
                 'user_id' => 1,
-                'views' => rand(200, 500),
+                'views' => rand(300, 750),
             ]
         );
 
