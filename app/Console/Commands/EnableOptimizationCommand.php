@@ -16,7 +16,7 @@ class EnableOptimizationCommand extends Command
     {
         $this->info('Enabling LiteSpeed Cache & PageSpeed Optimizations...');
 
-        // 1. Enable Botble Optimize Package Settings
+        // 1. Enable Botble Optimize Package & WebP Conversion Settings
         $settings = [
             'optimize_page_speed_enable'    => '1',
             'optimize_collapse_white_space' => '1',
@@ -24,6 +24,7 @@ class EnableOptimizationCommand extends Command
             'optimize_insert_dns_prefetch'  => '1',
             'optimize_remove_comments'      => '1',
             'optimize_remove_quotes'        => '1',
+            'media_convert_image_to_webp'   => '1',
         ];
 
         foreach ($settings as $key => $val) {
