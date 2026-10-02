@@ -5,7 +5,7 @@ namespace App\Services;
 class JobPostTemplateService
 {
     /**
-     * Render the full 11-section Job Post Template HTML matching user specifications & screenshot styling.
+     * Render the full 11-section Job Post Template HTML with guaranteed inline red/blue banner headings.
      *
      * @param array $data Structured job data
      * @return string Validated HTML string
@@ -29,7 +29,7 @@ class JobPostTemplateService
         $eligibilityCriteria = $data['eligibility_criteria'] ?? '';
         $positions = $data['vacant_positions'] ?? [];
         $adImageUrl = $data['ad_image_url'] ?? null;
-        $alsoApplyTitle = e($data['also_apply_title'] ?? 'Scholarships & Latest Government Jobs 2026');
+        $alsoApplyTitle = e($data['also_apply_title'] ?? 'Scholarship at Polytechnic di Torino University Italy 2025');
         $alsoApplyUrl = e($data['also_apply_url'] ?? '/category/jobs');
 
         $documents = $data['documents_required'] ?? [
@@ -50,6 +50,11 @@ class JobPostTemplateService
         $selectionProcess = $data['selection_process'] ?? null;
         $howToApplyUrdu = $data['how_to_apply_urdu'] ?? '';
 
+        // Heading Inline Styles (Guaranteed Red Background + Blue Left Accent + White Text)
+        $hStyle = 'background-color: #e53935 !important; border-left: 5px solid #007bff !important; color: #ffffff !important; padding: 12px 20px !important; font-size: 18px !important; font-weight: 700 !important; border-radius: 4px !important; margin-top: 25px !important; margin-bottom: 20px !important; display: block !important; box-shadow: 0 2px 5px rgba(0,0,0,0.08) !important;';
+        $summaryHStyle = 'background-color: #e53935 !important; border-left: 5px solid #007bff !important; color: #ffffff !important; padding: 10px 16px !important; font-size: 17px !important; font-weight: 700 !important; border-radius: 4px !important; margin-bottom: 18px !important; display: block !important;';
+        $alsoStyle = 'background-color: #e53935 !important; border-left: 5px solid #007bff !important; color: #ffffff !important; padding: 12px 20px !important; font-size: 16px !important; font-weight: 700 !important; border-radius: 4px !important; margin: 25px 0 !important; display: block !important;';
+
         // Build Vacant Positions Table Rows
         $positionRows = '';
         if (is_array($positions) && ! empty($positions)) {
@@ -64,7 +69,7 @@ class JobPostTemplateService
 
                 $positionRows .= "<tr>
                     <td>{$sr}</td>
-                    <td class=\"font-weight-bold\">{$name}</td>
+                    <td style=\"font-weight: 700;\">{$name}</td>
                     <td><span class=\"badge bg-info text-dark\">{$posVacancies}</span></td>
                     <td>{$posEdu}</td>
                     <td>{$posScale}</td>
@@ -100,7 +105,7 @@ class JobPostTemplateService
             $selText = is_array($selectionProcess) ? implode('</li><li>', array_map('e', $selectionProcess)) : e($selectionProcess);
             $selectionBlock = "
             <div class=\"job-section mb-4\">
-                <div class=\"job-heading-banner\">7. Official Selection Process</div>
+                <div style=\"{$hStyle}\">7. Official Selection Process</div>
                 <ol class=\"pl-4 text-secondary\" style=\"line-height: 1.8;\">
                     " . (is_array($selectionProcess) ? "<li>{$selText}</li>" : "<li>{$selText}</li>") . "
                 </ol>
@@ -113,7 +118,7 @@ class JobPostTemplateService
             $safeAdUrl = e($adImageUrl);
             $adImageBlock = "
             <div class=\"job-section mb-4 text-center\">
-                <div class=\"job-heading-banner text-left\">9. Official Job Advertisement</div>
+                <div style=\"{$hStyle}\" class=\"text-left\">9. Official Job Advertisement</div>
                 <div class=\"p-2 border rounded bg-white shadow-sm d-inline-block mw-100 mb-3\">
                     <img src=\"{$safeAdUrl}\" alt=\"Official Job Advertisement\" class=\"img-fluid rounded\" style=\"max-height: 700px; width: auto;\">
                 </div>
@@ -126,7 +131,7 @@ class JobPostTemplateService
         } else {
             $adImageBlock = "
             <div class=\"job-section mb-4 text-center\">
-                <div class=\"job-heading-banner text-left\">9. Official Job Advertisement</div>
+                <div style=\"{$hStyle}\" class=\"text-left\">9. Official Job Advertisement</div>
                 <div class=\"p-4 border border-dashed rounded bg-light text-muted mb-2\">
                     <p class=\"mb-1 font-weight-bold\">📄 Official Advertisement Image Container</p>
                     <p class=\"small mb-0\">Verify details directly on the official portal below or view newspaper clip upon publication.</p>
@@ -136,64 +141,11 @@ class JobPostTemplateService
 
         // Build Full HTML
         return <<<HTML
-<style>
-/* === CareerInPak Job Template Heading Banner (Screenshot Style) === */
-.job-heading-banner {
-    background-color: #e53935;
-    border-left: 5px solid #007bff;
-    color: #ffffff !important;
-    padding: 12px 20px;
-    font-size: 18px;
-    font-weight: 700;
-    border-radius: 4px;
-    margin-top: 25px;
-    margin-bottom: 20px;
-    display: block;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.08);
-}
-.job-summary-box {
-    background: #f8f9fa;
-    border: 1px solid #e9ecef;
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 25px;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.04);
-}
-.job-summary-box .job-summary-header {
-    background-color: #e53935;
-    border-left: 5px solid #007bff;
-    color: #ffffff !important;
-    padding: 10px 16px;
-    font-size: 17px;
-    font-weight: 700;
-    border-radius: 4px;
-    margin-bottom: 18px;
-}
-.also-apply-banner {
-    background-color: #e53935;
-    border-left: 5px solid #007bff;
-    color: #ffffff !important;
-    padding: 12px 20px;
-    font-size: 16px;
-    font-weight: 700;
-    border-radius: 4px;
-    margin: 25px 0;
-    display: block;
-}
-.also-apply-banner a {
-    color: #ffffff !important;
-    text-decoration: underline;
-}
-.also-apply-banner a:hover {
-    color: #ffebee !important;
-}
-</style>
-
 <div class="job-post-template font-sans">
 
   <!-- 1. Job Summary Box -->
-  <div class="job-summary-box">
-    <div class="job-summary-header">📋 Job Summary</div>
+  <div class="job-summary-box" style="background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 20px; margin-bottom: 25px; box-shadow: 0 3px 10px rgba(0,0,0,0.04);">
+    <div style="{$summaryHStyle}">📋 Job Summary</div>
     <div class="row" style="font-size: 15px; line-height: 1.8;">
       <div class="col-md-6 mb-2"><strong>Posted on:</strong> {$postedOn}</div>
       <div class="col-md-6 mb-2"><strong>Location:</strong> {$location}</div>
@@ -209,20 +161,20 @@ class JobPostTemplateService
 
   <!-- 2. Job Description -->
   <div class="job-section mb-4">
-    <div class="job-heading-banner">1. Job Description</div>
+    <div style="{$hStyle}">1. Job Description</div>
     <div class="job-text lead-sm text-secondary" style="line-height: 1.8;">
       {$jobDescription}
     </div>
   </div>
 
   <!-- Screenshot Style "Also Apply For" Banner -->
-  <div class="also-apply-banner">
-    Also Apply For: <a href="{$alsoApplyUrl}">{$alsoApplyTitle}</a>
+  <div style="{$alsoStyle}">
+    Also Apply For: <a href="{$alsoApplyUrl}" style="color: #ffffff !important; text-decoration: underline !important;">{$alsoApplyTitle}</a>
   </div>
 
   <!-- 3. Who Can Apply -->
   <div class="job-section mb-4">
-    <div class="job-heading-banner">2. Who Can Apply</div>
+    <div style="{$hStyle}">2. Who Can Apply</div>
     <div class="job-text text-secondary" style="line-height: 1.8;">
       {$whoCanApply}
     </div>
@@ -230,7 +182,7 @@ class JobPostTemplateService
 
   <!-- 4. Eligibility Criteria -->
   <div class="job-section mb-4">
-    <div class="job-heading-banner">3. Eligibility Criteria</div>
+    <div style="{$hStyle}">3. Eligibility Criteria</div>
     <div class="job-text text-secondary" style="line-height: 1.8;">
       {$eligibilityCriteria}
     </div>
@@ -238,10 +190,10 @@ class JobPostTemplateService
 
   <!-- 5. Vacant Positions Table -->
   <div class="job-section mb-4">
-    <div class="job-heading-banner">4. Vacant Positions</div>
+    <div style="{$hStyle}">4. Vacant Positions</div>
     <div class="table-responsive">
       <table class="table table-bordered table-striped align-middle">
-        <thead class="bg-primary text-white">
+        <thead style="background-color: #5869DA; color: #ffffff;">
           <tr>
             <th>Sr #</th>
             <th>Position Title</th>
@@ -261,7 +213,7 @@ class JobPostTemplateService
 
   <!-- 6. Documents Required -->
   <div class="job-section mb-4">
-    <div class="job-heading-banner">5. Documents Required</div>
+    <div style="{$hStyle}">5. Documents Required</div>
     <p class="text-muted small">The official advertisement may require some or all of the following documents. Candidates should confirm the final list from the official advertisement before applying:</p>
     <ul class="list-group list-group-flush mb-3">
       {$documentItems}
@@ -270,7 +222,7 @@ class JobPostTemplateService
 
   <!-- 7. Application Mistakes to Avoid -->
   <div class="job-section mb-4">
-    <div class="job-heading-banner">6. Application Mistakes to Avoid</div>
+    <div style="{$hStyle}">6. Application Mistakes to Avoid</div>
     <div class="p-3 border-left border-warning bg-light rounded" style="border-left-width: 5px !important;">
       <ul class="mb-0 text-dark small" style="line-height: 1.7;">
         {$mistakeItems}
@@ -282,7 +234,7 @@ class JobPostTemplateService
 
   <!-- 8. How to Apply (Urdu RTL Section) -->
   <div class="job-section mb-4">
-    <div class="job-heading-banner" style="display: flex; justify-content: space-between; align-items: center;">
+    <div style="{$hStyle} display: flex !important; justify-content: space-between; align-items: center;">
       <span>8. How to Apply</span>
       <span dir="rtl">درخواست جمع کروانے کا طریقہ</span>
     </div>
@@ -297,7 +249,7 @@ class JobPostTemplateService
 
   <!-- 10. Official Source & Verification -->
   <div class="job-section mb-4">
-    <div class="job-heading-banner">10. Official Source & Verification</div>
+    <div style="{$hStyle}">10. Official Source & Verification</div>
     <div class="p-4 border rounded bg-white text-center shadow-sm">
       <p class="small text-muted mb-3">CareerInPak collected this information from the official advertisement or official portal. Candidates should verify the details from the official source before applying. If you find an error, contact us at <a href="mailto:info@careerinpak.com">info@careerinpak.com</a>.</p>
       <div class="d-flex justify-content-center flex-wrap gap-2">
