@@ -179,32 +179,6 @@ app('events')->listen(RenderingThemeOptionSettings::class, function (): void {
             'icon' => 'ti ti-brush',
         ])
         ->setField([
-            'id' => 'action_button_text',
-            'section_id' => 'opt-text-subsection-header',
-            'type' => 'text',
-            'label' => __('Action button text'),
-            'attributes' => [
-                'name' => 'action_button_text',
-                'value' => null,
-                'options' => [
-                    'class' => 'form-control',
-                ],
-            ],
-        ])
-        ->setField([
-            'id' => 'action_button_url',
-            'section_id' => 'opt-text-subsection-header',
-            'type' => 'text',
-            'label' => __('Action button URL'),
-            'attributes' => [
-                'name' => 'action_button_url',
-                'value' => null,
-                'options' => [
-                    'class' => 'form-control',
-                ],
-            ],
-        ])
-        ->setField([
             'id' => 'blog_single_layout',
             'section_id' => 'opt-text-subsection-blog',
             'type' => 'select',

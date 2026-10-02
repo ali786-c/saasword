@@ -252,7 +252,8 @@ app('events')->listen(RouteMatched::class, function (): void {
         // CareerInPak homepage: hero (big most-recent card with manual
         // arrows + stacked latest column) and a plain grid of recent jobs.
         add_shortcode('recent-jobs-hero', __('Recent jobs hero'), __('Most recent jobs: big card with arrows + latest jobs column'), function ($shortcode) {
-            $posts = get_latest_posts(4, [], ['slugable', 'categories', 'categories.slugable', 'author', 'metadata']);
+            // 3 hero slides + 2 side column cards.
+            $posts = get_latest_posts(5, [], ['slugable', 'categories', 'categories.slugable', 'author', 'metadata']);
 
             if ($posts->isEmpty()) {
                 return null;
@@ -352,10 +353,23 @@ app('events')->listen(RouteMatched::class, function (): void {
                 ->sortBy(fn (Category $category) => array_search($category->name, $sections))
                 ->values();
 
+            // Only the policy pages (About Us, Contact Us, Privacy Policy,
+            // Terms, Disclaimer, Editorial Policy) — not the theme's demo
+            // pages (Home 2, Blog List layout, Cookie Policy, ...).
+            $pageSlugs = [
+                'about-us',
+                'contact-us',
+                'privacy-policy',
+                'terms-conditions',
+                'disclaimer',
+                'editorial-policy',
+            ];
+
             $pages = \Botble\Page\Models\Page::query()
                 ->wherePublished()
-                ->whereHas('slugable')
+                ->whereHas('slugable', fn ($query) => $query->whereIn('key', $pageSlugs))
                 ->with('slugable')
+                ->orderBy('name')
                 ->get();
 
             return Theme::partial('short-codes.homepage-seo-text', [

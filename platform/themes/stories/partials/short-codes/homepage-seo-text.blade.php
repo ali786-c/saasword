@@ -19,7 +19,7 @@
                 @endforeach
             </ul>
 
-            <h3 class="font-weight-900 mb-20">{{ __('About CareerInPak') }}</h3>
+            <h3 class="font-weight-900 mb-20">{{ __('Important pages') }}</h3>
             <ul class="list-inline mb-0">
                 @foreach($pages as $page)
                     <li class="list-inline-item mr-20 mb-10">
