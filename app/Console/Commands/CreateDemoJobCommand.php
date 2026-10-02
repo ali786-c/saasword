@@ -35,6 +35,7 @@ class CreateDemoJobCommand extends Command
             'official_apply_url' => 'https://careers.nadra.gov.pk',
             'last_checked' => 'September 28, 2026',
             'deadline' => 'October 25, 2026',
+            'ad_image_url' => '/storage/news/1.jpg',
             'also_apply_title' => 'Scholarship at Polytechnic di Torino University Italy 2025',
             'also_apply_url' => '/category/jobs',
             'job_description' => '<p>The <strong>National Database & Registration Authority (NADRA)</strong> has officially announced recruitment for <strong>Scanning Operators</strong> across multiple regional offices in Pakistan for 2026. This announcement provides contract employment for male and female candidates holding Intermediate or Bachelor qualifications with basic computer typing skills.</p><p>Eligible candidates from Lahore, Rawalpindi, Islamabad, Karachi, Peshawar, and Quetta are encouraged to review the eligibility criteria, age limits, and online application process below before submitting their forms before the deadline.</p>',
