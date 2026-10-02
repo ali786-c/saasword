@@ -807,6 +807,77 @@ class MediaController extends BaseController
                 $response = RvMedia::responseSuccess([], trans('core/media::media.update_alt_text_success'));
 
                 break;
+
+            case 'watermark':
+                Validator::validate($request->input(), [
+                    'selected' => ['required', 'array'],
+                    'selected.*.id' => ['required', 'exists:media_files,id'],
+                    'selected.*.watermark' => ['required'],
+                ]);
+
+                $updatedFiles = [];
+                foreach ($request->input('selected') as $item) {
+                    $file = MediaFile::query()->find($item['id']);
+                    if (! $file || ! $file->canGenerateThumbnails()) {
+                        continue;
+                    }
+
+                    $applyWatermark = filter_var($item['watermark'], FILTER_VALIDATE_BOOLEAN);
+                    $fileUrl = $file->url;
+                    $realPath = RvMedia::getRealPath($fileUrl);
+
+                    if (! $realPath || ! File::exists($realPath)) {
+                        continue;
+                    }
+
+                    $dirName = File::dirname($realPath);
+                    $fileName = File::name($realPath);
+                    $fileExt = File::extension($realPath);
+                    $backupPath = $dirName . '/' . $fileName . '_original_bak.' . $fileExt;
+
+                    if ($applyWatermark) {
+                        if (! File::exists($backupPath)) {
+                            File::copy($realPath, $backupPath);
+                        } else {
+                            File::copy($backupPath, $realPath);
+                        }
+
+                        $watermarkImage = setting('media_watermark_source', RvMedia::getConfig('watermark.source'));
+                        if (! $watermarkImage || ! File::exists(RvMedia::getRealPath($watermarkImage))) {
+                            return RvMedia::responseError('Watermark image source is not configured or found. Please set watermark image in Media Settings.');
+                        }
+
+                        $success = RvMedia::insertWatermark($fileUrl, true);
+
+                        if (! $success) {
+                            return RvMedia::responseError('Failed to apply watermark. Please verify image and watermark settings.');
+                        }
+
+                        $options = $file->options ?: [];
+                        $options['watermark'] = true;
+                        $file->options = $options;
+                        $file->save();
+
+                        RvMedia::generateThumbnails($file);
+                    } else {
+                        if (File::exists($backupPath)) {
+                            File::copy($backupPath, $realPath);
+                        }
+
+                        $options = $file->options ?: [];
+                        $options['watermark'] = false;
+                        $file->options = $options;
+                        $file->save();
+
+                        RvMedia::generateThumbnails($file);
+                    }
+
+                    $updatedFiles[] = new FileResource($file);
+                }
+
+                $response = RvMedia::responseSuccess($updatedFiles, 'Watermark updated successfully');
+
+                break;
             case 'empty_trash':
                 $this->fileRepository->emptyTrash();
                 $this->folderRepository->emptyTrash();

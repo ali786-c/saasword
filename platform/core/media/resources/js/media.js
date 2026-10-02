@@ -347,6 +347,88 @@ class MediaManagement {
                     _self.MediaService.getMedia(true)
                 })
             })
+            .off('click', '.js-save-file-alt-btn')
+            .on('click', '.js-save-file-alt-btn', (event) => {
+                event.preventDefault()
+                const $btn = $(event.currentTarget)
+                const $input = $btn.closest('.input-group').find('.js-file-details-alt-input')
+                const fileId = $input.data('id')
+                const newAlt = $input.val()
+                const $status = $btn.closest('.rv-media-alt-box').find('.js-file-alt-saved-status')
+
+                $btn.prop('disabled', true)
+
+                ActionsService.processAction(
+                    {
+                        action: 'alt_text',
+                        selected: [{ id: fileId, alt: newAlt }],
+                    },
+                    (res) => {
+                        $btn.prop('disabled', false)
+                        if (!res.error) {
+                            const selectedItems = Helpers.getSelectedItems()
+                            if (selectedItems && selectedItems.length > 0 && selectedItems[0].id == fileId) {
+                                selectedItems[0].alt = newAlt
+                            }
+                            $status.removeClass('d-none').stop(true, true).fadeIn().delay(2000).fadeOut()
+                        }
+                    }
+                )
+            })
+            .off('change', '.js-file-details-alt-input')
+            .on('change', '.js-file-details-alt-input', (event) => {
+                const $input = $(event.currentTarget)
+                const $btn = $input.closest('.input-group').find('.js-save-file-alt-btn')
+                $btn.trigger('click')
+            })
+            .off('change', '.js-toggle-file-watermark')
+            .on('change', '.js-toggle-file-watermark', (event) => {
+                const $toggle = $(event.currentTarget)
+                const fileId = $toggle.data('id')
+                const isWatermark = $toggle.is(':checked')
+
+                $toggle.prop('disabled', true)
+                Helpers.showAjaxLoading()
+
+                ActionsService.processAction(
+                    {
+                        action: 'watermark',
+                        selected: [{ id: fileId, watermark: isWatermark }],
+                    },
+                    (res) => {
+                        $toggle.prop('disabled', false)
+                        Helpers.hideAjaxLoading()
+                        if (!res.error) {
+                            const selectedItems = Helpers.getSelectedItems()
+                            if (selectedItems && selectedItems.length > 0 && selectedItems[0].id == fileId) {
+                                selectedItems[0].options = selectedItems[0].options || {}
+                                selectedItems[0].options.watermark = isWatermark
+                                if (res.data && res.data[0] && res.data[0].full_url) {
+                                    selectedItems[0].full_url = res.data[0].full_url
+                                }
+                            }
+
+                            const cacheBuster = '?v=' + Date.now()
+                            const $thumbImg = $('.rv-media-main .rv-media-details .rv-media-thumbnail img')
+                            if ($thumbImg.length) {
+                                let currentSrc = $thumbImg.attr('src').split('?')[0]
+                                $thumbImg.attr('src', currentSrc + cacheBuster)
+                            }
+
+                            const $gridItem = $(`[data-id="${fileId}"] .rv-media-item-thumbnail img`)
+                            if ($gridItem.length) {
+                                let currentSrc = $gridItem.attr('src').split('?')[0]
+                                $gridItem.attr('src', currentSrc + cacheBuster)
+                            }
+
+                            MessageService.showMessage('success', res.message, Helpers.trans('message.success_header'))
+                        } else {
+                            $toggle.prop('checked', !isWatermark)
+                            MessageService.showMessage('error', res.message, Helpers.trans('message.error_header'))
+                        }
+                    }
+                )
+            })
             .off('submit', '.form-download-url')
             .on('submit', '.form-download-url', async (event) => {
                 event.preventDefault()

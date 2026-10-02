@@ -776,9 +776,13 @@ class RvMedia
         return true;
     }
 
-    public function insertWatermark(string $image): bool
+    public function insertWatermark(string $image, bool $force = false): bool
     {
-        if (! $image || ! setting('media_watermark_enabled', $this->getConfig('watermark.enabled'))) {
+        if (! $image) {
+            return false;
+        }
+
+        if (! $force && ! setting('media_watermark_enabled', $this->getConfig('watermark.enabled'))) {
             return false;
         }
 

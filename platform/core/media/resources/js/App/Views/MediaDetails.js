@@ -24,10 +24,10 @@ export class MediaDetails {
     renderData(data) {
         const _self = this
         const thumb =
-            data.type === 'image' && data.full_url ? `<img src="${data.full_url}" alt="${data.name}">` : data.icon
+            data.type === 'image' && data.full_url ? `<img src="${data.full_url}" alt="${data.name || ''}">` : data.icon
         let description = ''
         Helpers.forEach(data, (val, index) => {
-            if (Helpers.inArray(_self.onlyFields, index) && val) {
+            if (Helpers.inArray(_self.onlyFields, index) && val && index !== 'alt') {
                 if (!Helpers.inArray(['mime_type'], index)) {
                     description += _self.descriptionItemTemplate.replace(/__title__/gi, Helpers.trans(index)).replace(
                         /__url__/gi,
@@ -58,6 +58,45 @@ export class MediaDetails {
                 }
             }
         })
+
+        // Add Alt Text input box for media files
+        if (data.id) {
+            const altVal = data.alt || ''
+            const altHtml = `<div class="mb-3 rv-media-alt-box">
+                <label class="form-label">${Helpers.trans('alt') || 'Alt Text'}</label>
+                <div class="input-group pe-1">
+                    <input type="text" id="file_details_alt" class="form-control js-file-details-alt-input" value="${altVal}" placeholder="Alt text for SEO..." data-id="${data.id}" />
+                    <button class="btn btn-default input-group-text js-save-file-alt-btn" type="button" data-id="${data.id}" title="Save Alt Text">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-device-floppy me-0" width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                           <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                           <path d="M6 4h10l4 4v10a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2"></path>
+                           <path d="M12 14m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+                           <path d="M14 4l0 4l-6 0l0 -4"></path>
+                        </svg>
+                    </button>
+                </div>
+                <span class="js-file-alt-saved-status text-success d-none" style="font-size: 11px; margin-top: 3px; display: block;">Saved!</span>
+            </div>`
+            description += altHtml
+        }
+
+        // Add Watermark toggle switch for images
+        const isImage = data.type === 'image' || (data.mime_type && data.mime_type.indexOf('image') !== -1)
+        if (data.id && isImage) {
+            const hasWatermark = data.options && (data.options.watermark === true || data.options.watermark === 1 || data.options.watermark === '1' || data.options.watermark === 'true')
+            const watermarkHtml = `<div class="mb-3 rv-media-watermark-box border-top pt-2">
+                <div class="d-flex align-items-center justify-content-between mb-1">
+                    <label class="form-label mb-0" for="file_details_watermark_toggle" style="font-weight: 600; cursor: pointer;">
+                        Watermark
+                    </label>
+                    <div class="form-check form-switch m-0">
+                        <input class="form-check-input js-toggle-file-watermark" type="checkbox" role="switch" id="file_details_watermark_toggle" data-id="${data.id}" ${hasWatermark ? 'checked' : ''}>
+                    </div>
+                </div>
+                <small class="text-muted d-block" style="font-size: 11px;">Toggle to apply watermark to image</small>
+            </div>`
+            description += watermarkHtml
+        }
 
         _self.$detailsWrapper.find('.rv-media-thumbnail').html(thumb)
         _self.$detailsWrapper.find('.rv-media-thumbnail').css('color', data.color)
