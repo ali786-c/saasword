@@ -730,6 +730,39 @@ class RvMedia
             return false;
         }
 
+        if (setting('media_enable_thumbnail_sizes', true)) {
+            foreach ($this->getSizes() as $size) {
+                $readableSize = explode('x', $size);
+
+                if (! $fileUpload || $this->isChunkUploadEnabled()) {
+                    $fileUpload = $this->getRealPath($file->url);
+
+                    if ($this->isUsingCloud()) {
+                        $fileUpload = @file_get_contents($fileUpload);
+
+                        if (! $fileUpload) {
+                            continue;
+                        }
+                    }
+                }
+
+                $thumbnailFileName = File::name($file->url) . '-' . $size . '.' . File::extension($file->url);
+                $dirName = File::dirname($file->url);
+                $thumbnailPath = ($dirName === '.' || ! $dirName) ? $thumbnailFileName : $dirName . '/' . $thumbnailFileName;
+
+                if (! $this->isUsingCloud() && Storage::exists($thumbnailPath)) {
+                    continue;
+                }
+
+                $this->thumbnailService
+                    ->setImage($fileUpload)
+                    ->setSize($readableSize[0], $readableSize[1])
+                    ->setDestinationPath(File::dirname($file->url))
+                    ->setFileName($thumbnailFileName)
+                    ->save();
+            }
+        }
+
         $folderIds = json_decode(setting('media_folders_can_add_watermark', ''), true);
 
         if (
@@ -738,41 +771,6 @@ class RvMedia
             ! empty(array_intersect($file->folder->parents->pluck('id')->all(), $folderIds))
         ) {
             $this->insertWatermark($file->url);
-        }
-
-        if (! setting('media_enable_thumbnail_sizes', true)) {
-            return false;
-        }
-
-        foreach ($this->getSizes() as $size) {
-            $readableSize = explode('x', $size);
-
-            if (! $fileUpload || $this->isChunkUploadEnabled()) {
-                $fileUpload = $this->getRealPath($file->url);
-
-                if ($this->isUsingCloud()) {
-                    $fileUpload = @file_get_contents($fileUpload);
-
-                    if (! $fileUpload) {
-                        continue;
-                    }
-                }
-            }
-
-            $thumbnailFileName = File::name($file->url) . '-' . $size . '.' . File::extension($file->url);
-            $dirName = File::dirname($file->url);
-            $thumbnailPath = ($dirName === '.' || ! $dirName) ? $thumbnailFileName : $dirName . '/' . $thumbnailFileName;
-
-            if (! $this->isUsingCloud() && Storage::exists($thumbnailPath)) {
-                continue;
-            }
-
-            $this->thumbnailService
-                ->setImage($fileUpload)
-                ->setSize($readableSize[0], $readableSize[1])
-                ->setDestinationPath(File::dirname($file->url))
-                ->setFileName($thumbnailFileName)
-                ->save();
         }
 
         return true;

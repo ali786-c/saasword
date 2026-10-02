@@ -89,9 +89,9 @@ $renderedContent = JobPostTemplateService::render($jobData);
 Jab bhi aap koi **Advertisement Picture** upload karenge:
 
 ### ⚙️ How Automatic Watermarking Works:
-1. System automated transparent text PNG (`careerinpak.com`) use karta hai.
-2. Image ke **bottom-right** (nichle daayein kone) par `80%` opacity ke sath auto-scale (`25%` of image width) ho kar watermark lag jata hai.
-3. Botble Media Manager (`RvMedia`) uploaded image aur thumbnails dono par watermark apply karta hai.
+1. **Clean Thumbnails (Featured Image Cards, Grid Views, Home Page):** System thumbnails (150x150, 300x200, etc.) **pehle clean generate hote hain (WITHOUT watermark)** taake site ka layout aur cards bilkul neat aur clean rahein.
+2. **Full Advertisement Picture (Modal View / High-Res View):** Full-size original advertisement image par automatic **bottom-right** corner mein `careerinpak.com` watermark stamp ho jata hai.
+3. **Fully Automatic Process:** Aap ko sirf image upload karni hai, thumbnail clean rahega aur main full ad image par watermark automatically lag jaye ga.
 
 ### 💻 CLI Commands for Watermark Management:
 
