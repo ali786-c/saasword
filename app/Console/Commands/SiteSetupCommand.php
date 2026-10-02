@@ -109,6 +109,8 @@ class SiteSetupCommand extends Command
         $this->removeSidebarWidgets();
         $this->setupSeo();
 
+        $this->call('cms:create-demo-job');
+
         $this->info('Clearing caches...');
 
         // The front menu renderer persists its own cache group; flush it or
