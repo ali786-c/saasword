@@ -123,22 +123,19 @@ class CreateDemoJobCommand extends Command
             ],
             [
                 'reference_id' => $post->id,
-                'prefix' => Slug::getPrefix($post::class, ''),
+                'prefix' => '',
             ]
         );
 
         if (class_exists(\Botble\Language\Models\LanguageMeta::class)) {
-            $langCode = class_exists(\Botble\Language\Facades\Language::class)
-                ? \Botble\Language\Facades\Language::getDefaultLanguageCode()
-                : 'en_US';
-
             \Botble\Language\Models\LanguageMeta::query()->firstOrCreate(
                 [
                     'reference_id' => $post->id,
                     'reference_type' => $post::class,
                 ],
                 [
-                    'lang_meta_code' => $langCode ?: 'en_US',
+                    'lang_meta_code' => setting('language_default_code', 'en_US'),
+                    'lang_meta_origin' => md5(microtime() . $post->id),
                 ]
             );
         }
