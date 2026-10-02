@@ -12,16 +12,88 @@ use Illuminate\Support\Str;
 
 class CreateFreshJobCommand extends Command
 {
-    protected $signature = 'cms:create-fresh-job {--type=fbr : Type of job to create (fbr, ppsc, paec)}';
+    protected $signature = 'cms:create-fresh-job {--type=umw : Type of job to create (umw, fbr, ppsc, paec)} {--draft : Save post as draft}';
 
     protected $description = 'Create a brand new fresh job post using the updated 11-section template engine';
 
     public function handle(): int
     {
-        $type = $this->option('type') ?? 'fbr';
-        $this->info("Creating fresh job post ({$type}) using 11-section JobPostTemplateService...");
+        $type = $this->option('type') ?? 'umw';
+        $isDraft = $this->option('draft') || $type === 'umw';
+        $status = $isDraft ? BaseStatusEnum::DRAFT : BaseStatusEnum::PUBLISHED;
 
-        if ($type === 'paec') {
+        $this->info("Creating fresh job post ({$type}) [Status: {$status}] using 11-section JobPostTemplateService...");
+
+        if ($type === 'umw') {
+            $title = 'University of Mianwali UMW Jobs 2026 - Consolidated Advt No 07/2026 Non-Teaching Vacancies';
+            $slugKey = Str::slug('University of Mianwali UMW Jobs 2026 Consolidated Advt No 07 2026 Non Teaching Vacancies');
+            $jobData = [
+                'posted_on' => 'October 02, 2026',
+                'city' => 'Mianwali',
+                'education' => 'Master / Bachelor / B.Com / DAE / Intermediate / Matric / Primary',
+                'vacancies' => '32+ Positions (14 Categories)',
+                'apply_method' => 'Online Portal + Hard Copy via Courier',
+                'organization' => 'University of Mianwali (UMW)',
+                'salary' => 'BPS-01 to BPS-16 (Rs. 30,000 - 85,000/Month)',
+                'official_source_url' => 'https://careers.umw.edu.pk/',
+                'official_apply_url' => 'https://careers.umw.edu.pk/',
+                'last_checked' => 'October 02, 2026',
+                'deadline' => 'October 13, 2026', // Online Deadline
+                'ad_image_url' => '', // Left empty for user to attach on live editor
+                'also_apply_title' => 'PPSC Jobs 2026 - Punjab Public Service Commission Advertisement No 18',
+                'also_apply_url' => '/ppsc-jobs-2026-punjab-public-service-commission-advertisement-no-18',
+                'job_description' => '<p>The <strong>University of Mianwali (UMW)</strong> has issued Consolidated Advertisement No. 07/2026 inviting online and hard-copy applications from eligible male and female candidates holding <strong>Punjab Domicile</strong> for <strong>32+ non-teaching staff vacancies</strong> across BS-01 to BS-16 scales.</p><p>Selected candidates will be appointed on regular/contract basis at the main campus (1 KM University Road, Mianwali). Candidates must submit online applications on <a href="https://careers.umw.edu.pk/" target="_blank" rel="nofollow">careers.umw.edu.pk</a> before <strong>October 13, 2026</strong>, followed by hard copy submission via courier before <strong>October 16, 2026</strong>.</p>',
+                'who_can_apply' => '<p>Only candidates possessing valid <strong>Punjab Domicile</strong> are eligible to apply. Applicants must meet the prescribed educational qualifications, post-qualification experience, computer typing proficiency, and age limits (18 to 35 years depending on scale).</p>',
+                'eligibility_criteria' => '<ul>
+                    <li><strong>Domicile Restriction:</strong> Mandatory Punjab Domicile only.</li>
+                    <li><strong>Fee Structure:</strong> BS-16: Rs. 2,500/- | BS-14 to BS-15: Rs. 2,000/- | BS-01 to BS-11: Rs. 1,500/- (Payable via Bank Draft in favor of Treasurer, University of Mianwali).</li>
+                    <li><strong>Application Dual Requirement:</strong> Online application submission on careers.umw.edu.pk AND hard copy submission via courier to Registrar Office are mandatory.</li>
+                    <li><strong>Contact Office:</strong> Office of Registrar, University of Mianwali, 1 KM University Road, Mianwali (Phone: 0459-920270, Email: registrar@umw.edu.pk).</li>
+                </ul>',
+                'vacant_positions' => [
+                    ['name' => 'Assistant (BS-16)', 'vacancies' => '02', 'education' => 'Master / BS (2nd Div) + 5 Yrs MS Office Exp', 'scale' => 'BS-16', 'location' => 'Mianwali', 'age_limit' => '21 - 35 Years'],
+                    ['name' => 'Accountant (BS-15)', 'vacancies' => '01', 'education' => 'B.Com (2nd Div) or equivalent', 'scale' => 'BS-15', 'location' => 'Mianwali', 'age_limit' => '18 - 30 Years'],
+                    ['name' => 'Caretaker (BS-14)', 'vacancies' => '01', 'education' => 'Bachelor Degree (2nd Div)', 'scale' => 'BS-14', 'location' => 'Mianwali', 'age_limit' => '18 - 30 Years'],
+                    ['name' => 'Electrician (BS-11)', 'vacancies' => '01', 'education' => 'Inter + DAE Electrical + 2 Yrs Exp', 'scale' => 'BS-11', 'location' => 'Mianwali', 'age_limit' => '18 - 30 Years'],
+                    ['name' => 'Junior Clerk (BS-11)', 'vacancies' => '09', 'education' => 'HSSC (2nd Div) + 25 wpm typing + MS Office', 'scale' => 'BS-11', 'location' => 'Mianwali', 'age_limit' => '18 - 30 Years'],
+                    ['name' => 'Qari (BS-09)', 'vacancies' => '01', 'education' => 'SSC (2nd Div) + Hifz-e-Quran Tajveed', 'scale' => 'BS-09', 'location' => 'Mianwali', 'age_limit' => '18 - 30 Years'],
+                    ['name' => 'Junior Storekeeper (BS-07)', 'vacancies' => '01', 'education' => 'SSC (2nd Div) + 25 wpm typing speed', 'scale' => 'BS-07', 'location' => 'Mianwali', 'age_limit' => '18 - 30 Years'],
+                    ['name' => 'Cook (BS-05)', 'vacancies' => '02', 'education' => 'Matric (2nd Div) + 2 Yrs Cooking Exp', 'scale' => 'BS-05', 'location' => 'Mianwali', 'age_limit' => '18 - 30 Years'],
+                    ['name' => 'Library Attendant (BS-05)', 'vacancies' => '02', 'education' => 'SSC (2nd Div) + Certificate in Library Science', 'scale' => 'BS-05', 'location' => 'Mianwali', 'age_limit' => '18 - 30 Years'],
+                    ['name' => 'Bus Driver (BS-04)', 'vacancies' => '04', 'education' => 'Matric + Valid HTV & PSV License + 5 Yrs Exp', 'scale' => 'BS-04', 'location' => 'Mianwali', 'age_limit' => '18 - 30 Years'],
+                    ['name' => 'Driver LTV (BS-04)', 'vacancies' => '03', 'education' => 'Matric + Valid LTV & PSV License + 5 Yrs Exp', 'scale' => 'BS-04', 'location' => 'Mianwali', 'age_limit' => '18 - 30 Years'],
+                    ['name' => 'Computer Lab Attendant (BS-01)', 'vacancies' => '01', 'education' => 'SSC (2nd Div) with Computer Science', 'scale' => 'BS-01', 'location' => 'Mianwali', 'age_limit' => '18 - 25 Years'],
+                    ['name' => 'Junior Lab Attendant (BS-01)', 'vacancies' => '04', 'education' => 'Secondary School Certificate (2nd Div)', 'scale' => 'BS-01', 'location' => 'Mianwali', 'age_limit' => '18 - 25 Years'],
+                    ['name' => 'Guest House Attendant (BS-01)', 'vacancies' => '01', 'education' => 'Secondary School Certificate (2nd Div)', 'scale' => 'BS-01', 'location' => 'Mianwali', 'age_limit' => '18 - 25 Years'],
+                ],
+                'documents_required' => [
+                    'Printed copy of Online Application Form from careers.umw.edu.pk',
+                    'Original Bank Draft favoring Treasurer, University of Mianwali',
+                    'Attested copies of CNIC and Punjab Domicile Certificate',
+                    'Attested copies of all Educational Certificates, Degrees & Transcripts',
+                    'Experience Certificates & Valid Driving Licenses (where applicable)',
+                    '03 Passport size recent photographs',
+                ],
+                'mistakes_to_avoid' => [
+                    'Do not miss the hard-copy courier deadline (October 16, 2026) — online submission alone is not sufficient.',
+                    'Do not deposit fee via cash or online transfer — UMW requires a Bank Draft favoring Treasurer, University of Mianwali.',
+                    'Candidates without Punjab Domicile should not apply as non-Punjab applications will be rejected.',
+                ],
+                'selection_process' => [
+                    'Online application submission on careers.umw.edu.pk before October 13, 2026.',
+                    'Bank Draft payment and courier dispatch of complete application dossier to Registrar Office before October 16, 2026.',
+                    'Written test & typing/practical test for Clerical, Computer, and Technical positions.',
+                    'Shortlisting of qualified candidates for Interview by UMW Selection Board.',
+                ],
+                'how_to_apply_urdu' => '<ol>
+                    <li>یونیورسٹی آف میانوالی کی سرکاری کیریئر پورٹل <strong>careers.umw.edu.pk</strong> پر جائیں۔</li>
+                    <li>آن لائن درخواست فارم پر کریں اور پرنٹ آؤٹ حاصل کریں۔</li>
+                    <li>اپنے سکیل کے مطابق پروسیسنگ فیس (BS-16: 2500, BS-14/15: 2000, BS-01 to 11: 1500) کا بینک ڈرافٹ "Treasurer, University of Mianwali" کے نام بنوائیں۔</li>
+                    <li>تمام تعلیمی اسناد، ڈومیسائل، سی این آئی سی اور تصاویر کی تصدیق شدہ کاپیاں آن لائن فارم کے ساتھ منسلک کریں۔</li>
+                    <li>درخواست کی ہارڈ کاپی بذریعہ ڈاک/کوریئر <strong>16 اکتوبر 2026</strong> سے پہلے دفتر رجسٹرار، یونیورسٹی آف میانوالی ارسال کریں۔</li>
+                </ol>',
+            ];
+        } elseif ($type === 'paec') {
             $title = 'Pakistan Atomic Energy Commission PAEC Jobs 2026 - Scientific Officer & Tech-I';
             $slugKey = Str::slug('Pakistan Atomic Energy Commission PAEC Jobs 2026 Scientific Officer Tech I');
             $jobData = [
@@ -143,9 +215,9 @@ class CreateFreshJobCommand extends Command
         $post = Post::query()->updateOrCreate(
             ['name' => $title],
             [
-                'description' => "FBR Jobs 2026 announced for 350+ Inspector Inland Revenue, Data Entry Operator, Stenotypist and UDC positions. Check eligibility, age limit, salary details and apply online before last date.",
+                'description' => "{$jobData['organization']} Jobs 2026 announced for {$jobData['vacancies']}. Check eligibility, age limit, salary details and apply online before last date.",
                 'content' => $content,
-                'status' => BaseStatusEnum::PUBLISHED,
+                'status' => $status,
                 'is_featured' => 1,
                 'user_id' => 1,
                 'views' => rand(300, 750),
