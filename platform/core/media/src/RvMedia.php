@@ -843,6 +843,11 @@ class RvMedia
         // Resize watermark width keep height auto
         $watermark->scale($watermarkSize);
 
+        $watermarkAngle = (int) setting('media_watermark_angle', 0);
+        if ($watermarkAngle !== 0) {
+            $watermark->rotate($watermarkAngle);
+        }
+
         $imageSource->place(
             $watermark,
             setting('media_watermark_position', $this->getConfig('watermark.position')),

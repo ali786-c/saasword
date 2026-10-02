@@ -678,16 +678,30 @@ class MediaSettingForm extends SettingForm
                 ),
                 'choices' => [
                     'top-left' => trans('core/setting::setting.media.watermark_position_top_left'),
+                    'top' => 'Top Center',
                     'top-right' => trans('core/setting::setting.media.watermark_position_top_right'),
+                    'left' => 'Middle Left',
+                    'center' => trans('core/setting::setting.media.watermark_position_center'),
+                    'right' => 'Middle Right',
                     'bottom-left' => trans(
                         'core/setting::setting.media.watermark_position_bottom_left'
                     ),
+                    'bottom' => 'Bottom Center',
                     'bottom-right' => trans(
                         'core/setting::setting.media.watermark_position_bottom_right'
                     ),
-                    'center' => trans('core/setting::setting.media.watermark_position_center'),
                 ],
-                'colspan' => 2,
+                'colspan' => 3,
+            ])
+            ->add('media_watermark_angle', NumberField::class, [
+                'label' => 'Watermark Angle / Rotation (Degrees)',
+                'value' => setting('media_watermark_angle', 0),
+                'attr' => [
+                    'placeholder' => '0 (Degrees, e.g. 45 or -45 for diagonal)',
+                    'min' => -360,
+                    'max' => 360,
+                ],
+                'colspan' => 3,
             ])
             ->add('media_watermark_position_x', NumberField::class, [
                 'label' => trans('core/setting::setting.media.watermark_position_x'),
@@ -698,7 +712,7 @@ class MediaSettingForm extends SettingForm
                 'attr' => [
                     'placeholder' => trans('core/setting::setting.media.watermark_position_x'),
                 ],
-                'colspan' => 2,
+                'colspan' => 3,
             ])
             ->add('media_watermark_position_y', NumberField::class, [
                 'label' => trans('core/setting::setting.media.watermark_position_y'),
@@ -709,7 +723,7 @@ class MediaSettingForm extends SettingForm
                 'attr' => [
                     'placeholder' => trans('core/setting::setting.media.watermark_position_y'),
                 ],
-                'colspan' => 2,
+                'colspan' => 3,
             ])
             ->add(
                 'media_watermark_warning',

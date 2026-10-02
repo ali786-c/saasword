@@ -80,9 +80,10 @@ class MediaSettingRequest extends Request
             'media_watermark_opacity' => ['nullable', 'numeric', 'min:0', 'max:100', 'required_if:media_watermark_enabled,1'],
             'media_watermark_position' => [
                 'nullable',
-                Rule::in(['top-left', 'top-right', 'bottom-left', 'bottom-right', 'center']),
+                Rule::in(['top-left', 'top', 'top-right', 'left', 'center', 'right', 'bottom-left', 'bottom', 'bottom-right']),
                 'required_if:media_watermark_enabled,1',
             ],
+            'media_watermark_angle' => ['nullable', 'numeric', 'between:-360,360'],
             'media_watermark_position_x' => ['nullable', 'numeric', 'min:0', 'required_if:media_watermark_enabled,1'],
             'media_watermark_position_y' => ['nullable', 'numeric', 'min:0', 'required_if:media_watermark_enabled,1'],
             'media_thumbnail_crop_position' => [
