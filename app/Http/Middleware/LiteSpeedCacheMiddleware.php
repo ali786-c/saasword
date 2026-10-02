@@ -15,6 +15,11 @@ class LiteSpeedCacheMiddleware
     {
         $response = $next($request);
 
+        // Check if LiteSpeed Cache is enabled in Admin Panel settings
+        if (! setting('optimize_litespeed_cache_enable', true)) {
+            return $response;
+        }
+
         // Only cache GET requests for non-authenticated guests and non-admin routes
         $adminDir = config('core.base.general.admin_dir', 'admin');
         if (

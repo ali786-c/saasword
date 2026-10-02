@@ -12,6 +12,28 @@
     class="optimize-settings mt-3"
     @style(['display: none;' => !setting('optimize_page_speed_enable', false)])
 >
+    <div class="mb-4 p-3 bg-light border rounded">
+        <h5 class="font-weight-bold mb-2">⚡ LiteSpeed Server RAM Cache</h5>
+        <x-core::form.on-off.checkbox
+            name="optimize_litespeed_cache_enable"
+            label="Enable LiteSpeed Cache & Enterprise RAM Caching"
+            :checked="setting('optimize_litespeed_cache_enable', true)"
+            helper-text="Outputs X-LiteSpeed-CacheControl response headers to allow LiteSpeed Web Server to cache HTML directly in server RAM for sub-15ms response times."
+        />
+    </div>
+
+    <div class="mb-4 p-3 bg-light border rounded">
+        <h5 class="font-weight-bold mb-2">🖼️ Image Optimization & Next-Gen WebP</h5>
+        <x-core::form.on-off.checkbox
+            name="media_convert_image_to_webp"
+            label="Convert Uploaded Images to WebP Automatically"
+            :checked="setting('media_convert_image_to_webp', true)"
+            helper-text="Automatically converts uploaded PNG, JPG, and JPEG images to high-compression .webp format to boost Google PageSpeed performance."
+        />
+    </div>
+
+    <h5 class="font-weight-bold mb-2">🧹 PageSpeed & HTML Minification Controls</h5>
+
     <x-core::form.on-off.checkbox
         name="optimize_collapse_white_space"
         :label="trans('packages/optimize::optimize.collapse_white_space')"

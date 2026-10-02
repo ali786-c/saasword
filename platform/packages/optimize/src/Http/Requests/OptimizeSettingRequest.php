@@ -11,6 +11,8 @@ class OptimizeSettingRequest extends Request
     {
         return [
             'optimize_page_speed_enable' => $onOffRule = new OnOffRule(),
+            'optimize_litespeed_cache_enable' => $onOffRule,
+            'media_convert_image_to_webp' => $onOffRule,
             'optimize_collapse_white_space' => $onOffRule,
             'optimize_elide_attributes' => $onOffRule,
             'optimize_inline_css' => $onOffRule,
