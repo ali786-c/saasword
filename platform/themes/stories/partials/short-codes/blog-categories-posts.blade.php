@@ -1,7 +1,14 @@
+@php
+    $sidebarContent = display_ad('top-sidebar-ads', ['class' => 'mb-30'])
+        . dynamic_sidebar('primary_sidebar')
+        . display_ad('bottom-sidebar-ads', ['class' => 'mt-30 mb-30']);
+    $hasSidebar = trim($sidebarContent) !== '';
+@endphp
+
 <div class="bg-grey pt-50 pb-50">
     <div class="container">
         <div class="row">
-            <div class="col-lg-8">
+            <div class="col-lg-{{ $hasSidebar ? '8' : '12' }}">
                 @if (!empty($category))
                     <div class="post-module-2">
                         <div class="widget-header-1 position-relative mb-30  wow fadeInUp animated">
@@ -37,13 +44,13 @@
                     </div>
                 @endif
             </div>
-            <div class="col-lg-4">
-                <div class="widget-area">
-                    {!! display_ad('top-sidebar-ads', ['class' => 'mb-30']) !!}
-                    {!! dynamic_sidebar('primary_sidebar') !!}
-                    {!! display_ad('bottom-sidebar-ads', ['class' => 'mt-30 mb-30']) !!}
+            @if ($hasSidebar)
+                <div class="col-lg-4">
+                    <div class="widget-area">
+                        {!! $sidebarContent !!}
+                    </div>
                 </div>
-            </div>
+            @endif
         </div>
     </div>
 </div>

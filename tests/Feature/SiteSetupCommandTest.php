@@ -90,6 +90,23 @@ class SiteSetupCommandTest extends TestCase
 
     public function test_site_setup_applies_pakistan_seo_defaults(): void
     {
+        // Seed demo widgets like the theme installer does, so the sidebar
+        // assertions below are proven, not vacuously true. (Unique index on
+        // widgets: sidebar_id+widget_id+theme+position — firstOrCreate.)
+        \Botble\Widget\Models\Widget::query()->firstOrCreate([
+            'sidebar_id' => 'primary_sidebar',
+            'widget_id' => 'AboutWidget',
+            'theme' => 'stories',
+            'position' => 0,
+        ], ['data' => []]);
+
+        \Botble\Widget\Models\Widget::query()->firstOrCreate([
+            'sidebar_id' => 'footer_sidebar',
+            'widget_id' => 'CustomMenuWidget',
+            'theme' => 'stories',
+            'position' => 0,
+        ], ['data' => []]);
+
         $this->assertSame(0, $this->artisanExitCode());
 
         // Site identity + Pakistan-targeted homepage meta.
@@ -101,12 +118,24 @@ class SiteSetupCommandTest extends TestCase
         // Job announcements use Article schema, not NewsArticle.
         $this->assertSame('Article', setting('blog_post_schema_type'));
 
-        // Demo Galleries widget must be gone from every sidebar area.
+        // Right rail: demo widgets (About me "Hello, I'm Steven", Popular
+        // Posts, Galleries) must be wiped so the homepage collapses the
+        // empty rail to full width.
         $this->assertSame(
             0,
             \Botble\Widget\Models\Widget::query()
+                ->where('sidebar_id', 'primary_sidebar')
                 ->where('theme', 'stories')
-                ->where('widget_id', 'GalleriesWidget')
+                ->count()
+        );
+
+        // ...but the footer sidebar (Quick links menu, Tags, Newsletter)
+        // must be left intact.
+        $this->assertGreaterThan(
+            0,
+            \Botble\Widget\Models\Widget::query()
+                ->where('sidebar_id', 'footer_sidebar')
+                ->where('theme', 'stories')
                 ->count()
         );
 

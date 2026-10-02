@@ -80,7 +80,7 @@ class SiteSetupCommand extends Command
         $this->publishPolicyPages();
         $this->rebuildFooterLegalMenu();
 
-        $this->removeGalleriesWidget();
+        $this->removeSidebarWidgets();
         $this->setupSeo();
 
         $this->info('Clearing caches...');
@@ -98,17 +98,21 @@ class SiteSetupCommand extends Command
     }
 
     /**
-     * The demo Galleries (instagram-style) widget renders in the sidebar
-     * area under the homepage sections — pure demo noise for a jobs site.
+     * The theme ships a demo right rail (About me "Hello, I'm Steven",
+     * Popular Posts, Galleries). A jobs portal needs no blog sidebar, and
+     * the demo author copy must never show on the live site — so empty the
+     * whole primary_sidebar. The layouts collapse to full width while the
+     * rail is empty, and it comes back automatically if real widgets are
+     * added later in Admin -> Appearance -> Widgets.
      */
-    protected function removeGalleriesWidget(): void
+    protected function removeSidebarWidgets(): void
     {
         $deleted = \Botble\Widget\Models\Widget::query()
-            ->where('theme', 'stories')
-            ->where('widget_id', 'GalleriesWidget')
+            ->where('sidebar_id', 'primary_sidebar')
+            ->where('theme', 'like', 'stories%')
             ->delete();
 
-        $this->info($deleted ? "Galleries widget removed ({$deleted} row)." : 'Galleries widget already removed.');
+        $this->info($deleted ? "Right-sidebar widgets removed ({$deleted} rows)." : 'Right-sidebar widgets already removed.');
     }
 
     /**
