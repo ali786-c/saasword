@@ -93,6 +93,68 @@ class CreateFreshJobCommand extends Command
                     <li>درخواست کی ہارڈ کاپی بذریعہ ڈاک/کوریئر <strong>16 اکتوبر 2026</strong> سے پہلے دفتر رجسٹرار، یونیورسٹی آف میانوالی ارسال کریں۔</li>
                 </ol>',
             ];
+        } elseif ($type === 'pidcl') {
+            $title = 'PIDCL Jobs 2026 - Pakistan Infrastructure Development Company 20 Vacancies';
+            $slugKey = Str::slug('PIDCL Jobs 2026 Pakistan Infrastructure Development Company 20 Vacancies');
+            $jobData = [
+                'posted_on' => 'September 27, 2026',
+                'city' => 'Islamabad, Karachi',
+                'education' => 'Master / Bachelor / DAE',
+                'vacancies' => '20 Positions (5 Categories)',
+                'apply_method' => 'Online via National Job Portal (www.njp.gov.pk)',
+                'organization' => 'Pakistan Infrastructure Development Company Limited (PIDCL)',
+                'salary' => 'Rs. 100,000 - 300,000/Month (Lumpsum)',
+                'official_source_url' => 'https://epaper.dawn.com/?page=27_09_2026_119',
+                'official_apply_url' => 'https://www.njp.gov.pk',
+                'last_checked' => 'October 03, 2026',
+                'deadline' => 'October 12, 2026',
+                'ad_image_url' => '',
+                'also_apply_title' => 'FBR Jobs 2026 - Inspector Inland Revenue & DEO 350+ Vacancies',
+                'also_apply_url' => '/category/federal-jobs',
+                'job_description' => '<p>The <strong>Pakistan Infrastructure Development Company Limited (PIDCL)</strong>, operating under the <strong>Ministry of Housing & Works, Government of Pakistan</strong>, has announced project-based recruitment for <strong>20 key vacancies</strong> across Islamabad and Karachi. Positions include Senior Site Engineer, Site Engineer (Civil), Project Coordinator, Sub-Engineer Civil, and Admn / Finance Assistant on an open-merit contract basis.</p><p>Qualified professionals meeting HEC degree criteria, PEC engineering registrations, and relevant experience are invited to apply online through the <strong>National Job Portal (<a href="https://www.njp.gov.pk" target="_blank" rel="nofollow">www.njp.gov.pk</a>)</strong> before the last date.</p>',
+                'who_can_apply' => '<p>Candidates from all over Pakistan meeting the prescribed educational qualifications (BS Civil Engineering, MS Construction/Project Management, DAE, Bachelor Degree), valid PEC registration (for engineering roles), and minimum age limits (25 to 30 years) are eligible on an open-merit contract basis.</p>',
+                'eligibility_criteria' => '<ul>
+                    <li><strong>Senior Site Engineer (Rs. 300,000/Month):</strong> Bachelor degree in Civil Engineering (HEC recognized) + at least 5 years relevant experience + mandatory PEC registration. Min Age: 30 Years.</li>
+                    <li><strong>Site Engineer Civil (Rs. 150,000/Month):</strong> Bachelor degree in Civil Engineering + at least 2 years relevant experience + mandatory PEC registration. Min Age: 25 Years.</li>
+                    <li><strong>Project Coordinator (Rs. 150,000/Month):</strong> Master degree in Construction Management / Project Management + at least 2 years experience. Min Age: 25 Years.</li>
+                    <li><strong>Sub-Engineer Civil (Rs. 100,000/Month):</strong> DAE Civil, Mechanical, or Electrical + at least 2 years experience. Min Age: 25 Years.</li>
+                    <li><strong>Admn / Finance Assistant (Rs. 100,000/Month):</strong> Bachelor Degree + relevant administrative/finance experience. Min Age: 25 Years.</li>
+                </ul>',
+                'vacant_positions' => [
+                    ['name' => 'Senior Site Engineer', 'vacancies' => '02', 'education' => 'BS Civil Engineering + 5 Yrs Exp', 'scale' => 'Contract (Rs. 300,000)', 'location' => 'Islamabad (1), Karachi (1)', 'age_limit' => '30+ Years'],
+                    ['name' => 'Site Engineer (Civil)', 'vacancies' => '05', 'education' => 'BS Civil Engineering + 2 Yrs Exp', 'scale' => 'Contract (Rs. 150,000)', 'location' => 'Islamabad (3), Karachi (2)', 'age_limit' => '25+ Years'],
+                    ['name' => 'Project Coordinator', 'vacancies' => '02', 'education' => 'MS Construction / Project Mgmt + 2 Yrs Exp', 'scale' => 'Contract (Rs. 150,000)', 'location' => 'Islamabad (1), Karachi (1)', 'age_limit' => '25+ Years'],
+                    ['name' => 'Sub-Engineer Civil', 'vacancies' => '07', 'education' => 'DAE Civil / Mechanical / Electrical + 2 Yrs Exp', 'scale' => 'Contract (Rs. 100,000)', 'location' => 'Islamabad (4), Karachi (3)', 'age_limit' => '25+ Years'],
+                    ['name' => 'Admn. / Finance Assistant', 'vacancies' => '04', 'education' => 'Bachelor Degree + Relevant Exp', 'scale' => 'Contract (Rs. 100,000)', 'location' => 'Islamabad (2), Karachi (2)', 'age_limit' => '25+ Years'],
+                ],
+                'documents_required' => [
+                    'Attested copy of CNIC card',
+                    'Educational Degrees & Transcripts (HEC recognized)',
+                    'PEC Registration Certificate (Mandatory for Engineers)',
+                    'DAE Diploma Certificate from Technical Board',
+                    'Experience Certificates from previous employers',
+                    'Recent Passport size photographs',
+                ],
+                'mistakes_to_avoid' => [
+                    'Do not submit hard-copy applications directly to PIDCL office — apply online via www.njp.gov.pk.',
+                    'Ensure your PEC registration is active before applying for engineering roles.',
+                    'Do not apply after the last date (October 12, 2026).',
+                    'Do not enter unverified experience details or incorrect degree names.',
+                ],
+                'selection_process' => [
+                    'Online application submission on National Job Portal (www.njp.gov.pk).',
+                    'Screening and shortlisting based on educational & PEC credentials.',
+                    'Interview at PIDCL Head Office Islamabad / Karachi (No TA/DA admissible).',
+                    'Appointment on project-based contractual terms.',
+                ],
+                'how_to_apply_urdu' => '<ol>
+                    <li>قومی جاب پورٹل <strong>www.njp.gov.pk</strong> پر جائیں اور اپنا اکاؤنٹ لاگ ان کریں۔</li>
+                    <li>سرچ بار میں <strong>Pakistan Infrastructure Development Company Limited (PIDCL)</strong> یا اپنی مطلوبہ اسامی (مثلاً Senior Site Engineer, Sub-Engineer) منتخب کریں۔</li>
+                    <li>اپنی تمام تعلیمی اسناد، PEC رجسٹریشن نمبر اور تجربے کی تفصیلات احتیاط سے فارم میں درج کریں۔</li>
+                    <li>تمام معلومات کی تصدیق کے بعد درخواست کو <strong>12 اکتوبر 2026</strong> سے پہلے آن لائن submit کریں۔</li>
+                    <li>یاد رہے کہ PIDCL دفتر میں براہ راست یا بذریعہ کوریئر درخواستیں قابل قبول نہیں ہوں گی۔</li>
+                </ol>',
+            ];
         } elseif ($type === 'paec') {
             $title = 'Pakistan Atomic Energy Commission PAEC Jobs 2026 - Scientific Officer & Tech-I';
             $slugKey = Str::slug('Pakistan Atomic Energy Commission PAEC Jobs 2026 Scientific Officer Tech I');

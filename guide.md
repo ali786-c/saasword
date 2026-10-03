@@ -1,228 +1,128 @@
-# CareerInPak Posting System Guide
+# CareerInPak Posting System & Complete Workflow Guide
 
-This guide defines the full local posting flow for CareerInPak job and scholarship posts.
+This guide is the master Standard Operating Procedure (SOP) for creating, formatting, watermarking, publishing, and syncing job and scholarship posts on **CareerInPak.com**.
 
-The main goal is not only a good SEO score. The main goal is to publish content that is useful, clear, trustworthy, and easy for a Pakistani job seeker to understand.
+The main goal is to publish content that is useful, clear, trustworthy, easy for a Pakistani job seeker to understand, and 100% compliant with search engine (SEO) and AdSense standards.
+
+---
 
 ## 1. Language Policy
 
 Use this rule for every post:
 
-- Main content must be written in pure English.
-- English must be simple, direct, and easy to understand.
-- Do not use Roman Urdu in the main content.
-- Urdu is allowed only inside the “How to Apply” section.
-- Do not use difficult vocabulary, long sentences, or corporate-style language.
-- Do not use emojis.
-- Do not use AI-style filler or hype.
+- **Main Content:** Must be written in simple, pure English.
+- **Tone:** Direct, clear, and easy to understand.
+- **Prohibitions:**
+  - Do NOT use Roman Urdu in the main body text.
+  - Do NOT use difficult vocabulary, long complex sentences, or corporate jargon.
+  - Do NOT use emojis.
+  - Do NOT use AI-style filler or hype ("prestigious opportunity", "golden chance").
+- **Urdu Allowed Location:** Urdu script is allowed **only** inside Section 4.9 ("How to Apply").
 
-Bad:
+### Examples:
+* **Bad:** "This prestigious opportunity offers a remarkable career pathway for ambitious candidates."
+* **Good:** "Punjab Police has announced new jobs for eligible candidates. Read the official advertisement before applying. Check the last date, age limit, and required documents carefully."
 
-“This prestigious opportunity offers a remarkable career pathway for ambitious candidates.”
+---
 
-Good:
+## 2. Content Quality Goal & High-Value Standard
 
-“Punjab Police has announced new jobs for eligible candidates. Read the official advertisement before applying. Check the last date, age limit, and required documents carefully.”
+Every post must answer these core questions clearly:
 
-## 2. Content Quality Goal
+1. What is the job or scholarship?
+2. Which organization announced it?
+3. Who can apply?
+4. What education, age, domicile, and experience are required?
+5. What is the last date / deadline?
+6. How can the user apply?
+7. Which documents are required?
+8. Where is the official source or application link?
+9. What should the candidate verify before applying?
+10. Is CareerInPak official or an informational portal?
 
-Every post must answer these questions clearly:
+### High-Value Writing Rules:
+- Write in simple English tailored for Pakistani readers.
+- Do not copy advertisements line-by-line. Re-organize the information logically.
+- Include practical original sections: Required Documents, Application Mistakes to Avoid, Selection Process, and Domicile/Eligibility highlights.
+- Avoid filler text added solely to lengthen the post.
 
-- What is the job or scholarship?
-- Which organization announced it?
-- Who can apply?
-- What education, age, domicile, and experience are required?
-- What is the last date?
-- How can the user apply?
-- Which documents may be required?
-- Where is the official source?
-- What should the user verify before applying?
-- Is CareerInPak official or only an information portal?
-
-If a user leaves the page with these answers, the post is useful.
-
-## 2.1 High-Value Writing Standard
-
-Every post must feel like a helpful guide, not a copied job advertisement.
-
-The post should help the reader understand:
-
-- whether the job is relevant for them
-- what documents they should prepare
-- what mistakes they should avoid
-- how to verify the official source
-- how to apply correctly
-- what information is confirmed and what is not available
-
-Required value rules:
-
-- Write in simple English for Pakistani readers.
-- Keep sentences short and clear.
-- Avoid hard vocabulary and corporate-style wording.
-- Do not use Roman Urdu in the main content.
-- Use Urdu only in the “How to Apply” section.
-- Do not copy the advertisement line by line.
-- Rewrite the information in a useful, organized way.
-- Add practical user-help sections such as documents, mistakes, eligibility, and verification.
-- Do not add filler only to make the post longer.
-
-Bad:
-
-“This distinguished initiative provides a remarkable opportunity for highly motivated candidates to pursue an exceptional public-sector career pathway.”
-
-Good:
-
-“The Government of Sindh Planning & Development Department has announced contract posts for the Climate & Equity Development Project. Candidates with Sindh domicile should check the required qualification, experience, age limit, and last date before applying.”
-
-Before a post is considered ready, it must provide real value beyond the vacancy table.
+---
 
 ## 3. No-Assumption Rule
 
 Never invent missing information.
 
-If official data does not mention something, do not add that optional detail in the post.
+If official sources omit optional details (e.g., exact salary, specific test date), omit those optional fields or leave optional table cells blank. Do not invent fake data.
 
-Do not fill the page with repeated lines like “Not mentioned in the official advertisement.”
+### Mandatory Required Fields (Post Creation Blocks if Missing):
+1. Focus keyword
+2. Organization name
+3. Apply method
+4. Official source URL
+5. Last checked date
+6. At least one job title / position
+7. "How to Apply" Urdu steps
 
-Only use a short verification note when needed:
+---
 
-“Please confirm final details from the official source before applying.”
+## 4. Required Post Structure (11 Sections)
 
-This rule applies to salary, vacancies, age limit, domicile, gender eligibility, experience, test/interview details, application fee, selection process, and last date.
-
-Required fields are different. If these are missing, stop and do not create the post:
-
-- focus keyword
-- organization
-- apply method
-- official source URL
-- last checked date
-- at least one position/title
-- How to Apply Urdu steps
-
-## 4. Required Post Structure
-
-Every job post should follow this structure.
+Every job post must follow this 11-section layout in sequence:
 
 ### 4.1 Short Introduction
-
-Write 2 short paragraphs.
-
-Include organization name, job title, location/province, last date if available, apply method, and official source note.
-
-The focus keyword can appear naturally in the first paragraph, but do not force it many times.
+- 2 short paragraphs explaining organization, main position, location, deadline, apply method, and official source note.
+- Include the primary focus keyword naturally in the first paragraph.
 
 ### 4.2 Quick Job Summary
-
-Use a clean table or summary card.
-
-Required fields:
-
+A clean summary card/table containing:
 - Organization
 - Job type
 - Location
 - Education
 - Vacancies
-- Last date
+- Last date / Deadline
 - Apply method
 - Official source
 - Last checked date
 
-If a field is missing, hide that row/field instead of writing placeholder text.
+*(Hide any row where data is unavailable instead of writing placeholder text).*
 
 ### 4.3 Who Can Apply
-
-Explain in simple English:
-
-- required education
-- age limit
-- domicile/province
-- gender if mentioned
-- experience if required
-- fresh candidates if allowed
-
-This section must help the reader quickly decide if the post is relevant.
+Simple English summary explaining: required education, age limits, domicile/province restrictions, gender quota, and experience requirements.
 
 ### 4.4 Vacant Positions
-
-Use a table when possible.
-
-Recommended columns:
-
-- Sr.
-- Post name
-- Vacancies
-- Education
-- Scale/pay
-- Location
-- Age limit
-
-If exact data is missing, leave that optional cell blank or remove that optional column/field. Do not invent details.
+An HTML table with columns: `Sr.`, `Post Name`, `Vacancies`, `Education`, `Scale/Pay`, `Location`, `Age Limit`.
 
 ### 4.5 Eligibility Criteria
-
-Use simple bullets.
-
-Cover education, age, domicile, experience, and any skill/test/physical requirement if mentioned.
+Bulleted list covering education, age limits, domicile requirements, and skill/test requirements.
 
 ### 4.6 Documents Required
-
-Add this as helpful original value.
-
-Use wording like:
-
-“The official advertisement may require some or all of the following documents. Candidates should confirm the final list from the official advertisement before applying.”
-
-Common documents:
-
-- CNIC
-- domicile
-- educational certificates
-- experience certificate
-- recent photographs
-- application form
-- challan form or fee slip, if required
+A helpful checklist for applicants with standard verification note:
+> *"The official advertisement may require some or all of the following documents. Candidates should confirm the final list from the official advertisement before applying."*
+- CNIC copy
+- Domicile Certificate
+- Educational Degrees & Transcripts
+- Experience Certificates (if applicable)
+- Passport-size Photographs
+- Fee Challan / Bank Draft receipt (if required)
 
 ### 4.7 Application Mistakes to Avoid
-
-This section is required because it helps real users.
-
-Include simple points:
-
+Crucial practical advice for real users:
 - Do not apply after the last date.
-- Do not enter the wrong CNIC or mobile number.
-- Do not submit an incomplete form.
-- Do not pay any fee on an unofficial link.
-- Read the official advertisement before applying.
-- Keep a copy of the submitted form or receipt.
+- Do not enter incorrect CNIC or mobile number.
+- Do not submit incomplete forms.
+- Do not pay fees on unofficial links.
+- Read official advertisement thoroughly before applying.
+- Keep a copy of submitted receipt/form.
 
 ### 4.8 Selection Process
+Explain official process steps (written test, physical test, interview, merit list) **only if mentioned**. Skip if not specified in official ad.
 
-If the official source mentions the process, explain it.
-
-Possible steps:
-
-- written test
-- physical test
-- interview
-- document verification
-- merit list
-
-If it is not mentioned, skip this section. Do not write a filler paragraph.
-
-### 4.9 How to Apply
-
-This is the only section where Urdu is allowed.
-
-Rules:
-
-- Use Urdu script.
-- Use RTL styling.
-- Keep steps short and clear.
-- Do not use Roman Urdu.
-- Do not duplicate these Urdu steps inside the main English content.
-
-Example wrapper:
+### 4.9 How to Apply (Urdu RTL Section)
+This is the **only** section where Urdu is permitted.
+- Must use pure Urdu script with `dir="rtl"` layout.
+- Uses Nastaliq font stack (`font-family: 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', sans-serif`).
+- Short numbered list (`<ol>`).
 
 ```html
 <div dir="rtl" style="text-align: right; font-family: 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', sans-serif; line-height: 2;">
@@ -235,342 +135,189 @@ Example wrapper:
 ```
 
 ### 4.10 Official Source and Verification
+Must include: official source link, advertisement image link, last checked date, and correction email (`info@careerinpak.com`).
 
-Every post must include:
-
-- official source link
-- official advertisement link if available
-- last checked date
-- what was checked
-- correction contact
-
-Recommended text:
-
-“CareerInPak collected this information from the official advertisement or official portal. Candidates should verify the details from the official source before applying. If you find an error, contact us at info@careerinpak.com.”
+> *"CareerInPak collected this information from the official advertisement or portal. Candidates should verify details from the official source before applying. If you find an error, contact us at info@careerinpak.com."*
 
 ### 4.11 Disclaimer
+Mandatory notice on every post:
 
-Every post must include a clear disclaimer:
+> *"CareerInPak is not a government website. We collect jobs and scholarships from official sources to help users find information in one place. CareerInPak does not guarantee selection, test calls, interviews, or employment. Always verify details from the official advertisement or portal before applying."*
 
-“CareerInPak is not a government website. We collect jobs and scholarships from official sources to help users find information in one place. CareerInPak does not guarantee selection, test calls, interviews, or employment. Always verify details from the official advertisement or official portal before applying.”
+---
 
 ## 5. Title Rules
 
-Titles must be factual.
-
-Do not use Massive, Amazing, Ultimate, Exclusive, Best, Golden opportunity, or Highly anticipated unless those words are part of the official source.
-
-Use this format:
-
-`[Organization] Jobs [Year] - [Exact Vacancies or Main Position]`
-
-Examples:
-
-- `FIA Jobs 2026 - 22 Superintendent Vacancies`
-- `Punjab Police Jobs 2026 - Constable and Lady Constable Posts`
-- `HEC Scholarships 2026 - Apply Online`
-
-If the exact number of vacancies is not mentioned, do not invent it.
-
-## 6. SEO Rules Without Keyword Stuffing
-
-SEO is important, but content must stay natural.
-
-Core SEO rules:
-
-- Use the focus keyword in the SEO title.
-- Use the focus keyword in the meta description.
-- Use the focus keyword in the slug.
-- Use the focus keyword naturally in the first paragraph.
-- Use one relevant subheading with the focus keyword only if it reads naturally.
-- Do not repeat the keyword unnaturally.
-- Do not target a fixed keyword density.
-- Use secondary keywords only where they fit naturally.
-- Add internal links only when they help the reader.
-- Add official external links clearly.
-- Keep the SEO title under about 60 characters when possible.
-- Keep the meta description around 140-160 characters when possible.
-- Use a clean lowercase slug with hyphens.
-- Use one clear H1/title and logical H2/H3 sections.
-- Add descriptive image alt text when a real official image is used.
-- Use Article/JobPosting schema only when required fields are available and accurate.
-- Do not add fake salary, fake address, fake hiring organization data, or fake schema fields.
-- Keep the page indexable only if it is useful and not expired/misleading.
-- Use canonical/self-canonical through WordPress/Rank Math.
-- Use FAQ schema only if real FAQs exist in the visible content.
-
-Do not write for RankMath score only. Write for the user first.
-
-## 6.1 Keyword and SEO Writing Formula
-
-Every post should have one primary focus keyword and 2 to 4 secondary keywords.
-
-Primary keyword examples:
-
-- `Sindh Planning Development Department Jobs 2026`
-- `Directorate of Community Schools Islamabad Jobs 2026`
-
-Secondary keyword examples:
-
-- `Sindh government jobs 2026`
-- `Planning and Development Department Sindh jobs`
-- `teaching jobs in Islamabad 2026`
-- `research associate jobs Sindh`
-
-Keyword placement:
-
-- primary keyword in SEO title
-- primary keyword in slug
-- primary keyword in meta description
-- primary keyword naturally in the first paragraph
-- secondary keywords naturally in relevant paragraphs
-
-Keyword rules:
-
-- Do not repeat the same keyword again and again.
-- Do not force keywords into every heading.
-- Do not create awkward sentences for SEO.
-- Do not add keywords that are not relevant to the job.
-- Do not use clickbait words to improve CTR.
-
-Title formula:
-
-`[Organization/Department] Jobs [Year]`
-
-If exact vacancies are confirmed, this is also allowed:
-
-`[Organization/Department] Jobs [Year] - [Number] Vacancies`
-
-Meta description formula:
-
-`Apply for [Organization] Jobs [Year]. Check vacancies, eligibility, last date, required documents, application method, and official source.`
-
-Internal linking:
-
-- Add 2 to 4 internal links only when useful.
-- Link to relevant category/hub pages such as Govt Jobs, Sindh Jobs, Teaching Jobs, IT Jobs, Scholarships, or Latest Jobs.
-- Do not add random internal links.
-
-External linking:
-
-- Add the official source or apply portal.
-- Label it clearly as official source or official portal.
-- Do not link to unknown third-party sites.
-
-AdSense-safe SEO principle:
-
-The post should be optimized enough for search engines, but it must still read like a helpful article for a real applicant.
-
-## 7. Internal and External Links
-
-Internal links should be useful.
-
-Good internal links:
-
-- latest government jobs
-- jobs by province
-- jobs by department
-- scholarships
-- related active job posts
-
-External links must point to the official department website, official portal, or official advertisement. Do not link to unknown or suspicious sites.
-
-## 8. Images and Advertisement
-
-Use only real and relevant images.
-
-Rules:
-
-- Do not inject dummy image blocks.
-- Do not create fake advertisement images.
-- If an official advertisement image is used, add descriptive alt text.
-- Alt text should describe the image, not just repeat keywords.
-
-## 9. Rank Math Meta
-
-Set these fields:
-
-- SEO title
-- meta description
-- focus keyword
-- 2 to 3 secondary keywords if useful
-- tags
-
-Meta description should be simple:
-
-`Apply for [Organization] Jobs [Year]. Check eligibility, vacancies, last date, official source, and application process before applying.`
-
-Rank Math should be used as a checklist, not as the main goal. Do not add awkward keywords, fake links, dummy images, or extra filler only to increase the score.
-
-## 9.1 Required Schema Delivery After Every Post
-
-After every generated job post, provide a paste-ready JSON-LD schema for Rank Math Custom Schema import.
-
-This is mandatory for every post.
-
-The assistant must provide:
-
-- a separate local schema file, for example `organization-job-title-2026-schema.json`
-- the full JSON-LD code in the chat
-- a short note that the user can paste it into Rank Math SEO > Schema > Import > Custom JSON-LD
-
-Schema rules:
-
-- Use `JobPosting` schema only for real job posts.
-- Use accurate official data only.
-- Do not invent salary, address, vacancy, date, or organization data.
-- If salary is not available, either omit salary or clearly use only safe official/BPS-based information when available.
-- `datePosted` must match the post/source date if available.
-- `validThrough` must match the official last date if available.
-- `hiringOrganization.name` must match the official hiring organization.
-- `url` should point to the official source or apply portal.
-- `jobLocation` should use the official address/location if available.
-- Do not add FAQ schema unless FAQs are visible in the post.
-- Do not add fake `baseSalary`, fake postal code, or fake street address just to remove schema warnings.
-
-If required schema data is not available, tell the user which fields are missing instead of inventing them.
-
-## 10. WordPress Publishing Flow
-
-Default flow:
-
-1. AI generates the post locally.
-2. WordPress post is created as published locally so it can be previewed and synced from the local workflow.
-3. Elementor template is cloned.
-4. Placeholders are replaced.
-5. Quality checklist is reviewed.
-6. Local preview is checked.
-7. Post is synced to live as draft through CIP Sync status mapping.
-8. Live preview is checked.
-9. Live post is published only after review.
-
-Do not publish directly on the live site unless the user clearly asks for it.
-
-## 11. Elementor Template Flow
-
-Template ID:
-
-`1156`
-
-The generator must load WordPress with `wp-load.php`, create a local published post, clone template `1156`, replace placeholders recursively, save `_elementor_data` with `wp_slash`, add Rank Math meta, add categories/tags, and print the post ID, local URL, and edit link. Live sync should still map local published posts to live draft during review.
-
-Required Elementor meta:
-
-- `_elementor_edit_mode = builder`
-- `_elementor_template_type = wp-post`
-
-## 12. Required Placeholders
-
-Current required placeholders:
-
-- `[Date]`
-- `[City]`
-- `[Education]`
-- `[Dept Name]`
-- `[Deadline]`
-- `[Salary]`
-- job description placeholder
-- vacant positions placeholder
-- how to apply placeholder
-
-New placeholders to add to the improved template:
-
-- `[Organization]`
-- `[Job Type]`
-- `[Vacancies]`
-- `[Apply Method]`
-- `[Official Source URL]`
-- `[Official Advertisement URL]`
-- `[Last Checked Date]`
-- `[Who Can Apply]`
-- `[Documents Required]`
-- `[Mistakes To Avoid]`
-- `[Selection Process]`
-- `[Verification Note]`
-- `[Disclaimer Note]`
-
-## 13. Quality Checklist Before Live Push
-
-Before syncing a post to live, check:
-
-- title is factual
-- main content is pure simple English
-- post provides value beyond the official ad
-- intro clearly explains department, post type, last date, apply method, and official source
-- no Roman Urdu in main content
-- Urdu appears only in How to Apply
-- official source is included
-- last checked date is included
-- last date is included when available; if missing, do not invent it
-- optional missing fields are skipped instead of filled with repeated “not mentioned” text
-- apply method is clear
-- documents required section is useful
-- application mistakes section is useful
-- who can apply section helps the reader decide eligibility
-- missing data is not invented
-- disclaimer is present
-- documents section is present
-- mistakes to avoid section is present
-- selection process is present only if available
-- no clickbait words
-- no keyword stuffing
-- no fake salary or vacancy number
-- no broken HTML
-- apply link points to official source
-
-## 14. Expired Job Handling
-
-Expired jobs are handled by the existing deadline/countdown shortcode/plugin. The generator should keep using the `[Deadline]` placeholder with `[job_countdown deadline="YYYY-MM-DD"]` when an ISO deadline is available.
-
-If the last date has passed, the existing expiry system should:
-
-- show an expired notice near the top
-- disable or clearly label the apply button
-- tell users to check latest jobs
-- keep the post useful for reference
-- do not mislead users into applying
-
-Do not add a second manual expired notice section in the Elementor template.
-
-## 15. Cleanup
-
-Temporary PHP files must be deleted after execution.
-
-Do not leave files like:
-
-- `temp-publish-job.php`
-- `temp-inspect-posting-flow.php`
-- temporary schema scripts
-
-## 16. AI Pair-Posting Protocol (Local-to-cPanel Workflow)
-
-To publish any job post efficiently, follow this exact 2-Step Workflow:
+Titles must be strictly factual without clickbait adjectives.
+Format: `[Organization] Jobs [Year] - [Exact Vacancies or Main Position]`
+
+* **Good Examples:**
+  - `FBR Jobs 2026 - Inspector Inland Revenue & DEO 350+ Vacancies`
+  - `University of Mianwali UMW Jobs 2026 - Consolidated Advt No 07/2026`
+  - `PPSC Jobs 2026 - Punjab Public Service Commission Advertisement No 18`
+
+---
+
+## 6. SEO, Keywords & Google Jobs Schema
+
+### Keyword Formula:
+- **1 Primary Focus Keyword:** Used in Title (<60 chars), Meta Description (140-160 chars), Slug (lowercase hyphenated), and 1st Paragraph.
+- **2 to 4 Secondary Keywords:** Placed naturally in body paragraphs.
+- **Internal Links:** 2 to 4 contextual links to relevant hub pages (Govt Jobs, Sindh Jobs, Teaching Jobs, IT Jobs).
+- **External Links:** Clear link to official source portal.
+
+### Google Jobs JSON-LD Schema (`schema.org/JobPosting`):
+Every post must embed or generate a clean JSON-LD script matching official data (`datePosted`, `validThrough`, `hiringOrganization`, `jobLocation`, `title`, `description`). No fake salary or address fields.
+
+---
+
+## 7. Visual Styling & CSS Specifications
+
+| Visual Element | Styling Rules |
+| :--- | :--- |
+| **Body Typography** | High contrast dark text (`color: #111111; font-family: Inter, Roboto, sans-serif; line-height: 1.7;`) with bold entity highlights. |
+| **Section Headings (H2/H3)** | Solid Red Banner (`background-color: #e53935; color: #ffffff; padding: 10px 15px; border-left: 5px solid #007bff; border-radius: 4px; font-weight: bold;`). |
+| **Active Deadline Box** | Light blue background (`#eef7ff`), border `#b3d7ff`, 📅 calendar badge + dynamic countdown (`[job_countdown deadline="YYYY-MM-DD"]`). |
+| **Expired Deadline Box** | Light red background (`#fdf2f2`), border `#f5c6cb`, ❌ alert badge ("This Job Has Expired"). |
+
+---
+
+## 8. Advertisement Images & Automatic Watermarking
+
+### Image Standards:
+1. **Featured Image / Grid Thumbnail:**
+   - **Dimensions:** `1200 x 630` pixels (16:9 Landscape).
+   - **Watermark:** **Clean (No watermark)** so home page cards and social thumbnails look neat.
+2. **Full Newspaper Job Advertisement Image:**
+   - **Dimensions:** `1000 x 1400` pixels (4:5 Portrait).
+   - **Watermark:** Automatic `careerinpak.com` stamp in bottom-right corner.
+   - **Format:** Automatic WebP encoding for 80% compression.
+
+### Artisan Watermarking Commands:
+```bash
+# Generate watermark PNG stamp
+php artisan cms:generate-watermark --text=careerinpak.com
+
+# Apply watermark to all uploaded media
+php artisan cms:media:insert-watermark
+
+# Convert all images to WebP
+php artisan cms:convert-images-to-webp
+```
+
+---
+
+## 9. Programmatic Post Creation Engine (`JobPostTemplateService`)
+
+In PHP code or CLI commands, posts are built via `App\Services\JobPostTemplateService::render($jobData)`.
+
+### Complete `$jobData` PHP Schema Array:
+```php
+use App\Services\JobPostTemplateService;
+
+$jobData = [
+    'posted_on'           => 'October 02, 2026',
+    'city'                => 'Islamabad, Lahore, Karachi',
+    'education'           => 'Bachelor / Master / Intermediate',
+    'vacancies'           => '350+ Positions',
+    'apply_method'        => 'Online via FPSC & FBR Portal',
+    'organization'        => 'Federal Board of Revenue (FBR)',
+    'salary'              => 'BPS-11 to BPS-16 (Rs. 45,000 - 95,000/Month)',
+    'official_source_url' => 'https://www.fbr.gov.pk',
+    'official_apply_url'  => 'https://www.fpsc.gov.pk',
+    'last_checked'        => 'October 02, 2026',
+    'deadline'            => 'October 25, 2026', // Format: Month Day, Year
+    'ad_image_url'        => '/storage/news/advertisement.jpg',
+    'also_apply_title'    => 'PPSC Jobs 2026 Advertisement No 18',
+    'also_apply_url'      => '/ppsc-jobs-2026-punjab-public-service-commission-advertisement-no-18',
+    'job_description'     => '<p>The <strong>Federal Board of Revenue (FBR)</strong> has announced...</p>',
+    'who_can_apply'       => '<p>Citizens of Pakistan having valid domicile...</p>',
+    'eligibility_criteria'=> '<ul><li><strong>Education:</strong> Bachelor Degree...</li></ul>',
+    'vacant_positions'    => [
+        [
+            'name'      => 'Inspector Inland Revenue',
+            'vacancies' => '180',
+            'education' => 'Bachelor (Economics / BBA / B.Com)',
+            'scale'     => 'BS-16 (Regular)',
+            'location'  => 'All Regional Offices',
+            'age_limit' => '20 - 33 Years',
+        ],
+    ],
+    'documents_required'  => [
+        'Original CNIC card copy',
+        'Domicile Certificate of relevant district',
+    ],
+    'mistakes_to_avoid'   => [
+        'Do not submit incomplete online forms.',
+    ],
+    'selection_process'   => [
+        'Online registration on official portal.',
+        'Screening MCQs test.',
+    ],
+    'how_to_apply_urdu'   => '<ol><li>ایف بی آر یا FPSC کی سرکاری ویب سائٹ پر جائیں...</li></ol>',
+];
+
+$htmlContent = JobPostTemplateService::render($jobData);
+```
+
+### Quick CLI Artisan Commands:
+```bash
+# Create active job post demo
+php artisan cms:create-fresh-job --type=fbr
+
+# Create expired job post demo
+php artisan cms:create-fresh-job --type=paec
+
+# Create as draft
+php artisan cms:create-fresh-job --type=umw --draft
+```
+
+---
+
+## 10. AI Pair-Posting Protocol (Local-to-cPanel 2-Step Workflow)
+
+To create and publish any job post efficiently with AI, follow this 2-step protocol:
 
 ### Step 1: User Provides Raw Job Data
-The user provides basic raw job information (e.g., job title, ad picture, organization, deadline, key positions, or official link).
+The user provides basic job information (e.g., job title, ad picture, organization, deadline, key positions, or official URL).
 
 ### Step 2: AI Automated Post Generation & Publishing
 The AI assistant takes the raw input and automatically:
 1. Formats the post using `JobPostTemplateService::render($jobData)`.
-2. Enforces all 11-section SEO & AdSense compliance rules:
-   - High-contrast body text (`#111111`) with bold entity highlights.
-   - Red banner headings (`#e53935`) with white text and left blue accent border (`5px solid #007bff`).
-   - Dynamic Last Date / Expiry Box (Active light blue `#eef7ff` with countdown vs. Expired light red `#fdf2f2` with ❌ alert).
-   - Google Jobs `schema.org/JobPosting` JSON-LD structured data block.
-   - Bilingual English body text + Urdu RTL Nastaliq box for "How to Apply".
-   - Official advertisement picture with automatic `careerinpak.com` watermark (thumbnails stay 100% clean).
-3. Creates the post locally in the database and flushes cache.
-4. Auto-commits and pushes changes to GitHub (`origin/main`).
-5. Updates dynamic `llms.txt` and `llms-full.txt` feeds.
-6. Provides the user with the 1-line cPanel deployment command to sync live server.
+2. Enforces all 11-section SEO & AdSense compliance rules.
+3. Applies high-contrast text (`#111111`), Red banner headings (`#e53935`), and dynamic deadline notice boxes (`#eef7ff` / `#fdf2f2`).
+4. Generates embedded Google Jobs `schema.org/JobPosting` JSON-LD data.
+5. Embeds bilingual English body + Urdu RTL Nastaliq section for "How to Apply".
+6. Creates the post locally in the database, attaches categories, creates slug, and flushes cache.
+7. Auto-commits and pushes code/data to GitHub (`origin/main`).
+8. Updates dynamic `llms.txt` and `llms-full.txt` feeds.
+9. Provides the 1-line cPanel deployment command to sync live server.
 
-### AI Pair-Posting Quality Checkpoints:
-- [x] **Crisp Black Text (`#111111`):** High readability with bold entity highlights.
+---
+
+## 11. Live Production Deployment Command (cPanel)
+
+Whenever new posts or code changes are pushed, execute this single terminal command on cPanel to update the live production server:
+
+```bash
+cd ~/careerinpak.com && git fetch origin main && git reset --hard origin/main && php artisan cms:site-setup && php artisan cms:convert-images-to-webp && php artisan cms:generate-watermark --text=careerinpak.com && php artisan cms:media:insert-watermark && php artisan cms:enable-litespeed-cache && php artisan tinker --execute="\App\Services\LlmsTxtService::generate();" && php artisan optimize:clear
+```
+
+---
+
+## 12. Quality Checkpoints Before Pushing Live
+
+- [x] **Title Format:** `[Organization Name] Jobs 2026 - [Position / Vacancies]`
+- [x] **Crisp Black Text (`#111111`):** High contrast body text with bold highlights.
 - [x] **Red Banner Headings:** Solid red (`#e53935`) background with left blue border accent (`5px solid #007bff`).
-- [x] **Dynamic Deadline Notice Box:** Active light blue (`#eef7ff`) countdown vs. Expired light red (`#fdf2f2`) alert box.
-- [x] **Google Jobs Schema (`schema.org/JobPosting`):** Embedded JSON-LD script for search engine rich snippets.
+- [x] **Dynamic Deadline Notice Box:** Active light blue (`#eef7ff`) countdown vs Expired light red (`#fdf2f2`) alert box.
+- [x] **Google Jobs Schema:** Embedded `schema.org/JobPosting` JSON-LD block.
 - [x] **Clean Thumbnails + Watermarked Full Ad Image:** Automatic `careerinpak.com` watermark on main ad picture only.
-- [x] **Automatic WebP Conversion:** Next-Gen WebP encoding for ultra-fast image loading.
-- [x] **Dynamic `llms.txt` Feed:** Real-time update of AI agent discoverability file upon post creation.
-- [x] **Git Pushed & Live cPanel Command:** Clean git sync and copy-paste live server deployment command.
+- [x] **WebP Conversion:** Next-Gen WebP encoding active.
+- [x] **Language Rule:** Pure simple English main body + RTL Urdu Nastaliq box for "How to Apply".
+- [x] **Git Pushed & Live cPanel Command Provided.**
+
+---
+*Guide updated October 2026 for CareerInPak.com (Botble CMS / Laravel 12).*
+
 

@@ -1,0 +1,36 @@
+{
+  "@context": "https://schema.org/",
+  "@type": "JobPosting",
+  "title": "PIDCL Jobs 2026 - Pakistan Infrastructure Development Company 20 Vacancies",
+  "description": "Pakistan Infrastructure Development Company Limited (PIDCL) under Ministry of Housing & Works invites applications for 20 project-based vacancies across Senior Site Engineer, Site Engineer Civil, Project Coordinator, Sub-Engineer Civil, and Admn/Finance Assistant. Apply online via National Job Portal www.njp.gov.pk.",
+  "identifier": {
+    "@type": "PropertyValue",
+    "name": "Pakistan Infrastructure Development Company Limited (PIDCL)",
+    "value": "PIDCL-JOB-2026-09"
+  },
+  "datePosted": "2026-09-27",
+  "validThrough": "2026-10-12",
+  "employmentType": "FULL_TIME",
+  "hiringOrganization": {
+    "@type": "Organization",
+    "name": "Pakistan Infrastructure Development Company Limited (PIDCL)",
+    "sameAs": "https://www.njp.gov.pk"
+  },
+  "jobLocation": {
+    "@type": "Place",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Islamabad, Karachi",
+      "addressCountry": "PK"
+    }
+  },
+  "baseSalary": {
+    "@type": "MonetaryAmount",
+    "currency": "PKR",
+    "value": {
+      "@type": "QuantitativeValue",
+      "value": "100000 - 300000",
+      "unitText": "MONTH"
+    }
+  }
+}
