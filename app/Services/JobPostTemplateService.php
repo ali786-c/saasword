@@ -329,15 +329,7 @@ class JobPostTemplateService
   <div class="job-section mb-4">
     <div style="{$hStyle}">10. Official Source & Verification</div>
     <div class="p-4 border rounded bg-white text-center shadow-sm" style="color: #111111 !important;">
-      <p class="small text-muted mb-3">CareerInPak collected this information from the official advertisement or official portal. Candidates should verify the details from the official source before applying. If you find an error, contact us at <a href="mailto:info@careerinpak.com">info@careerinpak.com</a>.</p>
-      <div class="d-flex justify-content-center flex-wrap gap-2">
-        <a href="{$officialApplyUrl}" target="_blank" rel="nofollow noopener" class="btn btn-danger btn-lg font-weight-bold px-4 py-2 text-white">
-          🚀 Apply Online / Official Portal
-        </a>
-        <a href="{$officialSourceUrl}" target="_blank" rel="nofollow noopener" class="btn btn-outline-secondary btn-lg font-weight-bold px-4 py-2 ml-2">
-          📄 View Official Advertisement
-        </a>
-      </div>
+      <p class="small text-muted mb-0">CareerInPak collected this information from the official advertisement or official portal. Candidates should verify the details from the official source before applying. If you find an error, contact us at <a href="mailto:info@careerinpak.com">info@careerinpak.com</a>.</p>
     </div>
   </div>
 
