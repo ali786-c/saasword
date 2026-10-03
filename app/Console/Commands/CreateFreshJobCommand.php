@@ -93,6 +93,79 @@ class CreateFreshJobCommand extends Command
                     <li>درخواست کی ہارڈ کاپی بذریعہ ڈاک/کوریئر <strong>16 اکتوبر 2026</strong> سے پہلے دفتر رجسٹرار، یونیورسٹی آف میانوالی ارسال کریں۔</li>
                 </ol>',
             ];
+        } elseif ($type === 'railways') {
+            $title = 'Pakistan Railways Jobs 2026 - Headquarters Office Lahore 45 Vacancies';
+            $slugKey = Str::slug('Pakistan Railways Jobs 2026 Headquarters Office Lahore 45 Vacancies');
+            $jobData = [
+                'posted_on' => 'September 27, 2026',
+                'city' => 'Lahore (All Pakistan Posting)',
+                'education' => 'DAE / Mechanical / Middle',
+                'vacancies' => '45 Positions (11 Categories)',
+                'apply_method' => 'By Post / Courier to Chief Personnel Officer',
+                'organization' => 'Pakistan Railways (Headquarters Office, Lahore)',
+                'salary' => 'BS-06 to BS-14 (As per last pay drawn + usual allowances)',
+                'official_source_url' => 'https://epaper.dawn.com/?page=27_09_2026_119',
+                'official_apply_url' => 'https://epaper.dawn.com/?page=27_09_2026_119',
+                'last_checked' => 'October 03, 2026',
+                'deadline' => 'October 12, 2026',
+                'ad_image_url' => '',
+                'also_apply_title' => 'FBR Jobs 2026 - Inspector Inland Revenue & DEO 350+ Vacancies',
+                'also_apply_url' => '/category/federal-jobs',
+                'job_description' => '<p>The <strong>Pakistan Railways Headquarters Office, Lahore</strong> has announced contractual recruitment for <strong>45 vacant positions</strong> in the <strong>Carriage & Wagon (C&W)</strong> and <strong>Mechanical Loco Departments</strong>. Suitable retired supervisory and technical staff up to <strong>62 years of age</strong> are invited to apply for 1-year contract appointment (extendable for another year).</p><p>Selected candidates will receive salary according to their last pay drawn in BS-06, BS-09, BS-11, BS-12, and BS-14 along with usual allowances. Interested applicants must submit typed applications along with Rs. 500 postal order to the Chief Personnel Officer before the closing date.</p>',
+                'who_can_apply' => '<p>Retired Pakistan Railways supervisory and technical employees of Carriage & Wagon and Mechanical Loco departments meeting age limit (up to 62 years), requisite qualification (DAE Mechanical / Middle), medical fitness from Railway Hospital, and minimum relevant field experience (10 to 20 years) are eligible to apply. Employees retired on compulsory, removal, dismissal, or medical grounds are NOT eligible.</p>',
+                'eligibility_criteria' => '<ul>
+                    <li><strong>Maximum Age Limit:</strong> Up to 62 Years (Physical fitness required).</li>
+                    <li><strong>Carriage & Wagon Positions:</strong> TXR Gr-III (BS-14), Foreman Gr-I (BS-14), TXR Gr-II (BS-12), Sub Engineer-II/Sr Chargeman (BS-12), Mistry (BS-09), Skilled Fitter/Coach Builder/Welder (BS-06).</li>
+                    <li><strong>Loco Department Positions:</strong> Foreman/Electrical Foreman Gr-I (BS-14), AFO/Sr Chargeman (BS-12), JCM & S.E.E Diesel (BS-11), Mistry Mech/Elect (BS-09), Skilled Wireman/Fitter (BS-06).</li>
+                    <li><strong>Postal Order Fee:</strong> Rs. 500/- Postal Order in favor of Pakistan Railways.</li>
+                    <li><strong>Medical Fitness:</strong> Passing medical examination at Pakistan Railways Hospital is mandatory.</li>
+                </ul>',
+                'vacant_positions' => [
+                    ['name' => 'TXR / Gr-III (C&W)', 'vacancies' => '01', 'education' => 'DAE Mechanical + 20 Yrs Exp', 'scale' => 'BS-14', 'location' => 'Lahore / Railway System', 'age_limit' => 'Up to 62 Years'],
+                    ['name' => 'Foreman / Gr-I (C&W)', 'vacancies' => '02', 'education' => 'DAE Mechanical + 20 Yrs Exp', 'scale' => 'BS-14', 'location' => 'Lahore / Railway System', 'age_limit' => 'Up to 62 Years'],
+                    ['name' => 'TXR / Gr-II (C&W)', 'vacancies' => '06', 'education' => 'DAE Mechanical + 10 Yrs Exp', 'scale' => 'BS-12', 'location' => 'Lahore / Railway System', 'age_limit' => 'Up to 62 Years'],
+                    ['name' => 'Sub Engineer-II / Sr Chargeman (C&W)', 'vacancies' => '08', 'education' => 'DAE Mechanical + 10 Yrs Exp', 'scale' => 'BS-12', 'location' => 'Lahore / Railway System', 'age_limit' => 'Up to 62 Years'],
+                    ['name' => 'Mistry (C&W)', 'vacancies' => '01', 'education' => 'Middle + 10 Yrs Exp', 'scale' => 'BS-09', 'location' => 'Lahore / Railway System', 'age_limit' => 'Up to 62 Years'],
+                    ['name' => 'Skilled (C&W Fitter, Coach Builder, Welder)', 'vacancies' => '03', 'education' => 'Middle + 10 Yrs Exp', 'scale' => 'BS-06', 'location' => 'Lahore / Railway System', 'age_limit' => 'Up to 62 Years'],
+                    ['name' => 'Foreman/Gr-I & Electrical Foreman Diesel (Loco)', 'vacancies' => '04', 'education' => 'DAE Mechanical + 10 Yrs Exp', 'scale' => 'BS-14', 'location' => 'Lahore / Railway System', 'age_limit' => 'Up to 62 Years'],
+                    ['name' => 'AFO / Sr. Chargeman / AEFO Diesel (Loco)', 'vacancies' => '07', 'education' => 'DAE Mechanical + 10 Yrs Exp', 'scale' => 'BS-12', 'location' => 'Lahore / Railway System', 'age_limit' => 'Up to 62 Years'],
+                    ['name' => 'JCM & S.E.E Diesel (Loco)', 'vacancies' => '04', 'education' => 'DAE Mechanical + 10 Yrs Exp', 'scale' => 'BS-11', 'location' => 'Lahore / Railway System', 'age_limit' => 'Up to 62 Years'],
+                    ['name' => 'Mistry Mech & Elect Diesel (Loco)', 'vacancies' => '03', 'education' => 'Middle + 10 Yrs Exp', 'scale' => 'BS-09', 'location' => 'Lahore / Railway System', 'age_limit' => 'Up to 62 Years'],
+                    ['name' => 'Skilled Wireman & Fitter Diesel (Loco)', 'vacancies' => '06', 'education' => 'Middle + 10 Yrs Exp', 'scale' => 'BS-06', 'location' => 'Lahore / Railway System', 'age_limit' => 'Up to 62 Years'],
+                ],
+                'documents_required' => [
+                    'Typed application form with complete database',
+                    'Postal Order of Rs. 500/-',
+                    'Attested copies of all Educational Certificates',
+                    'Attested copy of Computerized CNIC',
+                    'Railway Retired Identity Card / Experience Certificate',
+                    'Photocopy of PPO (Pension Payment Order)',
+                    'Photocopy of LPC (Last Pay Certificate)',
+                    'Service Certificate',
+                    'Three (03) fresh passport size photographs',
+                    'Three (03) registered postal envelopes with RAD card and cell number written',
+                ],
+                'mistakes_to_avoid' => [
+                    'Do not forget to attach the Rs. 500 Postal Order with your application.',
+                    'Employees retired on compulsory, removal, dismissal, or medical grounds should not apply.',
+                    'Ensure 3 registered envelopes with RAD card and cell number are attached with application.',
+                    'Send application directly to Chief Personnel Officer, Empress Road, Lahore before deadline.',
+                ],
+                'selection_process' => [
+                    'Submission of typed application dossier with postal order to Chief Personnel Officer Lahore.',
+                    'Shortlisting of eligible retired employees.',
+                    'Interview by Pakistan Railways Selection Board.',
+                    'Medical fitness examination at Pakistan Railways Hospital.',
+                    'Contractual appointment letter issuance for 1 year.',
+                ],
+                'how_to_apply_urdu' => '<ol>
+                    <li>اپنی تمام معلومات (ڈیٹا بیس) کے ساتھ ایک مائیکروسافٹ ورڈ میں ٹائپ شدہ درخواست تیار کریں۔</li>
+                    <li>درخواست کے ساتھ <strong>500 روپے ka Postal Order</strong> (پاکستان ریلویز کے نام) منسلک کریں۔</li>
+                    <li>تمام تعلیمی اسناد، شناختی کارڈ، ریلوے رٹائرڈ آئی ڈی کارڈ، PPO، LPC، اور سروس سرٹیفکیٹ کی تصدیق شدہ کاپیاں لف کریں۔</li>
+                    <li>تین (03) تازہ پاسپورٹ سائز تصاویر اور 3 رجسٹری لفافے (RAD کارڈ اور فون نمبر درج شدہ) درخواست کے ساتھ پن کریں۔</li>
+                    <li>مکمل درخواست بذریعہ ڈاک/کوریئر <strong>"Chief Personnel Officer, Pakistan Railways Headquarters Office, Empress Road, Lahore"</strong> کے پتے پر ارسال کریں۔</li>
+                </ol>',
+            ];
         } elseif ($type === 'pidcl') {
             $title = 'PIDCL Jobs 2026 - Pakistan Infrastructure Development Company 20 Vacancies';
             $slugKey = Str::slug('PIDCL Jobs 2026 Pakistan Infrastructure Development Company 20 Vacancies');

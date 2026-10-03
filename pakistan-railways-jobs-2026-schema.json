@@ -1,0 +1,36 @@
+{
+  "@context": "https://schema.org/",
+  "@type": "JobPosting",
+  "title": "Pakistan Railways Jobs 2026 - Headquarters Office Lahore 45 Vacancies",
+  "description": "Pakistan Railways Headquarters Office Lahore invites applications from retired supervisory staff for 45 contractual vacancies in Carriage & Wagon and Mechanical Loco departments. Maximum age 62 years.",
+  "identifier": {
+    "@type": "PropertyValue",
+    "name": "Pakistan Railways",
+    "value": "PR-HQ-LAHORE-2026-09"
+  },
+  "datePosted": "2026-09-27",
+  "validThrough": "2026-10-12",
+  "employmentType": "CONTRACT",
+  "hiringOrganization": {
+    "@type": "Organization",
+    "name": "Pakistan Railways (Headquarters Office, Lahore)",
+    "sameAs": "https://epaper.dawn.com/?page=27_09_2026_119"
+  },
+  "jobLocation": {
+    "@type": "Place",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Lahore",
+      "addressCountry": "PK"
+    }
+  },
+  "baseSalary": {
+    "@type": "MonetaryAmount",
+    "currency": "PKR",
+    "value": {
+      "@type": "QuantitativeValue",
+      "value": "BS-06 to BS-14",
+      "unitText": "MONTH"
+    }
+  }
+}
