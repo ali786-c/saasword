@@ -12,19 +12,84 @@ use Illuminate\Support\Str;
 
 class CreateFreshJobCommand extends Command
 {
-    protected $signature = 'cms:create-fresh-job {--type=umw : Type of job to create (umw, fbr, ppsc, paec)} {--draft : Save post as draft}';
+    protected $signature = 'cms:create-fresh-job {--type=nadra : Type of job to create (nadra, umw, fbr, railways, pidcl, ppsc, paec)} {--draft : Save post as draft}';
 
     protected $description = 'Create a brand new fresh job post using the updated 11-section template engine';
 
     public function handle(): int
     {
-        $type = $this->option('type') ?? 'umw';
-        $isDraft = $this->option('draft') || $type === 'umw';
+        $type = $this->option('type') ?? 'nadra';
+        $isDraft = $this->option('draft');
         $status = $isDraft ? BaseStatusEnum::DRAFT : BaseStatusEnum::PUBLISHED;
 
         $this->info("Creating fresh job post ({$type}) [Status: {$status}] using 11-section JobPostTemplateService...");
 
-        if ($type === 'umw') {
+        if ($type === 'nadra') {
+            $title = 'NADRA Jobs 2026 Islamabad - Scanning Operator Project-Based Vacancies';
+            $slugKey = Str::slug('NADRA Jobs 2026 Islamabad Scanning Operator Project Based Vacancies');
+            $jobData = [
+                'posted_on'           => 'September 27, 2026',
+                'city'                => 'Islamabad (NADRA Regional Office)',
+                'education'           => 'Minimum Intermediate / FA / FSc / I.Com or Equivalent',
+                'vacancies'           => 'Multiple Positions (Project-Based)',
+                'apply_method'        => 'Online via NADRA Careers Portal',
+                'organization'        => 'National Database & Registration Authority (NADRA)',
+                'salary'              => 'Rs. 40,000 / Month Base + Per Page Scanned Incentive',
+                'official_source_url' => 'https://epaper.brecorder.com/2026/09/27/7-page/attachment/2337612-picture.html',
+                'official_apply_url'  => 'https://careers.nadra.gov.pk',
+                'last_checked'        => 'October 04, 2026',
+                'deadline'            => 'October 11, 2026',
+                'ad_image_url'        => 'https://epaper.brecorder.com/2026/09/27/7-page/attachment/2337612-picture.html',
+                'also_apply_title'    => 'FBR Jobs 2026 - Inspector Inland Revenue & DEO 350+ Vacancies',
+                'also_apply_url'      => '/category/federal-jobs',
+                'job_description'     => '<p>The <strong>National Database & Registration Authority (NADRA)</strong>, Ministry of Interior & Narcotics Control, Government of Pakistan, has announced online applications from eligible residents of Islamabad for project-based <strong>Scanning Operator</strong> positions at the NADRA Regional Office Islamabad.</p><p>Under Regulation 9, 10, and 11 of NADRA Employees (Service) Regulations 2002, selected candidates will be assigned the task of archiving old NADRA records with a daily target of scanning a minimum of <strong>400 pages per day</strong> across three work shifts (Morning, Evening, Night). Interested male, female, transgender, and differently-abled applicants must apply online on <a href="https://careers.nadra.gov.pk" target="_blank" rel="nofollow">careers.nadra.gov.pk</a> before <strong>October 11, 2026</strong>.</p>',
+                'who_can_apply'       => '<p>Only candidates possessing valid <strong>CNIC / Domicile of Islamabad</strong> are eligible to apply and appear for the interview. Applicants must possess a minimum qualification of Intermediate (FA / FSc / I.Com / ICS or equivalent), be up to <strong>25 years of age</strong> (including 5 years general age relaxation), and be willing to work in any assigned shift (Morning, Evening, or Night) six days a week.</p>',
+                'eligibility_criteria'=> '<ul>
+                    <li><strong>Domicile Restriction:</strong> Strictly reserved for Residents of Islamabad (as per CNIC / Domicile).</li>
+                    <li><strong>Educational Qualification:</strong> Minimum Intermediate (HSSC / FA / FSc / I.Com / ICS) or equivalent from a recognized board.</li>
+                    <li><strong>Age Limit:</strong> Maximum 25 Years (General 5 years age relaxation is already included).</li>
+                    <li><strong>Daily Scanning Target:</strong> Candidates must scan a minimum of 400 pages per day.</li>
+                    <li><strong>Shift Requirement:</strong> Project operates in 3 shifts (Morning, Evening, Night), 6 days a week. Candidates must be willing to serve in any shift.</li>
+                    <li><strong>Employment Terms:</strong> Purely project-based contract for 3 months (90 days) – extendable based on project requirements.</li>
+                </ul>',
+                'vacant_positions'    => [
+                    [
+                        'name'      => 'Scanning Operator (Project-Based)',
+                        'vacancies' => 'Multiple',
+                        'education' => 'Minimum Intermediate or Equivalent',
+                        'scale'     => 'Contract (Rs. 40,000 + Incentive)',
+                        'location'  => 'NADRA Regional Office Islamabad',
+                        'age_limit' => 'Max 25 Years',
+                    ],
+                ],
+                'documents_required'  => [
+                    'Candidate Updated Curriculum Vitae (CV)',
+                    'Original CNIC and Domicile Certificate of Islamabad',
+                    'Educational Board Certificates & Transcripts (Matric & Intermediate)',
+                    'No Objection Certificate (NOC) if currently serving in Govt / Semi-Govt',
+                    'Recent passport-size photographs',
+                ],
+                'mistakes_to_avoid'   => [
+                    'Do not submit hard-copy applications — only online applications via careers.nadra.gov.pk are accepted.',
+                    'Non-residents of Islamabad should not apply as CNIC/Domicile verification is strictly mandatory.',
+                    'Do not bring electronic gadgets (mobile phone, smartwatch, etc.) to the interview room as they are strictly prohibited.',
+                    'Do not provide false or forged information — misleading data will result in permanent disqualification.',
+                ],
+                'selection_process'   => [
+                    'Online application submission on official NADRA portal (careers.nadra.gov.pk) before October 11, 2026.',
+                    'Shortlisting of qualified candidates based on Islamabad domicile and educational credentials.',
+                    'Interview at NADRA Headquarters / Regional Office Islamabad (Bring original documents).',
+                    'Issuance of 3-month project-based contract offer letter to selected candidates.',
+                ],
+                'how_to_apply_urdu'   => '<ol>
+                    <li>نادرا کی سرکاری کیریئر ویب سائٹ <strong>careers.nadra.gov.pk</strong> پر جائیں۔</li>
+                    <li>آن لائن درخواست فارم پُر کریں اور سی وی، تعلیمی اسناد، شناختی کارڈ اور اسلام آباد ڈومیسائل اپ لوڈ کریں۔</li>
+                    <li>درخواست جمع کروانے کی آخری تاریخ <strong>11 اکتوبر 2026</strong> ہے۔</li>
+                    <li>صرف اسلام آباد کے شناختی کارڈ اور ڈومیسائل کے حامل امیدواران انٹرویو کے لیے اہل ہوں گے۔</li>
+                    <li>انٹرویو کے وقت اصل تعلیمی اسناد، سی این آئی سی اور ڈومیسائل ساتھ لانا لازمی ہے۔</li>
+                </ol>',
+            ];
+        } elseif ($type === 'umw') {
             $title = 'University of Mianwali UMW Jobs 2026 - Consolidated Advt No 07/2026 Non-Teaching Vacancies';
             $slugKey = Str::slug('University of Mianwali UMW Jobs 2026 Consolidated Advt No 07 2026 Non Teaching Vacancies');
             $jobData = [
