@@ -8,6 +8,7 @@ use Botble\OneSignal\Forms\OneSignalSettingForm;
 use Botble\OneSignal\Http\Requests\OneSignalSettingRequest;
 use Botble\OneSignal\Services\OneSignalService;
 use Botble\Setting\Http\Controllers\SettingController;
+use Illuminate\Http\Request;
 
 class OneSignalSettingController extends SettingController
 {
@@ -45,5 +46,43 @@ class OneSignalSettingController extends SettingController
 
         return $response
             ->setMessage(trans('plugins/onesignal::onesignal.test_push_success'));
+    }
+
+    public function manualPush(OneSignalService $service)
+    {
+        $this->pageTitle('Send Push Blast & History');
+
+        $segments = $service->getSegments();
+        $notifications = $service->getNotificationsHistory(20);
+
+        return view('plugins/onesignal::manual-push', compact('segments', 'notifications'));
+    }
+
+    public function sendManualPush(Request $request, OneSignalService $service, BaseHttpResponse $response): BaseHttpResponse
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'message' => 'required|string|max:1000',
+            'segment' => 'required|string',
+            'url' => 'nullable|url',
+            'image' => 'nullable|url',
+        ]);
+
+        $result = $service->sendNotification(
+            title: $request->input('title'),
+            message: $request->input('message'),
+            url: $request->input('url'),
+            image: $request->input('image'),
+            includedSegments: [$request->input('segment')]
+        );
+
+        if (! $result['success']) {
+            return $response
+                ->setError()
+                ->setMessage('Push Blast Failed: ' . $result['message']);
+        }
+
+        return $response
+            ->setMessage('Push notification blast sent successfully to subscribers!');
     }
 }

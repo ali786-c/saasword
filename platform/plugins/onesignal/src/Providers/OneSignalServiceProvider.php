@@ -6,9 +6,11 @@ use Botble\Base\Events\CreatedContentEvent;
 use Botble\Base\Events\UpdatedContentEvent;
 use Botble\Base\Facades\AdminHelper;
 use Botble\Base\Facades\BaseHelper;
+use Botble\Base\Facades\DashboardMenu;
 use Botble\Base\Facades\MetaBox;
 use Botble\Base\Facades\PanelSectionManager;
 use Botble\Base\PanelSections\PanelSectionItem;
+use Botble\Base\Supports\DashboardMenuItem;
 use Botble\Base\Supports\ServiceProvider;
 use Botble\Base\Traits\LoadAndPublishDataTrait;
 use Botble\Blog\Models\Post;
@@ -51,6 +53,39 @@ class OneSignalServiceProvider extends ServiceProvider
                 );
         });
 
+        // Register Dashboard Sidebar Navigation Menu Items
+        DashboardMenu::beforeRetrieving(function (): void {
+            DashboardMenu::make()
+                ->registerItem(
+                    DashboardMenuItem::make()
+                        ->id('cms-plugins-onesignal')
+                        ->priority(950)
+                        ->name('OneSignal Push')
+                        ->icon('ti ti-bell')
+                        ->permissions('onesignal.settings')
+                )
+                ->registerItem(
+                    DashboardMenuItem::make()
+                        ->id('cms-plugins-onesignal-settings')
+                        ->priority(1)
+                        ->parentId('cms-plugins-onesignal')
+                        ->name('Plugin Settings')
+                        ->icon('ti ti-settings')
+                        ->route('onesignal.settings')
+                        ->permissions('onesignal.settings')
+                )
+                ->registerItem(
+                    DashboardMenuItem::make()
+                        ->id('cms-plugins-onesignal-manual')
+                        ->priority(2)
+                        ->parentId('cms-plugins-onesignal')
+                        ->name('Push Blast & Logs')
+                        ->icon('ti ti-send')
+                        ->route('onesignal.manual-push')
+                        ->permissions('onesignal.settings')
+                );
+        });
+
         // Register front-end SDK in <head>
         if (BaseHelper::isFrontendRequest()) {
             add_filter(THEME_FRONT_HEADER, function (?string $html) {
@@ -84,12 +119,17 @@ class OneSignalServiceProvider extends ServiceProvider
             }
 
             $request = request();
+            $isCreated = $event instanceof CreatedContentEvent;
             $shouldSend = false;
 
             if ($request->has('onesignal_send_notification')) {
                 $shouldSend = (bool) $request->input('onesignal_send_notification');
             } else {
-                $shouldSend = (bool) setting('onesignal_auto_send_on_post_publish', 1);
+                if ($isCreated) {
+                    $shouldSend = (bool) setting('onesignal_auto_send_on_post_publish', 1);
+                } else {
+                    $shouldSend = (bool) setting('onesignal_auto_send_on_post_update', 0);
+                }
             }
 
             if (! $shouldSend) {
@@ -104,6 +144,8 @@ class OneSignalServiceProvider extends ServiceProvider
 
             $customTitle = $request->input('onesignal_custom_title');
             $customMessage = $request->input('onesignal_custom_message');
+            $targetSegment = $request->input('onesignal_target_segment', 'All');
+            $mobileUrl = $request->input('onesignal_mobile_url');
 
             $prefix = setting('onesignal_default_title_prefix');
             $title = $customTitle ?: ($prefix ? trim($prefix) . ' ' . $data->name : $data->name);
@@ -117,7 +159,9 @@ class OneSignalServiceProvider extends ServiceProvider
                 title: $title,
                 message: $message,
                 url: $url,
-                image: $image
+                image: $image,
+                includedSegments: [$targetSegment],
+                mobileUrl: $mobileUrl
             );
         });
     }
@@ -135,7 +179,11 @@ class OneSignalServiceProvider extends ServiceProvider
                 trans('plugins/onesignal::onesignal.meta_box_title'),
                 function () use ($object) {
                     $sendNotification = setting('onesignal_auto_send_on_post_publish', 1);
-                    return view('plugins/onesignal::meta-box', compact('sendNotification'))->render();
+                    /** @var OneSignalService $service */
+                    $service = app(OneSignalService::class);
+                    $segments = $service->getSegments();
+                    
+                    return view('plugins/onesignal::meta-box', compact('sendNotification', 'segments'))->render();
                 },
                 Post::class,
                 $context

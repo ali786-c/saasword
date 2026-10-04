@@ -16,11 +16,14 @@ Route::group(['namespace' => 'Botble\OneSignal\Http\Controllers'], function (): 
     })->name('onesignal.worker');
 
     AdminHelper::registerRoutes(function (): void {
-        Route::prefix('settings/onesignal')->name('onesignal.')->group(function (): void {
+        Route::prefix('onesignal')->name('onesignal.')->group(function (): void {
             Route::group(['permission' => 'onesignal.settings'], function (): void {
-                Route::get('/', [OneSignalSettingController::class, 'edit'])->name('settings');
-                Route::put('/', [OneSignalSettingController::class, 'update'])->name('settings.update');
-                Route::post('/send-test', [OneSignalSettingController::class, 'sendTest'])->name('settings.send-test');
+                Route::get('settings', [OneSignalSettingController::class, 'edit'])->name('settings');
+                Route::put('settings', [OneSignalSettingController::class, 'update'])->name('settings.update');
+                Route::post('send-test', [OneSignalSettingController::class, 'sendTest'])->name('settings.send-test');
+                
+                Route::get('manual-push', [OneSignalSettingController::class, 'manualPush'])->name('manual-push');
+                Route::post('send-manual', [OneSignalSettingController::class, 'sendManualPush'])->name('send-manual');
             });
         });
     });
