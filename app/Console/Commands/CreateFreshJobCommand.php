@@ -12,15 +12,15 @@ use Illuminate\Support\Str;
 
 class CreateFreshJobCommand extends Command
 {
-    protected $signature = 'cms:create-fresh-job {--type=nadra : Type of job to create (nadra, umw, fbr, railways, pidcl, ppsc, paec)} {--draft : Save post as draft}';
+    protected $signature = 'cms:create-fresh-job {--type=nadra : Type of job to create (nadra, umw, fbr, railways, pidcl, ppsc, paec)} {--draft : Save post as draft} {--publish : Publish post directly}';
 
     protected $description = 'Create a brand new fresh job post using the updated 11-section template engine';
 
     public function handle(): int
     {
         $type = $this->option('type') ?? 'nadra';
-        $isDraft = $this->option('draft');
-        $status = $isDraft ? BaseStatusEnum::DRAFT : BaseStatusEnum::PUBLISHED;
+        $isPublish = $this->option('publish');
+        $status = $isPublish ? BaseStatusEnum::PUBLISHED : BaseStatusEnum::DRAFT;
 
         $this->info("Creating fresh job post ({$type}) [Status: {$status}] using 11-section JobPostTemplateService...");
 

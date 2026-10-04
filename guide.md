@@ -288,19 +288,19 @@ The AI assistant takes the raw input and automatically:
 3. Applies high-contrast text (`#111111`), Red banner headings (`#e53935`), and dynamic deadline notice boxes (`#eef7ff` / `#fdf2f2`).
 4. Generates embedded Google Jobs `schema.org/JobPosting` JSON-LD data.
 5. Embeds bilingual English body + Urdu RTL Nastaliq section for "How to Apply".
-6. Creates the post locally in the database, attaches categories, creates slug, and flushes cache.
+6. Creates the post as **Draft** status so admin can review and attach featured image on live CMS.
 7. Auto-commits and pushes code/data to GitHub (`origin/main`).
 8. Updates dynamic `llms.txt` and `llms-full.txt` feeds.
-9. Provides the 1-line cPanel deployment command to sync live server.
+9. Provides the 1-line cPanel deployment command with `--draft` to sync live server database.
 
 ---
 
 ## 11. Live Production Deployment Command (cPanel)
 
-Whenever new posts or code changes are pushed, execute this single terminal command on cPanel to update the live production server:
+Whenever new posts or code changes are pushed, execute this single terminal command on cPanel to update the live production server (posts created as **Draft** status):
 
 ```bash
-cd ~/careerinpak.com && git fetch origin main && git reset --hard origin/main && php artisan cms:site-setup && php artisan cms:convert-images-to-webp && php artisan cms:generate-watermark --text=careerinpak.com && php artisan cms:media:insert-watermark && php artisan cms:enable-litespeed-cache && php artisan tinker --execute="\App\Services\LlmsTxtService::generate();" && php artisan optimize:clear
+cd ~/careerinpak.com && git fetch origin main && git reset --hard origin/main && php artisan cms:site-setup && php artisan cms:create-fresh-job --type=nadra --draft && php artisan optimize:clear
 ```
 
 ---
