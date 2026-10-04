@@ -1,0 +1,11 @@
+{
+    "id": "botble/onesignal",
+    "name": "OneSignal Web Push Notifications",
+    "namespace": "Botble\\OneSignal\\",
+    "provider": "Botble\\OneSignal\\Providers\\OneSignalServiceProvider",
+    "author": "CareerInPak",
+    "url": "https://careerinpak.com",
+    "version": "1.0.0",
+    "description": "Send automatic and manual Web Push Notifications to subscribers via OneSignal API",
+    "minimum_core_version": "7.0.0"
+}

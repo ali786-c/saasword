@@ -1,0 +1,10 @@
+{
+    "name": "botble/onesignal",
+    "description": "OneSignal Web Push Notifications plugin for Botble CMS",
+    "type": "botble-plugin",
+    "autoload": {
+        "psr-4": {
+            "Botble\\OneSignal\\": "src/"
+        }
+    }
+}

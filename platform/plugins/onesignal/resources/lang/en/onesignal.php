@@ -1,0 +1,28 @@
+<?php
+
+return [
+    'name' => 'OneSignal Web Push',
+    'settings_title' => 'OneSignal Web Push Notifications',
+    'settings_description' => 'Configure OneSignal App ID, REST API Key, and auto-push notification rules for published posts.',
+    'enable' => 'Enable OneSignal Web Push',
+    'enable_helper' => 'Turn on OneSignal Web Push subscription on the front-end site.',
+    'app_id' => 'OneSignal App ID',
+    'app_id_placeholder' => 'e.g. 12345678-abcd-1234-abcd-123456789abc',
+    'rest_api_key' => 'REST API Key',
+    'rest_api_key_placeholder' => 'e.g. Os_ApiKey_...',
+    'safari_web_id' => 'Safari Web ID (Optional)',
+    'safari_web_id_placeholder' => 'web.onesignal.auto.12345678-1234-1234-1234-123456789abc',
+    'auto_send' => 'Automatically Send Push Notification on Post Publish',
+    'auto_send_helper' => 'When a new post is published, automatically send push notification to all subscribers.',
+    'default_title_prefix' => 'Default Push Title Prefix / Fallback',
+    'default_title_prefix_placeholder' => 'e.g. New Job Announced:',
+    'send_test_push' => 'Send Test Notification',
+    'test_push_success' => 'Test notification request submitted successfully to OneSignal!',
+    'test_push_error' => 'Failed to send test push notification: ',
+    'meta_box_title' => 'OneSignal Push Notification',
+    'send_push_for_this_post' => 'Send Push Notification for this post',
+    'custom_push_title' => 'Custom Push Title (Optional)',
+    'custom_push_title_placeholder' => 'Leave empty to use Post Title',
+    'custom_push_message' => 'Custom Push Message (Optional)',
+    'custom_push_message_placeholder' => 'Leave empty to use Post Excerpt',
+];
