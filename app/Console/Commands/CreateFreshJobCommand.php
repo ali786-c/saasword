@@ -12,19 +12,160 @@ use Illuminate\Support\Str;
 
 class CreateFreshJobCommand extends Command
 {
-    protected $signature = 'cms:create-fresh-job {--type=nadra : Type of job to create (nadra, umw, fbr, railways, pidcl, ppsc, paec)} {--draft : Save post as draft} {--publish : Publish post directly}';
+    protected $signature = 'cms:create-fresh-job {--type=cpsp : Type of job to create (cpsp, nadra, umw, fbr, railways, pidcl, ppsc, paec)} {--draft : Save post as draft} {--publish : Publish post directly}';
 
     protected $description = 'Create a brand new fresh job post using the updated 11-section template engine';
 
     public function handle(): int
     {
-        $type = $this->option('type') ?? 'nadra';
+        $type = $this->option('type') ?? 'cpsp';
         $isPublish = $this->option('publish');
         $status = $isPublish ? BaseStatusEnum::PUBLISHED : BaseStatusEnum::DRAFT;
 
         $this->info("Creating fresh job post ({$type}) [Status: {$status}] using 11-section JobPostTemplateService...");
 
-        if ($type === 'nadra') {
+        if ($type === 'cpsp') {
+            $title = 'CPSP Jobs 2026 Lahore - College of Physicians and Surgeons Pakistan Opportunities';
+            $slugKey = Str::slug('CPSP Jobs 2026 Lahore College of Physicians and Surgeons Pakistan Opportunities');
+            $jobData = [
+                'posted_on'           => 'October 05, 2026',
+                'city'                => 'Lahore Based (Regional Office)',
+                'education'           => 'Master / BS Computer Science / Graduate / DAE Electrical / Matric / Middle',
+                'vacancies'           => 'Multiple Positions (10 Categories)',
+                'apply_method'        => 'Email CV to jobs@cpsp.edu.pk or Mail to HR Dept Karachi',
+                'organization'        => 'College of Physicians and Surgeons Pakistan (CPSP)',
+                'salary'              => 'Competitive Package + Medical & Provident Fund (As per CPSP Rules)',
+                'official_source_url' => 'https://cpsp.edu.pk',
+                'official_apply_url'  => 'mailto:jobs@cpsp.edu.pk',
+                'last_checked'        => 'October 05, 2026',
+                'deadline'            => 'October 12, 2026',
+                'ad_image_url'        => '/storage/news/cpsp-jobs-2026-advertisement.jpg',
+                'also_apply_title'    => 'PPSC Jobs 2026 - Punjab Public Service Commission Advertisement No 18',
+                'also_apply_url'      => '/ppsc-jobs-2026-punjab-public-service-commission-advertisement-no-18',
+                'job_description'     => '<p>The <strong>College of Physicians and Surgeons Pakistan (CPSP)</strong>, a premier postgraduate medical institution established in 1962, has officially announced new <strong>CPSP Jobs 2026 Lahore</strong> across multiple departments. Qualified, energetic, and experienced candidates seeking <strong>medical education jobs in Pakistan</strong> or administrative and technical roles in Lahore are invited to apply for these positions.</p><p>Vacancies are open for Lahore-based operational roles including Assistant Manager (Department of Medical Education), Assistant Manager (IT), Office Assistant, Generator Operator, Electrician, Plumber, Driver, Office Boy, Room Boy, and Security Guard. Interested applicants must submit their updated resume along with a recent passport-size photograph by <strong>October 12, 2026</strong> via email at <a href="mailto:jobs@cpsp.edu.pk">jobs@cpsp.edu.pk</a> or by post to the CPSP HR Department in DHA Phase II, Karachi.</p>',
+                'who_can_apply'       => '<p>Male and female candidates holding relevant academic degrees (Masters, BS CS/IT, Graduation, DAE, Matric, Middle) with required technical skills and practical work experience in their respective trades are eligible to apply. Applicants must be physically fit, reliable, and willing to serve at the CPSP Regional Office in Lahore.</p>',
+                'eligibility_criteria'=> '<ul>
+                    <li><strong>Assistant Manager DME:</strong> Graduate or preferably Master in relevant field with hands-on experience in medical education, academic coordination, curriculum activities, and proficiency in MS Office.</li>
+                    <li><strong>Assistant Manager IT:</strong> BS in Computer Science or IT with 2 to 3 years experience in Cisco Layer 2/3 devices, Linux servers, Video Conferencing, VoIP systems, TCP/IP (DNS, DHCP), desktop support, and conducting IT workshops.</li>
+                    <li><strong>Office Assistant:</strong> Graduation with relevant office work experience, computer literacy, and strong communication skills.</li>
+                    <li><strong>Generator Operator:</strong> Matric with DAE / Certificate in Electrical or Mechanical Engineering from a recognized institute with experience operating and maintaining Diesel Generators (Siemens / Caterpillar).</li>
+                    <li><strong>Electrician:</strong> Matric with DAE in Electrical Engineering and relevant practical experience.</li>
+                    <li><strong>Plumber:</strong> Middle pass with practical experience in pipeline installation, sanitary fittings, leak repairs, and valve maintenance.</li>
+                    <li><strong>Driver:</strong> Middle pass holding a valid HTV or LTV driving license with clean driving history and relevant experience.</li>
+                    <li><strong>Support Staff (Office Boy, Room Boy, Security Guard):</strong> Energetic candidates able to read and write; Room Boys responsible for room cleaning/servicing; Security Guards preferably with licensed arms.</li>
+                </ul>',
+                'vacant_positions'    => [
+                    [
+                        'name'      => 'Assistant Manager (DME)',
+                        'vacancies' => '01',
+                        'education' => 'Graduate / Master (Medical Education / Relevant)',
+                        'scale'     => 'CPSP Managerial Cadre',
+                        'location'  => 'Lahore',
+                        'age_limit' => '25 - 40 Years',
+                    ],
+                    [
+                        'name'      => 'Assistant Manager (IT)',
+                        'vacancies' => '01',
+                        'education' => 'BS Computer Science / Information Technology',
+                        'scale'     => 'CPSP Technical Cadre (2-3 Yrs Exp)',
+                        'location'  => 'Lahore',
+                        'age_limit' => '24 - 38 Years',
+                    ],
+                    [
+                        'name'      => 'Office Assistant',
+                        'vacancies' => 'Multiple',
+                        'education' => 'Graduation (BA / B.Sc / B.Com / BBA)',
+                        'scale'     => 'CPSP Staff Cadre',
+                        'location'  => 'Lahore',
+                        'age_limit' => '20 - 35 Years',
+                    ],
+                    [
+                        'name'      => 'Generator Operator',
+                        'vacancies' => '01',
+                        'education' => 'Matric + DAE Electrical / Mechanical',
+                        'scale'     => 'Technical Staff',
+                        'location'  => 'Lahore',
+                        'age_limit' => '22 - 40 Years',
+                    ],
+                    [
+                        'name'      => 'Electrician',
+                        'vacancies' => '01',
+                        'education' => 'Matric + DAE Electrical',
+                        'scale'     => 'Technical Staff',
+                        'location'  => 'Lahore',
+                        'age_limit' => '20 - 40 Years',
+                    ],
+                    [
+                        'name'      => 'Plumber',
+                        'vacancies' => '01',
+                        'education' => 'Minimum Middle with Sanitary Experience',
+                        'scale'     => 'Technical Staff',
+                        'location'  => 'Lahore',
+                        'age_limit' => '20 - 42 Years',
+                    ],
+                    [
+                        'name'      => 'Driver (HTV / LTV)',
+                        'vacancies' => 'Multiple',
+                        'education' => 'Minimum Middle + Valid HTV/LTV License',
+                        'scale'     => 'Transport Staff',
+                        'location'  => 'Lahore',
+                        'age_limit' => '22 - 45 Years',
+                    ],
+                    [
+                        'name'      => 'Office Boy',
+                        'vacancies' => 'Multiple',
+                        'education' => 'Matric (Energetic & Reliable)',
+                        'scale'     => 'Support Staff',
+                        'location'  => 'Lahore',
+                        'age_limit' => '18 - 30 Years',
+                    ],
+                    [
+                        'name'      => 'Room Boy',
+                        'vacancies' => 'Multiple',
+                        'education' => 'Literate (Ability to Read & Write)',
+                        'scale'     => 'Guest House Staff',
+                        'location'  => 'Lahore',
+                        'age_limit' => '18 - 35 Years',
+                    ],
+                    [
+                        'name'      => 'Security Guard',
+                        'vacancies' => 'Multiple',
+                        'education' => 'Literate (Licensed Arm Preferred)',
+                        'scale'     => 'Security Cadre',
+                        'location'  => 'Lahore',
+                        'age_limit' => '25 - 48 Years',
+                    ],
+                ],
+                'documents_required'  => [
+                    'Updated Curriculum Vitae (CV) with recent passport-size photograph attached',
+                    'Attested copies of Educational Degrees / Certificates (Matric, Inter, Graduation, Master, BS CS)',
+                    'Diploma in Electrical / Mechanical / Sanitary (DAE / Certificate) where applicable',
+                    'Valid HTV / LTV Driving License copy (for Driver position)',
+                    'Valid CNIC copy and Domicile certificate',
+                    'Experience certificates proving relevant work history in institutional maintenance or IT management',
+                ],
+                'mistakes_to_avoid'   => [
+                    'Do not send resumes without attaching a recent passport-size photograph.',
+                    'Do not submit applications after the deadline of October 12, 2026.',
+                    'Ensure the subject line of your email clearly states the post applied for (e.g., "Application for Assistant Manager IT - Lahore").',
+                    'Do not send incomplete documents or unreadable scanned copies of degrees.',
+                ],
+                'selection_process'   => [
+                    'Receipt and initial screening of resumes sent via email (jobs@cpsp.edu.pk) or postal mail before October 12, 2026.',
+                    'Shortlisting of eligible candidates based on academic qualification and years of relevant experience.',
+                    'Written / Technical test or practical skill demonstration (for IT, Technical, and Driving positions).',
+                    'Formal interview conducted by the CPSP HR Selection Board at Lahore / Karachi office.',
+                    'Final offer letter issuance and medical fitness evaluation.',
+                ],
+                'how_to_apply_urdu'   => '<ol>
+                    <li>اپنی اپ ڈیٹ شدہ سی وی (CV) اور حالیہ پاسپورٹ سائز تصویر تیار کریں۔</li>
+                    <li>درخواست آن لائن ای میل کے ذریعے <strong>jobs@cpsp.edu.pk</strong> پر ارسال کریں۔ (ای میل کے سبجیکٹ میں پوسٹ کا نام ضرور لکھیں)۔</li>
+                    <li>یا اپنی سی وی بحساب HR Department, College of Physicians & Surgeons Pakistan, 7th Central Street, D.H.A Phase II, Karachi پر بذریعہ ڈاک/کوریئر بھیجیں۔</li>
+                    <li>درخواست جمع کروانے کی آخری تاریخ <strong>12 اکتوبر 2026</strong> ہے۔</li>
+                    <li>صرف شارٹ لسٹ شدہ امیدواران کو ٹیسٹ/انٹرویو کے لیے کال کی جائے گی۔</li>
+                </ol>',
+            ];
+        } elseif ($type === 'nadra') {
             $title = 'NADRA Jobs 2026 Islamabad - Scanning Operator Project-Based Vacancies';
             $slugKey = Str::slug('NADRA Jobs 2026 Islamabad Scanning Operator Project Based Vacancies');
             $jobData = [
