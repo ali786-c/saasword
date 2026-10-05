@@ -108,6 +108,7 @@ class SiteSetupCommand extends Command
 
         $this->removeSidebarWidgets();
         $this->setupSeo();
+        $this->ensureJobAlertsPopupActivated();
 
         $this->info('Clearing caches...');
 
@@ -615,5 +616,20 @@ class SiteSetupCommand extends Command
         Post::query()->whereIn('id', $newest)->update(['is_featured' => 1]);
 
         $this->info("Featured flags set on {$newest->count()} newest published posts.");
+    }
+
+    protected function ensureJobAlertsPopupActivated(): void
+    {
+        $activatedPlugins = Setting::get('activated_plugins');
+        $plugins = $activatedPlugins ? json_decode($activatedPlugins, true) : [];
+        if (! is_array($plugins)) {
+            $plugins = [];
+        }
+
+        if (! in_array('job-alerts-popup', $plugins)) {
+            $plugins[] = 'job-alerts-popup';
+            Setting::set('activated_plugins', json_encode(array_values(array_unique($plugins))))->save();
+            $this->info("Activated 'job-alerts-popup' plugin.");
+        }
     }
 }

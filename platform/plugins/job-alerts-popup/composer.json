@@ -1,0 +1,10 @@
+{
+    "name": "botble/job-alerts-popup",
+    "description": "Job Alerts Auto Popup Plugin for Botble CMS",
+    "type": "botble-plugin",
+    "autoload": {
+        "psr-4": {
+            "Botble\\JobAlertsPopup\\": "src/"
+        }
+    }
+}

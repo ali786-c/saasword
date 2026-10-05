@@ -1,0 +1,11 @@
+{
+    "id": "botble/job-alerts-popup",
+    "name": "Job Alerts Popup",
+    "namespace": "Botble\\JobAlertsPopup\\",
+    "provider": "Botble\\JobAlertsPopup\\Providers\\JobAlertsPopupServiceProvider",
+    "author": "CareerInPak",
+    "url": "https://careerinpak.com",
+    "version": "1.0.0",
+    "description": "Auto-popup modal for WhatsApp Job Alerts channel subscriptions with dual-close options.",
+    "minimum_core_version": "7.3.0"
+}
