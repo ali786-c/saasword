@@ -137,7 +137,7 @@
 
 <script>
 (function() {
-    document.addEventListener('DOMContentLoaded', function() {
+    function initJobAlertsPopup() {
         var popupOverlay = document.getElementById('job-alerts-popup-overlay');
         if (!popupOverlay) return;
 
@@ -187,7 +187,13 @@
                 closePopup();
             }
         });
-    });
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initJobAlertsPopup);
+    } else {
+        initJobAlertsPopup();
+    }
 })();
 </script>
 <!-- Job Alerts Popup Plugin End -->

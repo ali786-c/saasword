@@ -18,11 +18,9 @@ class JobAlertsPopupServiceProvider extends ServiceProvider
             ->loadAndPublishConfigurations(['general'])
             ->loadAndPublishViews();
 
-        $this->app['events']->listen(RouteMatched::class, function (): void {
-            if (defined('THEME_FRONT_FOOTER') && theme_option('job_alerts_popup_enable', 'yes') === 'yes') {
-                add_filter(THEME_FRONT_FOOTER, [$this, 'renderJobAlertsPopup'], 1350);
-            }
-        });
+        $hook = defined('THEME_FRONT_FOOTER') ? THEME_FRONT_FOOTER : 'theme-front-footer';
+        add_filter($hook, [$this, 'renderJobAlertsPopup'], 1350);
+        add_filter('theme-front-footer', [$this, 'renderJobAlertsPopup'], 1350);
 
         $this->app['events']->listen(RenderingThemeOptionSettings::class, function (): void {
             theme_option()
