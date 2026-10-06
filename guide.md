@@ -303,7 +303,7 @@ The AI assistant takes the raw input and automatically:
 Whenever new posts or code changes are pushed, execute this single terminal command on cPanel to update the live production server (creating the post in **Draft** status):
 
 ```bash
-cd ~/careerinpak.com && git fetch origin main && git reset --hard origin/main && php artisan cms:site-setup && php artisan cms:create-fresh-job --type=mohmand --draft && php artisan optimize:clear
+cd ~/careerinpak.com && git fetch origin main && git reset --hard origin/main && php artisan cms:create-fresh-job --type=mohmand --draft && php artisan optimize:clear
 ```
 
 ---
