@@ -297,16 +297,20 @@ The AI assistant takes the raw input and automatically:
 
 ## 11. Live Production Deployment Command (cPanel)
 
-Whenever new posts or code changes are pushed, execute this single terminal command on cPanel to update the live production server (posts created as **Draft** status):
+> [!IMPORTANT]
+> **STRICT LIVE DRAFT RULE:** Posts MUST NEVER be published directly on the live production server via CLI/deployment commands. They MUST ALWAYS be created in **Draft** status using the `--draft` flag so the admin can review the content, attach the official featured image/ad picture on the live CMS dashboard, and publish manually when ready.
+
+Whenever new posts or code changes are pushed, execute this single terminal command on cPanel to update the live production server (creating the post in **Draft** status):
 
 ```bash
-cd ~/careerinpak.com && git fetch origin main && git reset --hard origin/main && php artisan cms:site-setup && php artisan cms:create-fresh-job --type=nadra --draft && php artisan optimize:clear
+cd ~/careerinpak.com && git fetch origin main && git reset --hard origin/main && php artisan cms:site-setup && php artisan cms:create-fresh-job --type=mohmand --draft && php artisan optimize:clear
 ```
 
 ---
 
 ## 12. Quality Checkpoints Before Pushing Live
 
+- [x] **Live Draft Status:** Posts are ALWAYS saved as **Draft** (`--draft`) on live server for admin review (NEVER auto-published via CLI).
 - [x] **Title Format:** `[Organization Name] Jobs 2026 - [Position / Vacancies]`
 - [x] **Crisp Black Text (`#111111`):** High contrast body text with bold highlights.
 - [x] **Red Banner Headings:** Solid red (`#e53935`) background with left blue border accent (`5px solid #007bff`).
@@ -315,7 +319,7 @@ cd ~/careerinpak.com && git fetch origin main && git reset --hard origin/main &&
 - [x] **Clean Thumbnails + Watermarked Full Ad Image:** Automatic `careerinpak.com` watermark on main ad picture only.
 - [x] **WebP Conversion:** Next-Gen WebP encoding active.
 - [x] **Language Rule:** Pure simple English main body + RTL Urdu Nastaliq box for "How to Apply".
-- [x] **Git Pushed & Live cPanel Command Provided.**
+- [x] **Git Pushed & Live cPanel Command Provided (with `--draft`).**
 
 ---
 *Guide updated October 2026 for CareerInPak.com (Botble CMS / Laravel 12).*

@@ -12,19 +12,102 @@ use Illuminate\Support\Str;
 
 class CreateFreshJobCommand extends Command
 {
-    protected $signature = 'cms:create-fresh-job {--type=cpsp : Type of job to create (cpsp, nadra, umw, fbr, railways, pidcl, ppsc, paec)} {--draft : Save post as draft} {--publish : Publish post directly}';
+    protected $signature = 'cms:create-fresh-job {--type=mohmand : Type of job to create (mohmand, cpsp, nadra, umw, fbr, railways, pidcl, ppsc, paec)} {--draft : Save post as draft} {--publish : Publish post directly}';
 
     protected $description = 'Create a brand new fresh job post using the updated 11-section template engine';
 
     public function handle(): int
     {
-        $type = $this->option('type') ?? 'cpsp';
+        $type = $this->option('type') ?? 'mohmand';
         $isPublish = $this->option('publish');
         $status = $isPublish ? BaseStatusEnum::PUBLISHED : BaseStatusEnum::DRAFT;
 
         $this->info("Creating fresh job post ({$type}) [Status: {$status}] using 11-section JobPostTemplateService...");
 
-        if ($type === 'cpsp') {
+        if ($type === 'mohmand') {
+            $title = 'Cadet College Mohmand Jobs 2026 - Teaching & Admin Staff 55+ Vacancies';
+            $slugKey = Str::slug('Cadet College Mohmand Jobs 2026 Teaching Admin Staff 55 Vacancies');
+            $jobData = [
+                'posted_on'           => 'October 06, 2026',
+                'city'                => 'Mohmand / Peshawar, Khyber Pakhtunkhwa',
+                'education'           => 'MBBS / Master / MSc / BA / BSc / FA / FSc / Matric / Middle / Primary',
+                'vacancies'           => '55 Positions (22 Categories)',
+                'apply_method'        => 'By Post / Courier to PO Box No. 62 GPO Peshawar',
+                'organization'        => 'Cadet College Mohmand (Govt of KPK)',
+                'salary'              => 'BPS-02 to BPS-18 (As per KPK Govt / College Rules)',
+                'official_source_url' => 'https://ccmohmand.edu.pk',
+                'official_apply_url'  => 'mailto:ccmohmand@gmail.com',
+                'last_checked'        => 'October 06, 2026',
+                'deadline'            => 'October 30, 2026',
+                'ad_image_url'        => '',
+                'also_apply_title'    => 'PPSC Jobs 2026 - Punjab Public Service Commission Advertisement No 18',
+                'also_apply_url'      => '/ppsc-jobs-2026-punjab-public-service-commission-advertisement-no-18',
+                'job_description'     => '<p>The <strong>Government of Khyber Pakhtunkhwa</strong> has announced official recruitment for <strong>Cadet College Mohmand Jobs 2026</strong> for teaching and administrative staff. Applications are invited from eligible candidates initially for a one-year probation period, extendable or convertible to regular posts based on satisfactory performance.</p><p>Vacancies are open across 22 categories including <strong>Security Officer (BPS-18)</strong>, <strong>RMO / Doctor (BPS-18)</strong>, <strong>Lecturers (BPS-17)</strong> in Physics, Chemistry, Biology, English, Urdu, Islamiat & Computer Science, <strong>Psychologist (BPS-17)</strong>, <strong>Hostel Supervisor (BPS-16)</strong>, <strong>PT Instructor (BPS-14)</strong>, <strong>Clerical & Technical Staff</strong>, and support personnel. Complete applications with bio-data, CV, and attested documents must reach <strong>PO Box No. 62 GPO, Peshawar</strong> by <strong>October 30, 2026</strong>.</p>',
+                'who_can_apply'       => '<p>Qualified candidates possessing relevant academic degrees (MBBS, Masters, MSc Clinical Psychology, BA/BSc, FA/FSc, Matric, Middle, Primary) with requisite practical experience are eligible to apply. Preference will be given to retired personnel from the Armed Forces / Army JCOs / NCOs for security, administration, hostel supervision, PT drill instruction, and clerical roles. Applicants must meet the prescribed age limits ranging from 30 to 50 years depending on the post grade.</p>',
+                'eligibility_criteria'=> '<ul>
+                    <li><strong>Security Officer (BPS-18):</strong> BA / equivalent with Retired Major / Captain background from Armed Forces. Max Age: 50 years.</li>
+                    <li><strong>RMO / Doctor (BPS-18):</strong> MBBS / MD with minimum 5 years experience as a Doctor in a renowned hospital. Max Age: 50 years.</li>
+                    <li><strong>Lecturers (BPS-17):</strong> Master / equivalent in Physics, Chemistry, Biology, English, Urdu, Islamiat, or Computer Science. Preferably 5 years teaching experience in a Cadet College or renowned institution. Max Age: 35 years.</li>
+                    <li><strong>Psychologist (BPS-17):</strong> MSc Clinical Psychology with preferably 5 years experience in Cadet College / institution. Max Age: 35 years.</li>
+                    <li><strong>Hostel Supervisor (BPS-16):</strong> BA / BSc with 3 years relevant experience (Army retired preferred). Max Age: 45 years.</li>
+                    <li><strong>PT Instructor (BPS-14):</strong> Retired Army personnel qualified in PT / Drill Course with min 2 years experience at Army Training Institution. Max Age: 48 years.</li>
+                    <li><strong>Clerical & NCO Cadre (BPS-11 to 13):</strong> FA / FSc with 3 years experience for Adm NCO, Catering NCO, and Junior Clerk positions. Max Age: 45 years.</li>
+                    <li><strong>Technical & Support Staff (BPS-02 to 07):</strong> Driver (Middle + HTV/LTV), CCTV Operator (Matric + Diploma/Exp), Storeman, Plumber, Cook, Nan Bai, Sanitary Worker, Naib Qasid, Class Attendant, Mess Waiter, Dish Washer, House Bearer, and Ground Man. Max Age: 30 to 40 years.</li>
+                </ul>',
+                'vacant_positions'    => [
+                    ['name' => 'Security Officer', 'vacancies' => '01', 'education' => 'BA / Equivalent (Retired Major / Captain)', 'scale' => 'BPS-18', 'location' => 'Cadet College Mohmand', 'age_limit' => 'Max 50 Years'],
+                    ['name' => 'RMO / Doctor', 'vacancies' => '01', 'education' => 'MBBS / MD (Min 5 Yrs Exp)', 'scale' => 'BPS-18', 'location' => 'Cadet College Mohmand', 'age_limit' => 'Max 50 Years'],
+                    ['name' => 'Lecturers (Physics, Chemistry, Biology, English, Urdu, Islamiat, CS)', 'vacancies' => '07', 'education' => 'Master / Equivalent in Subject (5 Yrs Exp Pref)', 'scale' => 'BPS-17', 'location' => 'Cadet College Mohmand', 'age_limit' => 'Max 35 Years'],
+                    ['name' => 'Psychologist', 'vacancies' => '01', 'education' => 'MSc Clinical Psychology (5 Yrs Exp Pref)', 'scale' => 'BPS-17', 'location' => 'Cadet College Mohmand', 'age_limit' => 'Max 35 Years'],
+                    ['name' => 'Hostel Supervisor', 'vacancies' => '01', 'education' => 'BA / BSc + 3 Yrs Exp (Retired Army Pref)', 'scale' => 'BPS-16', 'location' => 'Cadet College Mohmand', 'age_limit' => 'Max 45 Years'],
+                    ['name' => 'PT Instructor', 'vacancies' => '01', 'education' => 'Retired Army (PT / Drill Course Qualified + 2 Yrs Exp)', 'scale' => 'BPS-14', 'location' => 'Cadet College Mohmand', 'age_limit' => 'Max 48 Years'],
+                    ['name' => 'Adm NCO', 'vacancies' => '01', 'education' => 'FA / FSc + 3 Yrs Exp (Retired Army JCO/NCO Pref)', 'scale' => 'BPS-13', 'location' => 'Cadet College Mohmand', 'age_limit' => 'Max 45 Years'],
+                    ['name' => 'Catering NCO', 'vacancies' => '01', 'education' => 'FA / FSc + 3 Yrs Exp (Retired Army Pref)', 'scale' => 'BPS-13', 'location' => 'Cadet College Mohmand', 'age_limit' => 'Max 45 Years'],
+                    ['name' => 'Junior Clerk', 'vacancies' => '01', 'education' => 'FA / FSc + 3 Yrs Exp (Retired Army Pref)', 'scale' => 'BPS-11', 'location' => 'Cadet College Mohmand', 'age_limit' => 'Max 45 Years'],
+                    ['name' => 'Driver', 'vacancies' => '01', 'education' => 'Middle + HTV/LTV License + Repair Exp', 'scale' => 'BPS-07', 'location' => 'Cadet College Mohmand', 'age_limit' => 'Max 40 Years'],
+                    ['name' => 'CCTV Operator', 'vacancies' => '01', 'education' => 'Matric + 3 Yrs Exp (Diploma & Army Pref)', 'scale' => 'BPS-06', 'location' => 'Cadet College Mohmand', 'age_limit' => 'Max 35 Years'],
+                    ['name' => 'Storeman', 'vacancies' => '01', 'education' => 'Matric + 3 Yrs Exp (Retired Army Pref)', 'scale' => 'BPS-06', 'location' => 'Cadet College Mohmand', 'age_limit' => 'Max 40 Years'],
+                    ['name' => 'Plumber', 'vacancies' => '01', 'education' => 'Middle + 3 Yrs Exp', 'scale' => 'BPS-06', 'location' => 'Cadet College Mohmand', 'age_limit' => 'Max 35 Years'],
+                    ['name' => 'Cook', 'vacancies' => '04', 'education' => 'Primary + 2 Yrs Exp', 'scale' => 'BPS-04', 'location' => 'Cadet College Mohmand', 'age_limit' => 'Max 30 Years'],
+                    ['name' => 'Nan Bai', 'vacancies' => '03', 'education' => 'Primary + 2 Yrs Exp', 'scale' => 'BPS-04', 'location' => 'Cadet College Mohmand', 'age_limit' => 'Max 30 Years'],
+                    ['name' => 'Sanitary Worker', 'vacancies' => '05', 'education' => 'Middle + 2 Yrs Exp', 'scale' => 'BPS-03', 'location' => 'Cadet College Mohmand', 'age_limit' => 'Max 30 Years'],
+                    ['name' => 'Naib Qasid', 'vacancies' => '01', 'education' => 'Middle + 2 Yrs Exp', 'scale' => 'BPS-02', 'location' => 'Cadet College Mohmand', 'age_limit' => 'Max 30 Years'],
+                    ['name' => 'Class Room Attendant', 'vacancies' => '04', 'education' => 'Matric + 2 Yrs Exp', 'scale' => 'BPS-02', 'location' => 'Cadet College Mohmand', 'age_limit' => 'Max 35 Years'],
+                    ['name' => 'Mess Waiter', 'vacancies' => '06', 'education' => 'Middle + 2 Yrs Exp', 'scale' => 'BPS-02', 'location' => 'Cadet College Mohmand', 'age_limit' => 'Max 35 Years'],
+                    ['name' => 'Dish Washer', 'vacancies' => '01', 'education' => 'Middle + 2 Yrs Exp', 'scale' => 'BPS-02', 'location' => 'Cadet College Mohmand', 'age_limit' => 'Max 30 Years'],
+                    ['name' => 'House Bearer', 'vacancies' => '10', 'education' => 'Middle + 2 Yrs Exp', 'scale' => 'BPS-02', 'location' => 'Cadet College Mohmand', 'age_limit' => 'Max 30 Years'],
+                    ['name' => 'Ground man', 'vacancies' => '03', 'education' => 'Middle + 2 Yrs Exp', 'scale' => 'BPS-02', 'location' => 'Cadet College Mohmand', 'age_limit' => 'Max 35 Years'],
+                ],
+                'documents_required'  => [
+                    'Detailed Bio-Data / Curriculum Vitae (CV) with active contact number and email',
+                    'Attested photocopies of all Educational Certificates, Degrees & Transcripts',
+                    'Attested copy of Computerized CNIC and Domicile Certificate',
+                    'Attested photocopies of Experience Certificates / Military Discharge Book (where applicable)',
+                    'Valid HTV / LTV Driving License copy (for Driver position)',
+                    'Latest passport-size photographs with blue background',
+                ],
+                'mistakes_to_avoid'   => [
+                    'Do not submit applications after the deadline of October 30, 2026.',
+                    'Ensure the application envelope is clearly marked with the name of the post applied for.',
+                    'Do not send un-attested copies of certificates or incomplete bio-data forms.',
+                    'No TA/DA will be paid for appearing in test/interview at Cadet College Mohmand.',
+                ],
+                'selection_process'   => [
+                    'Receipt of applications duly marked for the post at PO Box No. 62 GPO, Peshawar before October 30, 2026.',
+                    'Initial document verification and shortlisting of qualified candidates.',
+                    'Interview conducted by the Selection Board at Cadet College Mohmand.',
+                    'Final appointment initially for 1-year probation period (extendable or convertible to regular status).',
+                ],
+                'how_to_apply_urdu'   => '<ol>
+                    <li>اپنی تعلیمی اسناد، تجربہ سرٹیفکیٹس، سی این آئی سی کاپی اور تازہ ترین تصاویر کی تصدیق شدہ (Attested) کاپیاں تیار کریں۔</li>
+                    <li>ایک مکمل سی وی (Bio-Data / CV) تیار کریں اور درخواست کے لفافے کے اوپر مطلوبہ اسامی (Post) کا نام واضح تحریر کریں۔</li>
+                    <li>درخواست بذریعہ پوسٹ/کوریئر پتے <strong>"PO Box No. 62 GPO, Peshawar"</strong> پر ارسال کریں۔</li>
+                    <li>درخواست موصول ہونے کی حتمی تاریخ <strong>30 اکتوبر 2026</strong> ہے۔</li>
+                    <li>صرف شارٹ لسٹ شدہ امیدواروں کو کیڈٹ کالج مہمند میں انٹرویو کے لیے بلایا جائے گا۔ (کوئی TA/DA نہیں دیا جائے گا)۔</li>
+                    <li>کسی بھی رہنمائی کے لیے فون نمبر <strong>0924-29341</strong> یا ای میل <strong>ccmohmand@gmail.com</strong> پر رابطہ کریں۔</li>
+                </ol>',
+            ];
+        } elseif ($type === 'cpsp') {
             $title = 'CPSP Jobs 2026 Lahore - College of Physicians and Surgeons Pakistan Opportunities';
             $slugKey = Str::slug('CPSP Jobs 2026 Lahore College of Physicians and Surgeons Pakistan Opportunities');
             $jobData = [
