@@ -12,7 +12,7 @@ use Illuminate\Support\Str;
 
 class CreateFreshJobCommand extends Command
 {
-    protected $signature = 'cms:create-fresh-job {--type=mohmand : Type of job to create (mohmand, cpsp, nadra, umw, fbr, railways, pidcl, ppsc, paec)} {--draft : Save post as draft} {--publish : Publish post directly}';
+    protected $signature = 'cms:create-fresh-job {--type=mohmand : Type of job to create (mohmand, cpsp, nadra, umw, fbr, railways, pidcl, ppsc, paec, uoc)} {--draft : Save post as draft} {--publish : Publish post directly}';
 
     protected $description = 'Create a brand new fresh job post using the updated 11-section template engine';
 
@@ -24,7 +24,87 @@ class CreateFreshJobCommand extends Command
 
         $this->info("Creating fresh job post ({$type}) [Status: {$status}] using 11-section JobPostTemplateService...");
 
-        if ($type === 'mohmand') {
+        if ($type === 'uoc') {
+            $title = 'University of Chakwal UoC Jobs 2026 - Advertisement No 06/2026';
+            $slugKey = Str::slug('University of Chakwal UoC Jobs 2026 Advertisement No 06 2026');
+            $jobData = [
+                'posted_on'           => 'October 07, 2026',
+                'city'                => 'Chakwal, Punjab',
+                'education'           => 'PhD / MS / M.Phil / Master / BS / B.Sc Civil / MBBS / MBA / ACCA',
+                'vacancies'           => '21 Positions',
+                'apply_method'        => 'Online via UoC Portal + Hard Copy Courier',
+                'organization'        => 'University of Chakwal (UoC)',
+                'salary'              => 'BPS-17 to BPS-20 (As per Govt / UoC Scale)',
+                'official_source_url' => 'https://uoc.edu.pk/jobs.php',
+                'official_apply_url'  => 'https://uoc.edu.pk/jobs.php',
+                'last_checked'        => 'October 07, 2026',
+                'deadline'            => 'October 07, 2026',
+                'also_apply_title'    => 'PPSC Jobs 2026 - Punjab Public Service Commission Advertisement No 18',
+                'also_apply_url'      => '/ppsc-jobs-2026-punjab-public-service-commission-advertisement-no-18',
+                'job_description'     => '<p>The <strong>University of Chakwal (UoC)</strong> has published official <strong>Advertisement No: 06/2026</strong> (IPL-9880) inviting online applications from qualified candidates holding a <strong>Punjab Domicile</strong>. The announced vacancies include statutory executive leadership roles such as <em>Controller of Examinations (BS-20)</em> and <em>Registrar (BS-20)</em>, alongside several administrative officer roles spanning BS-17 to BS-19 on regular and contract bases.</p><p>Eligible candidates meeting the Higher Education Commission (HEC) and Pakistan Engineering Council (PEC) qualification standards must apply online through the official University of Chakwal portal. Printed application dossiers accompanied by required certificates and bank challan receipts must reach the Registrar Office by courier.</p>',
+                'who_can_apply'       => '<p>Candidates having valid <strong>Punjab Domicile</strong> meeting the HEC recognized educational qualification, required post-qualification experience, and prescribed age limits are eligible. Both fresh and experienced male, female, and minority candidates can apply as per Government of Punjab quota policies. Foreign degree holders must submit HEC/IBCC equivalence certificates.</p>',
+                'eligibility_criteria'=> '<ul>
+                    <li><strong>Domicile:</strong> Punjab Province Domicile holders only.</li>
+                    <li><strong>Education:</strong> PhD, MS/M.Phil, Master’s/BS (2nd division), B.Sc Civil Engineering, MBBS, MBA, M.Com, ACCA, ACMA, or equivalent from HEC recognized institutes.</li>
+                    <li><strong>Age Limit:</strong> 21 to 50 Years (Upper age relaxation applicable as per Punjab Govt policy).</li>
+                    <li><strong>Professional Registration:</strong> PEC registration required for Civil Engineering posts; PMC registration for Medical Officer.</li>
+                </ul>',
+                'vacant_positions'    => [
+                    ['name' => 'Controller of Examinations', 'vacancies' => '01', 'education' => 'PhD + 8 yrs exp OR MS/M.Phil + 10 yrs exp OR Master/BS + 12 yrs exp', 'scale' => 'BS-20 (Contract)', 'location' => 'Chakwal', 'age_limit' => '40-50 Years'],
+                    ['name' => 'Registrar', 'vacancies' => '01', 'education' => 'PhD + 8 yrs exp OR MS/M.Phil + 10 yrs exp OR Master/BS + 12 yrs exp', 'scale' => 'BS-20 (Contract)', 'location' => 'Chakwal', 'age_limit' => '40-50 Years'],
+                    ['name' => 'Project Director', 'vacancies' => '01', 'education' => 'B.Sc Civil Engineering (PEC Registered) + 12 yrs exp', 'scale' => 'BS-19', 'location' => 'Chakwal', 'age_limit' => '35-50 Years'],
+                    ['name' => 'Deputy Director (Sports)', 'vacancies' => '01', 'education' => 'Master/BS Sports Sciences / Physical Education + 5 yrs exp', 'scale' => 'BS-18', 'location' => 'Chakwal', 'age_limit' => '25-45 Years'],
+                    ['name' => 'Deputy Director (Press, Media & Publication)', 'vacancies' => '01', 'education' => 'MS/M.Phil + 3 yrs exp OR Master/BS Mass Comm + 5 yrs exp', 'scale' => 'BS-18', 'location' => 'Chakwal', 'age_limit' => '25-45 Years'],
+                    ['name' => 'Deputy Controller of Examinations', 'vacancies' => '01', 'education' => 'MS/M.Phil + 3 yrs exp OR Master/BS + 5 yrs exp', 'scale' => 'BS-18', 'location' => 'Chakwal', 'age_limit' => '25-45 Years'],
+                    ['name' => 'Deputy Registrar', 'vacancies' => '01', 'education' => 'MS/M.Phil + 3 yrs exp OR Master/BS + 5 yrs exp', 'scale' => 'BS-18', 'location' => 'Chakwal', 'age_limit' => '25-45 Years'],
+                    ['name' => 'Deputy Treasurer', 'vacancies' => '02', 'education' => 'MS/M.Phil Finance/M.Com/ACCA/ACMA + 3-5 yrs exp', 'scale' => 'BS-18', 'location' => 'Chakwal', 'age_limit' => '25-45 Years'],
+                    ['name' => 'Senior Press Manager', 'vacancies' => '01', 'education' => 'Master/BS Mass Comm / Media Studies + 5 yrs exp', 'scale' => 'BS-18', 'location' => 'Chakwal', 'age_limit' => '25-45 Years'],
+                    ['name' => 'Assistant Controller of Examinations', 'vacancies' => '02', 'education' => 'Master’s degree or BS (2nd Division)', 'scale' => 'BS-17', 'location' => 'Chakwal', 'age_limit' => '21-35 Years'],
+                    ['name' => 'Assistant Registrar', 'vacancies' => '02', 'education' => 'MBA / M.Com / MCS / ACMA / ACCA / Master / BS', 'scale' => 'BS-17', 'location' => 'Chakwal', 'age_limit' => '21-35 Years'],
+                    ['name' => 'Assistant Treasurer', 'vacancies' => '02', 'education' => 'MBA / M.Com / ACMA / ACCA / M.Sc Economics', 'scale' => 'BS-17', 'location' => 'Chakwal', 'age_limit' => '21-35 Years'],
+                    ['name' => 'Assistant Director (Academics)', 'vacancies' => '01', 'education' => 'Master’s degree or BS (2nd Division)', 'scale' => 'BS-17', 'location' => 'Chakwal', 'age_limit' => '21-35 Years'],
+                    ['name' => 'Assistant Director (Purchase & Store)', 'vacancies' => '01', 'education' => 'MBA / M.Com / ACMA / ACCA / M.Sc Economics', 'scale' => 'BS-17', 'location' => 'Chakwal', 'age_limit' => '21-35 Years'],
+                    ['name' => 'Assistant Director (Planning & Development)', 'vacancies' => '01', 'education' => 'Master / BS in Economics, Engineering, or Mgmt Sciences', 'scale' => 'BS-17', 'location' => 'Chakwal', 'age_limit' => '21-35 Years'],
+                    ['name' => 'Assistant Engineer (Civil)', 'vacancies' => '01', 'education' => 'B.Sc Civil Engineering (PEC Registered)', 'scale' => 'BS-17', 'location' => 'Chakwal', 'age_limit' => '21-35 Years'],
+                    ['name' => 'Assistant Librarian', 'vacancies' => '01', 'education' => 'Master / BS Library & Information Science', 'scale' => 'BS-17', 'location' => 'Chakwal', 'age_limit' => '21-35 Years'],
+                    ['name' => 'Estate Officer', 'vacancies' => '01', 'education' => 'Master / BS + 2 yrs relevant experience', 'scale' => 'BS-17', 'location' => 'Chakwal', 'age_limit' => '21-35 Years'],
+                    ['name' => 'Medical Officer', 'vacancies' => '01', 'education' => 'MBBS (1st Div) + PMC Registration + 1 yr House Job', 'scale' => 'BS-17', 'location' => 'Chakwal', 'age_limit' => '21-35 Years'],
+                    ['name' => 'Security Officer', 'vacancies' => '01', 'education' => 'Retired Commissioned Armed Forces Officer', 'scale' => 'BS-17', 'location' => 'Chakwal', 'age_limit' => '21-35 Years'],
+                    ['name' => 'Personal Secretary', 'vacancies' => '01', 'education' => 'Master/BS + 100 wpm shorthand & 50 wpm typing speed', 'scale' => 'BS-17', 'location' => 'Chakwal', 'age_limit' => '21-35 Years'],
+                ],
+                'documents_required'  => [
+                    'Duly signed online application form printout (02 hard copy sets)',
+                    'Original paid Bank of Punjab system-generated fee challan',
+                    'Attested copy of Punjab Domicile Certificate & CNIC',
+                    'Attested copies of Educational Degrees, Transcripts, and Result Cards',
+                    'Experience certificates issued by authorized appointing authority',
+                    'HEC / IBCC Equivalence Certificate (for foreign qualification holders)',
+                    'NOC / Departmental Permission Certificate (for Govt employees)',
+                    'Detailed updated Resume / CV (preferably double-sided print)',
+                ],
+                'mistakes_to_avoid'   => [
+                    'Do not miss the online application cutoff date (October 07, 2026).',
+                    'Do not send incomplete dossiers or missing fee challan copies.',
+                    'Do not submit private experience without valid entity registration proof.',
+                    'Do not send hard copies late (must reach by October 08, 2026, 04:00 PM).',
+                    'Do not pay fee on unverified links (fee must be paid via Bank of Punjab challan).',
+                ],
+                'selection_process'   => [
+                    'Online Registration on official UoC portal (uoc.edu.pk/jobs.php).',
+                    'Hard copy submission of 02 dossier sets via registered courier.',
+                    'Scrutiny of documents and eligibility verification by UoC committee.',
+                    'Screening MCQ Test (if required by University competent authority).',
+                    'Shortlisting and official interview call for eligible candidates.',
+                ],
+                'how_to_apply_urdu'   => '<ol style="list-style-position: inside; padding-right: 15px;">
+                    <li>سب سے پہلے آفیشل پورٹل <strong>uoc.edu.pk/jobs.php</strong> پر جا کر آن لائن فارم پر کریں۔</li>
+                    <li>آن لائن فارم جمع کروانے کے بعد سسٹم سے جنریٹ شدہ چالان فارم بینک آف پنجاب (BOP) کی کسی بھی برانچ میں جمع کروائیں۔</li>
+                    <li>رجسٹرار اور کنٹرولر امتحانات کی اسامیوں کے لیے پروسیسنگ فیس 5,000 روپے جبکہ دیگر انتظامی اسامیوں (BS-17 تا BS-19) کے لیے 3,000 روپے ہے۔</li>
+                    <li>آن لائن فارم کا پرنٹ نکال کر ساتھ اصل چالان، ڈومیسائل، قومی شناختی کارڈ، تعلیمی اسناد اور تجربہ کے سرٹیفکیٹس کے دو (02) مکمل ڈوسیئر سیٹ تیار کریں۔</li>
+                    <li>تیار شدہ 02 سیٹ مورخہ 08 اکتوبر 2026 شام 04:00 بجے تک رجسٹرار آفس، یونیورسٹی آف چکوال، سٹی کیمپس، تلہ گنگ روڈ، چکوال کو بذریعہ رجسٹرڈ کورئیر/ڈاک ارسال کریں۔</li>
+                </ol>',
+            ];
+        } elseif ($type === 'mohmand') {
             $title = 'Cadet College Mohmand Jobs 2026 - Teaching & Admin Staff 55+ Vacancies';
             $slugKey = Str::slug('Cadet College Mohmand Jobs 2026 Teaching Admin Staff 55 Vacancies');
             $jobData = [
