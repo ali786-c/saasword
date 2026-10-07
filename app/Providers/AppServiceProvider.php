@@ -17,7 +17,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        if (class_exists(\Botble\JobAlertsPopup\Providers\JobAlertsPopupServiceProvider::class)) {
+            $this->app->register(\Botble\JobAlertsPopup\Providers\JobAlertsPopupServiceProvider::class);
+        }
     }
 
     /**
