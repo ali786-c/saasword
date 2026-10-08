@@ -12,19 +12,88 @@ use Illuminate\Support\Str;
 
 class CreateFreshJobCommand extends Command
 {
-    protected $signature = 'cms:create-fresh-job {--type=mohmand : Type of job to create (mohmand, cpsp, nadra, umw, fbr, railways, pidcl, ppsc, paec, uoc)} {--draft : Save post as draft} {--publish : Publish post directly}';
+    protected $signature = 'cms:create-fresh-job {--type=neb : Type of job to create (neb, mohmand, cpsp, nadra, umw, fbr, railways, pidcl, ppsc, paec, uoc)} {--draft : Save post as draft} {--publish : Publish post directly}';
 
     protected $description = 'Create a brand new fresh job post using the updated 11-section template engine';
 
     public function handle(): int
     {
-        $type = $this->option('type') ?? 'mohmand';
+        $type = $this->option('type') ?? 'neb';
         $isPublish = $this->option('publish');
         $status = $isPublish ? BaseStatusEnum::PUBLISHED : BaseStatusEnum::DRAFT;
 
-        $this->info("Creating fresh job post ({$type}) [Status: {$status}] using 11-section JobPostTemplateService...");
-
-        if ($type === 'uoc') {
+        if ($type === 'neb') {
+            $title = 'National Employment Bureau NEB Jobs 2026 - 105+ Vacancies';
+            $slugKey = Str::slug('National Employment Bureau NEB Jobs 2026 105 Vacancies Islamabad');
+            $jobData = [
+                'posted_on'           => 'October 08, 2026',
+                'city'                => 'Islamabad (Headquarters) / All Pakistan Quota',
+                'education'           => 'Primary / Middle / Matric / Intermediate / Bachelor / Master / ACCA / B.Com / BS CS / Software Engineering',
+                'vacancies'           => '105 Positions (12 Categories)',
+                'apply_method'        => 'Online via Official Portal (www.nebpakistan.org)',
+                'organization'        => 'National Employment Bureau Pakistan (NEB)',
+                'salary'              => 'Rs. 45,000 to Rs. 155,000 / Month (Post Wise)',
+                'official_source_url' => 'https://www.nebpakistan.org',
+                'official_apply_url'  => 'https://www.nebpakistan.org',
+                'last_checked'        => 'October 08, 2026',
+                'deadline'            => 'October 15, 2026',
+                'also_apply_title'    => 'PPSC Jobs 2026 - Punjab Public Service Commission Advertisement No 18',
+                'also_apply_url'      => '/ppsc-jobs-2026-punjab-public-service-commission-advertisement-no-18',
+                'job_description'     => '<p>The <strong>National Employment Bureau Pakistan (NEB)</strong>, located at State Life Building, Block L, Sector F-7/4, Islamabad, has officially announced high-pay career opportunities for Pakistani citizens (Male & Female). Applications are invited for <strong>105+ vacancies</strong> across 12 distinct positions ranging from support staff to executive director roles.</p><p>Selected candidates will receive attractive monthly remuneration packages ranging from <strong>Rs. 45,000 to Rs. 155,000 per month</strong> depending on the scale and post grade. Eligible candidates across Punjab, Sindh, Khyber Pakhtunkhwa (KP), Balochistan, AJK, and Gilgit-Baltistan (GB) must submit their applications online at <strong>www.nebpakistan.org</strong> before <strong>October 15, 2026</strong>.</p>',
+                'who_can_apply'       => '<p>Pakistani male and female citizens holding valid Domicile of Punjab, Sindh, Khyber Pakhtunkhwa, Balochistan, AJK, GB, or Merit seats are eligible to apply. Applicants must meet the prescribed educational qualifications (ranging from Primary to 16 Years Master’s/BS Degree) and age limits (up to 45 years depending on the post). Reserved provincial quotas are strictly allocated as per Government of Pakistan policy.</p>',
+                'eligibility_criteria'=> '<ul>
+                    <li><strong>Assistant Director (Admin & Employment):</strong> 16 Years Master’s / Bachelor’s degree in Public Administration, Management, HR, Business Administration, Economics, or Social Sciences. Max Age: 35 Years.</li>
+                    <li><strong>IT / Software Officer:</strong> BS / MSc in Computer Science, IT, Software Engineering or equivalent with computer & software development knowledge. Max Age: 35 Years.</li>
+                    <li><strong>Accounts Officer:</strong> M.Com, ACCA, MBA Finance, or B.Com (Hons) with relevant accounting experience. Max Age: 40 Years.</li>
+                    <li><strong>Clerical Staff (UDC / LDC / Record Keeper):</strong> Intermediate or Matric with minimum 30 wpm typing speed and MS Office / computer proficiency. Max Age: 35 to 40 Years.</li>
+                    <li><strong>Junior Accountant & Statistical Assistant:</strong> Intermediate / Associate Degree in Commerce or Statistics/Mathematics with computer literacy. Max Age: 35 Years.</li>
+                    <li><strong>Support Staff (Naib Qasid, Chowkidar, Office Attendant):</strong> Primary / Middle / Literate with physical fitness and office support capabilities. Max Age: 40 to 45 Years.</li>
+                </ul>',
+                'vacant_positions'    => [
+                    ['name' => 'Assistant Director (Administration)', 'vacancies' => '01 (Merit)', 'education' => 'Master / Bachelor (16 Yrs) in Public Admin / HR / MBA', 'scale' => 'Rs. 155,000/- p.m', 'location' => 'Islamabad', 'age_limit' => 'Max 35 Years'],
+                    ['name' => 'Assistant Director (Employment Services)', 'vacancies' => '16 (Punjab:09, Sindh:03, KP:02, Bal:01, AJK/GB:01)', 'education' => '16 Yrs in Economics / Public Admin / HR / Social Sciences', 'scale' => 'Rs. 155,000/- p.m', 'location' => 'Islamabad / Regional', 'age_limit' => 'Max 35 Years'],
+                    ['name' => 'IT / Software Officer', 'vacancies' => '04 (Merit:01, Punjab:02, KP:01)', 'education' => 'BS / MSc in CS, IT, Software Engineering', 'scale' => 'Rs. 155,000/- p.m', 'location' => 'Islamabad', 'age_limit' => 'Max 35 Years'],
+                    ['name' => 'Accounts Officer', 'vacancies' => '05 (Punjab:03, Sindh:01, KP:01)', 'education' => 'M.Com / ACCA / MBA Finance / B.Com (Hons)', 'scale' => 'Rs. 155,000/- p.m', 'location' => 'Islamabad', 'age_limit' => 'Max 40 Years'],
+                    ['name' => 'UDC (Upper Division Clerk)', 'vacancies' => '21 (Merit:02, Punjab:04, Sindh:13, KP:01, Bal:01)', 'education' => 'Intermediate + 30 wpm typing speed + MS Office', 'scale' => 'Rs. 80,000/- p.m', 'location' => 'Islamabad / Regional', 'age_limit' => 'Max 35 Years'],
+                    ['name' => 'Junior Accountant', 'vacancies' => '04 (Punjab:02, Sindh:01, KP:01)', 'education' => 'Intermediate / Associate Degree in Commerce', 'scale' => 'Rs. 75,000/- p.m', 'location' => 'Islamabad', 'age_limit' => 'Max 35 Years'],
+                    ['name' => 'Junior Statistical Assistant', 'vacancies' => '04 (Punjab:02, Sindh:01, KP:01)', 'education' => 'Intermediate with Statistics / Mathematics', 'scale' => 'Rs. 75,000/- p.m', 'location' => 'Islamabad', 'age_limit' => 'Max 35 Years'],
+                    ['name' => 'LDC (Lower Division Clerk)', 'vacancies' => '06 (Punjab:02, Sindh:01, KP:01, Bal:01, AJK/GB:01)', 'education' => 'Matric + 30 wpm typing speed + computer basics', 'scale' => 'Rs. 72,000/- p.m', 'location' => 'Islamabad / Regional', 'age_limit' => 'Max 35 Years'],
+                    ['name' => 'Record Keeper', 'vacancies' => '04 (Punjab:02, Sindh:01, KP:01)', 'education' => 'Intermediate / ICS + computer knowledge', 'scale' => 'Rs. 65,000/- p.m', 'location' => 'Islamabad', 'age_limit' => 'Max 40 Years'],
+                    ['name' => 'Naib Qasid', 'vacancies' => '13 (Punjab:07, Sindh:02, KP:02, Bal:01, AJK/GB:01)', 'education' => 'Primary / Middle pass (Physically fit)', 'scale' => 'Rs. 45,500/- p.m', 'location' => 'Islamabad / Regional', 'age_limit' => 'Max 45 Years'],
+                    ['name' => 'Chowkidar (Naibowkidar)', 'vacancies' => '23 (Punjab:13, Sindh:04, KP:03, Bal:02, AJK/GB:01)', 'education' => 'Primary education (Physically fit)', 'scale' => 'Rs. 45,500/- p.m', 'location' => 'Islamabad / Regional', 'age_limit' => 'Max 45 Years'],
+                    ['name' => 'Office Attendant', 'vacancies' => '04 (Punjab:02, Sindh:01, KP:01)', 'education' => 'Primary / Literate', 'scale' => 'Rs. 45,000/- p.m', 'location' => 'Islamabad', 'age_limit' => 'Max 40 Years'],
+                ],
+                'documents_required'  => [
+                    'Original CNIC card copy (Computerized National Identity Card)',
+                    'Domicile Certificate of relevant district / province (Punjab, Sindh, KP, Balochistan, AJK, GB)',
+                    'Educational degrees, certificates, and detailed marks certificates (DMC)',
+                    'Experience certificates (for accounting, IT, and admin positions where applicable)',
+                    'Recent passport-size photographs with blue background',
+                    'Computer / typing skill certificate (for UDC and LDC posts)',
+                ],
+                'mistakes_to_avoid'   => [
+                    'Do not submit online applications after the last date (October 15, 2026).',
+                    'Do not provide false CNIC number, phone number, or incorrect domicile quota.',
+                    'Candidates applying for UDC/LDC must ensure they pass the mandatory 30 wpm typing test.',
+                    'Do not pay any fee to unauthorized persons; verify official procedure at www.nebpakistan.org.',
+                    'Read the complete Terms of Reference (ToRs) on the official website before applying.',
+                ],
+                'selection_process'   => [
+                    'Online registration through the official web portal www.nebpakistan.org.',
+                    'Scrutiny of online applications and initial shortlisting of eligible candidates.',
+                    'Skill / typing test for clerical candidates (UDC / LDC).',
+                    'Written screening test and formal interview by NEB selection board.',
+                    'Final merit list display and appointment letter issuance for selected candidates.',
+                ],
+                'how_to_apply_urdu'   => '<ol style="list-style-position: inside; padding-right: 15px;">
+                    <li>آفیشل ویب سائٹ <strong>www.nebpakistan.org</strong> پر جائیں اور آن لائن فارم پر کریں۔</li>
+                    <li>تعلیم، عمر کی حد، ڈومیسائل کوٹہ اور مطلوبہ پوسٹ کی شرائط غور سے چیک کریں۔</li>
+                    <li>یو ڈی سی (UDC) اور ایل ڈی سی (LDC) کی پوسٹوں کے لیے 30 الفاظ فی منٹ ٹائپنگ سپیڈ لازمی ہے۔</li>
+                    <li>آن لائن درخواست جمع کروانے کی آخری تاریخ <strong>15 اکتوبر 2026</strong> ہے۔</li>
+                    <li>صرف شارٹ لسٹ شدہ امیدواروں کو تحریری ٹیسٹ، سکل ٹیسٹ اور انٹرویو کے لیے بلایا جائے گا۔</li>
+                </ol>',
+            ];
+        } elseif ($type === 'uoc') {
             $title = 'University of Chakwal UoC Jobs 2026 - Advertisement No 06/2026';
             $slugKey = Str::slug('University of Chakwal UoC Jobs 2026 Advertisement No 06 2026');
             $jobData = [
@@ -712,11 +781,19 @@ class CreateFreshJobCommand extends Command
 
         $content = JobPostTemplateService::render($jobData);
 
-        $category = Category::query()->where('name', 'Federal Jobs')->first()
-            ?: Category::query()->where('name', 'Jobs')->first()
-            ?: Category::query()->first();
+        if (! class_exists(\Botble\Blog\Models\Post::class)) {
+            $this->error('Botble Blog plugin Post model not found.');
+            return self::FAILURE;
+        }
 
-        $post = Post::query()->updateOrCreate(
+        $category = null;
+        if (class_exists(\Botble\Blog\Models\Category::class)) {
+            $category = \Botble\Blog\Models\Category::query()->where('name', 'Federal Jobs')->first()
+                ?: \Botble\Blog\Models\Category::query()->where('name', 'Jobs')->first()
+                ?: \Botble\Blog\Models\Category::query()->first();
+        }
+
+        $post = \Botble\Blog\Models\Post::query()->updateOrCreate(
             ['name' => $title],
             [
                 'description' => "{$jobData['organization']} Jobs 2026 announced for {$jobData['vacancies']}. Check eligibility, age limit, salary details and apply online before last date.",
