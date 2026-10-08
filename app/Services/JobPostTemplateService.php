@@ -87,30 +87,37 @@ class JobPostTemplateService
             }
         }
 
-        // WhatsApp Channel Promo Banner Component (Fail-Safe Table Layout)
+        // WhatsApp Channel Promo Banner Component
         $whatsappBanner = "
-        <div class=\"whatsapp-channel-banner my-4\" style=\"background-color: #f0fdf4 !important; border: 1.5px solid #25D366 !important; border-radius: 12px !important; padding: 16px 20px !important; margin-top: 20px !important; margin-bottom: 25px !important; box-shadow: 0 2px 8px rgba(37, 211, 102, 0.12) !important;\">
-            <table style=\"width: 100% !important; border-collapse: collapse !important; border: 0 !important; background: transparent !important; margin: 0 !important; padding: 0 !important;\">
-                <tr style=\"background: transparent !important;\">
-                    <td style=\"width: 54px !important; vertical-align: middle !important; border: 0 !important; padding: 0 15px 0 0 !important;\">
-                        <div style=\"width: 46px !important; height: 46px !important; background-color: #25D366 !important; border-radius: 50% !important; display: block !important; text-align: center !important; line-height: 46px !important;\">
-                            <span style=\"font-size: 24px !important; color: #ffffff !important; line-height: 46px !important; display: inline-block !important;\">💬</span>
-                        </div>
-                    </td>
-                    <td style=\"vertical-align: middle !important; border: 0 !important; padding: 0 !important;\">
-                        <div style=\"font-size: 18px !important; font-weight: 700 !important; color: #111111 !important; line-height: 1.3 !important; margin: 0 0 4px 0 !important;\">
-                            Join our WhatsApp Channel!
-                        </div>
-                        <div style=\"font-size: 14px !important; color: #4a5568 !important; line-height: 1.4 !important; margin: 0 !important;\">
-                            Don't miss out! Get the latest Government &amp; Private jobs alerts directly on your phone.
-                        </div>
-                    </td>
-                    <td style=\"text-align: right !important; vertical-align: middle !important; border: 0 !important; padding: 0 0 0 15px !important; width: 130px !important;\">
-                        <a href=\"{$whatsappUrl}\" target=\"_blank\" rel=\"noopener noreferrer\" style=\"background-color: #25D366 !important; color: #ffffff !important; font-weight: 700 !important; font-size: 15px !important; padding: 10px 22px !important; border-radius: 30px !important; text-decoration: none !important; display: inline-block !important; white-space: nowrap !important; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3) !important;\">
-                            Join Now
-                        </a>
-                    </td>
-                </tr>
+        <div class=\"whatsapp-channel-banner\" style=\"background:#f0fdf4;border:1px solid #b7ebc6;border-radius:12px;margin:25px 0;padding:18px 20px;\">
+            <table style=\"width:100%;border-collapse:collapse;margin:0;padding:0;\">
+                <tbody>
+                    <tr>
+                        <!-- WhatsApp Icon -->
+                        <td style=\"width:52px;padding:0 14px 0 0;vertical-align:middle;\">
+                            <div style=\"width:46px;height:46px;background:#25D366;border-radius:50%;text-align:center;\">
+                                <svg width=\"25\" height=\"25\" viewBox=\"0 0 24 24\" fill=\"#ffffff\" style=\"margin-top:10px;\">
+                                    <path d=\"M20.52 3.48A11.82 11.82 0 0 0 12.08 0C5.54 0 .22 5.32.22 11.86c0 2.09.55 4.13 1.59 5.93L.11 24l6.36-1.67a11.85 11.85 0 0 0 5.61 1.42h.01c6.54 0 11.86-5.32 11.86-11.86 0-3.17-1.23-6.15-3.43-8.41zM12.09 21.73h-.01a9.83 9.83 0 0 1-5.01-1.37l-.36-.21-3.77.99 1.01-3.67-.23-.38a9.83 9.83 0 1 1 8.37 4.64zm5.4-7.37c-.3-.15-1.77-.87-2.05-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.76-1.66-2.06-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.49s1.07 2.89 1.22 3.09c.15.2 2.1 3.21 5.08 4.5.71.31 1.26.5 1.69.64.71.23 1.35.2 1.86.12.57-.08 1.77-.72 2.02-1.42.25-.7.25-1.3.17-1.42-.07-.12-.27-.2-.57-.35z\"/>
+                                </svg>
+                            </div>
+                        </td>
+                        <!-- Text -->
+                        <td style=\"padding:0;vertical-align:middle;\">
+                            <div style=\"color:#111111;font-size:17px;line-height:1.35;margin:0 0 3px;\">
+                                <strong>Join our WhatsApp Channel!</strong>
+                            </div>
+                            <div style=\"color:#4a5568;font-size:13.5px;line-height:1.5;margin:0;\">
+                                Get the latest Government &amp; Private job alerts directly on your phone.
+                            </div>
+                        </td>
+                        <!-- Button -->
+                        <td style=\"width:120px;padding:0 0 0 15px;text-align:right;vertical-align:middle;\">
+                            <a href=\"{$whatsappUrl}\" target=\"_blank\" rel=\"noopener noreferrer\" style=\"display:inline-block;background:#25D366;color:#ffffff;border-radius:7px;padding:10px 18px;font-size:14px;font-weight:600;text-decoration:none;white-space:nowrap;\">
+                                Join Now
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
             </table>
         </div>";
 
