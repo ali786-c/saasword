@@ -12,7 +12,7 @@ use Illuminate\Support\Str;
 
 class CreateFreshJobCommand extends Command
 {
-    protected $signature = 'cms:create-fresh-job {--type=neb : Type of job to create (neb, mohmand, cpsp, nadra, umw, fbr, railways, pidcl, ppsc, paec, uoc)} {--draft : Save post as draft} {--publish : Publish post directly}';
+    protected $signature = 'cms:create-fresh-job {--type=neb : Type of job to create (neb, prosecution, mohmand, cpsp, nadra, umw, fbr, railways, pidcl, ppsc, paec, uoc)} {--draft : Save post as draft} {--publish : Publish post directly}';
 
     protected $description = 'Create a brand new fresh job post using the updated 11-section template engine';
 
@@ -91,6 +91,77 @@ class CreateFreshJobCommand extends Command
                     <li>یو ڈی سی (UDC) اور ایل ڈی سی (LDC) کی پوسٹوں کے لیے 30 الفاظ فی منٹ ٹائپنگ سپیڈ لازمی ہے۔</li>
                     <li>آن لائن درخواست جمع کروانے کی آخری تاریخ <strong>15 اکتوبر 2026</strong> ہے۔</li>
                     <li>صرف شارٹ لسٹ شدہ امیدواروں کو تحریری ٹیسٹ، سکل ٹیسٹ اور انٹرویو کے لیے بلایا جائے گا۔</li>
+                </ol>',
+            ];
+        } elseif ($type === 'prosecution' || $type === 'sindhprosecution') {
+            $title = 'Prosecutor General Sindh Jobs 2026 - 570+ Driver, Naib Qasid, Daftari & Staff Vacancies';
+            $slugKey = Str::slug('Prosecutor General Sindh Jobs 2026 Criminal Prosecution Department Walk-in Interview');
+            $jobData = [
+                'posted_on'           => 'October 10, 2026',
+                'city'                => 'Karachi (Head Office) & All 28 Districts of Sindh',
+                'education'           => 'Primary Pass / Driving License (Motorcycle/LTV) / Literate / Practical Experience',
+                'vacancies'           => '570+ Positions (Head Office: 232, District Offices: 338)',
+                'apply_method'        => 'Walk-in Interview with Application & Attested Documents',
+                'organization'        => 'Criminal Prosecution Services Department, Government of Sindh',
+                'salary'              => 'BPS-01 to BPS-04 (Rs. 32,000 to Rs. 45,000 / Month + Govt Allowances)',
+                'official_source_url' => 'https://www.iwork4sindh.com',
+                'official_apply_url'  => 'https://www.iwork4sindh.com',
+                'last_checked'        => 'October 10, 2026',
+                'deadline'            => 'October 31, 2026',
+                'also_apply_title'    => 'PPSC Jobs 2026 - Punjab Public Service Commission Advertisement No 18',
+                'also_apply_url'      => '/ppsc-jobs-2026-punjab-public-service-commission-advertisement-no-18',
+                'job_description'     => '<p>The <strong>Criminal Prosecution Services Department, Government of Sindh</strong>, through the Office of the <strong>Prosecutor General Sindh</strong> (4th Floor, Administration Block, High Court of Sindh, Karachi), has officially announced recruitment for <strong>570+ vacant posts (BPS-01 to BPS-04)</strong>. Opportunities are available at the Provincial Head Office in Karachi (232 vacancies) as well as across all 28 District Public Prosecutor Offices throughout Sindh (338 vacancies).</p><p>Applications are invited for the positions of <strong>Dispatch Rider (BPS-04)</strong>, <strong>Driver (BPS-04)</strong>, <strong>Daftari (BPS-02)</strong>, <strong>Chowkidar (BPS-01)</strong>, <strong>Naib Qasid (BPS-01)</strong>, and <strong>Sanitary Worker (BPS-01)</strong>. Recruitment will be conducted strictly through scheduled <strong>Walk-in Interviews</strong> from <strong>October 19, 2026 to October 31, 2026</strong> as per district quotas and published schedules (INF-KRY 4363-26).</p>',
+                'who_can_apply'       => '<p>Candidates holding valid <strong>Domicile and PRC (Form-D) of Sindh Province</strong> (allocated under Rural 60% and Urban 40% quotas) are eligible. For Head Office positions in Karachi, candidates holding Sindh domicile are eligible. For District Public Prosecutor offices, candidates must possess the domicile/PRC of the concerned district. Applicants must be between <strong>18 to 30 years of age</strong> (general upper age relaxation is admissible per Government of Sindh policy). Separate <strong>5% quotas</strong> are reserved for Women, Minorities, and Persons with Disabilities.</p>',
+                'eligibility_criteria'=> '<ul>
+                    <li><strong>Dispatch Rider (BPS-04):</strong> At least Primary pass with a valid Motorcycle driving license. Age: 18-30 years.</li>
+                    <li><strong>Driver (BPS-04):</strong> At least Primary pass with a valid Car/LTV driving license, minimum 2 years driving experience, and ability to maintain a vehicle log book. Age: 18-30 years.</li>
+                    <li><strong>Daftari (BPS-02):</strong> Primary pass will be preferred. Age: 18-30 years.</li>
+                    <li><strong>Chowkidar (BPS-01):</strong> Preferably literate. Age: 18-30 years.</li>
+                    <li><strong>Naib Qasid (BPS-01):</strong> Preferably literate. Age: 18-30 years.</li>
+                    <li><strong>Sanitary Worker (BPS-01):</strong> Relevant practical experience in sanitary work. Age: 18-30 years.</li>
+                    <li><strong>Age Limit & Relaxation:</strong> 18 to 30 years. Upper age relaxation admissible in accordance with Government of Sindh policy.</li>
+                </ul>',
+                'vacant_positions'    => [
+                    ['name' => 'Naib Qasid', 'vacancies' => '394 (Head Office: 105, 28 Districts: 289)', 'education' => 'Preferably Literate', 'scale' => 'BPS-01', 'location' => 'Karachi & All 28 Sindh Districts', 'age_limit' => '18 - 30 Years'],
+                    ['name' => 'Dispatch Rider', 'vacancies' => '44 (Head Office: 33, Districts: 11)', 'education' => 'Primary Pass + Motorcycle License', 'scale' => 'BPS-04', 'location' => 'Karachi & District Offices', 'age_limit' => '18 - 30 Years'],
+                    ['name' => 'Daftari', 'vacancies' => '41 (Head Office)', 'education' => 'Primary Pass Preferred', 'scale' => 'BPS-02', 'location' => 'Prosecutor General Office Karachi', 'age_limit' => '18 - 30 Years'],
+                    ['name' => 'Sanitary Worker', 'vacancies' => '45 (Head Office: 32, Districts: 13)', 'education' => 'Experience of Sanitary Work', 'scale' => 'BPS-01', 'location' => 'Karachi & District Offices', 'age_limit' => '18 - 30 Years'],
+                    ['name' => 'Driver', 'vacancies' => '27 (Head Office: 19, Districts: 08)', 'education' => 'Primary Pass + Car/LTV License + 2 Yrs Exp', 'scale' => 'BPS-04', 'location' => 'Karachi & District Offices', 'age_limit' => '18 - 30 Years'],
+                    ['name' => 'Chowkidar', 'vacancies' => '19 (Head Office: 02, Districts: 17)', 'education' => 'Preferably Literate', 'scale' => 'BPS-01', 'location' => 'Karachi & District Offices', 'age_limit' => '18 - 30 Years'],
+                ],
+                'documents_required'  => [
+                    'Separate written application for each post applied for',
+                    'Attested copies of Primary pass certificate / School Leaving Certificate (where applicable)',
+                    'Attested copy of valid Computerized National Identity Card (CNIC)',
+                    'Attested copies of Domicile Certificate and PRC (Form-D) of relevant Sindh district',
+                    'Valid Driving License (Motorcycle or LTV) with log book record for Driver and Dispatch Rider candidates',
+                    'Experience Certificate (for Driver and Sanitary Worker applicants)',
+                    'Recent passport-size photographs with blue background',
+                    'Disability / Minority Certificate from authorized board (for reserved quota applicants)',
+                    'Departmental NOC (No Objection Certificate) for candidates already employed in government service',
+                ],
+                'mistakes_to_avoid'   => [
+                    'Do not miss your district interview schedule — walk-in interviews are conducted strictly district-wise.',
+                    'Candidates must submit a separate written application with attested documents for each post applied for.',
+                    'Do not bring un-attested photocopies of certificates; all documents must be properly verified and attested.',
+                    'No TA/DA will be admissible for appearing in walk-in interviews at High Court Karachi or District offices.',
+                    'Government servants must apply through proper channel with official NOC.',
+                ],
+                'selection_process'   => [
+                    'Submission of written application and attested document dossier at the walk-in interview desk.',
+                    'Head Office Interviews (Karachi): Held at Prosecutor General Sindh, 4th Floor, High Court of Sindh, Karachi from October 19 to 24, 2026.',
+                    'District Public Prosecutor Office Interviews: Held at concerned District offices from October 26 to 31, 2026.',
+                    'Practical driving and log book verification test for Driver and Dispatch Rider applicants.',
+                    'Successful and rejected candidates will be informed via official telephonic call within 15 days after the walk-in interview.',
+                    'Final merit list compilation and appointment letters issued in accordance with Sindh Government recruitment policy.',
+                ],
+                'how_to_apply_urdu'   => '<ol style="list-style-position: inside; padding-right: 15px;">
+                    <li>امیدوار اپنی درخواست (Application) کے ہمراہ تعلیمی اسناد، سی این آئی سی، ڈومیسائل، پی آر سی (PRC) کی تصدیق شدہ کاپیاں اور پاسپورٹ سائز تصاویر تیار کریں۔</li>
+                    <li>اگر ایک سے زائد پوسٹوں پر اپلائی کرنا ہو تو ہر اسامی کے لیے الگ الگ درخواست اور تصدیق شدہ دستاویزات لانا لازمی ہے۔</li>
+                    <li><strong>ہیڈ آفس کراچی کی اسامیوں کے لیے انٹرویو:</strong> 19 تا 24 اکتوبر 2026 کو پراسیکیوٹر جنرل سندھ، چوتھی منزل، ایڈمنسٹریشن بلاک، ہائی کورٹ آف سندھ، کراچی میں ہوں گے۔</li>
+                    <li><strong>ضلعی پبلک پراسیکیوٹر دفاتر کے لیے انٹرویو:</strong> 26 تا 31 اکتوبر 2026 کو متعلقہ ضلع کے پبلک پراسیکیوٹر دفتر میں ہوں گے۔</li>
+                    <li>اپنے ضلع کے مقررہ دن اور تاریخ کے مطابق تمام اصل کاغذات اور تصدیق شدہ کاپیاں لے کر انٹرویو کے لیے حاضر ہوں۔</li>
+                    <li>منتخب اور مسترد ہونے والے امیدواروں کو واک ان انٹرویو کے 15 دن کے اندر اندر سرکاری فون کال کے ذریعے مطلع کیا جائے گا۔</li>
                 </ol>',
             ];
         } elseif ($type === 'uoc') {
