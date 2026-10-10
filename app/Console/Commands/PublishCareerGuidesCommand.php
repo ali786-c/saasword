@@ -40,7 +40,7 @@ class PublishCareerGuidesCommand extends Command
         return self::SUCCESS;
     }
 
-    protected function publishPpscGuide(BaseStatusEnum $status): void
+    protected function publishPpscGuide($status): void
     {
         $title = 'How to Prepare for PPSC Examinations 2026: Complete Syllabus, Books & Scoring Strategy';
         $slugKey = 'how-to-prepare-for-ppsc-examinations-2026-syllabus-books-strategy';
