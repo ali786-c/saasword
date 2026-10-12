@@ -12,7 +12,7 @@ use Illuminate\Support\Str;
 
 class CreateFreshJobCommand extends Command
 {
-    protected $signature = 'cms:create-fresh-job {--type=neb : Type of job to create (neb, prosecution, mohmand, cpsp, nadra, umw, fbr, railways, pidcl, ppsc, paec, uoc)} {--draft : Save post as draft} {--publish : Publish post directly}';
+    protected $signature = 'cms:create-fresh-job {--type=neb : Type of job to create (neb, prosecution, mohmand, cpsp, nadra, umw, fbr, railways, pidcl, ppsc, paec, uoc, pseb, pu)} {--draft : Save post as draft} {--publish : Publish post directly}';
 
     protected $description = 'Create a brand new fresh job post using the updated 11-section template engine';
 
@@ -848,6 +848,169 @@ class CreateFreshJobCommand extends Command
                     <li>درخواست کی حتمی تاریخ <strong>25 اکتوبر 2026</strong> سے پہلے آن لائن submit کریں۔</li>
                 </ol>',
             ];
+        } elseif ($type === 'pseb' || $type === 'it' || $type === 'software') {
+            $title = 'Pakistan Software Export Board PSEB Jobs 2026 - 04+ Positions';
+            $slugKey = Str::slug('Pakistan Software Export Board PSEB Jobs 2026 Islamabad');
+            $jobData = [
+                'posted_on'           => 'October 11, 2026',
+                'city'                => 'Islamabad (Head Office) / Pakistan',
+                'education'           => '16 Years Education (Management Sciences / HR / BBA / Economics / Public Policy / Computer Sciences / IT)',
+                'vacancies'           => '04 Positions (PPS-07 & PPS-08)',
+                'apply_method'        => 'Online via National Job Portal (njp.gov.pk) or Tech Destination (techdestination.com/careers)',
+                'organization'        => 'Pakistan Software Export Board (PSEB)',
+                'salary'              => 'PPS-07 & PPS-08 (Market-Competitive Project Pay Scale)',
+                'official_source_url' => 'https://techdestination.com/careers/',
+                'official_apply_url'  => 'https://njp.gov.pk',
+                'last_checked'        => 'October 11, 2026',
+                'deadline'            => 'October 25, 2026',
+                'also_apply_title'    => 'FBR Jobs 2026 - Federal Board of Revenue Inspector & DEO Vacancies',
+                'also_apply_url'      => '/fbr-jobs-2026-federal-board-of-revenue',
+                'job_description'     => '<p>The <strong>Pakistan Software Export Board (PSEB)</strong>, operating under the Ministry of Information Technology and Telecommunication (MoITT), Government of Pakistan, has officially announced career opportunities on a contract basis under the PSDP Project titled <strong>"Revamping of IT Industry Landscape"</strong>. PSEB is mandated to develop and promote Pakistan\'s IT and IT-enabled Services (IT/ITeS) sectors, drive export growth, and position Pakistan as a globally competitive tech destination.</p><p>Applications are invited from capable and qualified professionals for <strong>04 vacant positions</strong> based in Islamabad. Available roles include <strong>Assistant Program Manager HR Skills (PPS-08)</strong>, <strong>Research Consultant (PPS-08)</strong>, and <strong>Assistant Program Officer HR Skills (PPS-07)</strong>. Eligible candidates must apply online through the National Job Portal (<strong>njp.gov.pk</strong>) or Tech Destination before <strong>October 25, 2026</strong>.</p>',
+                'who_can_apply'       => '<p>Pakistani citizens (male and female) holding a minimum of 16 years of education from an HEC-recognized university in relevant disciplines (Management Sciences, HR, Business Administration, Economics, Research, Public Policy, Computer Sciences, or IT) are eligible to apply. Applicants must have 2 to 6 years of post-qualification professional experience, with preference given to those with government or PSDP/ADP project experience. The maximum age limit is 45 years for Program Manager and Officer posts, and 55 years for the Research Consultant role. Government and semi-government employees must apply through proper channels.</p>',
+                'eligibility_criteria'=> '<ul>
+                    <li><strong>Assistant Program Manager HR Skills (PPS-08 - 2 Positions):</strong> Minimum 16 years of education from an HEC-recognized university in Management Sciences, Human Resource, Business Administration, Computer Sciences, or IT. Minimum 04 years of post-qualification experience in Human Resource Development, project management, or capacity development projects. Preference for PSDP/ADP/Government project experience. Maximum age: 45 years.</li>
+                    <li><strong>Research Consultant (PPS-08 - 1 Position):</strong> Minimum 16 years of education from an HEC-recognized university in Management Sciences, Economics, Research, Public Policy, or Business Administration. Minimum 6 years of professional experience, with at least 4 years in managing PSDP programs focused on marketing research, survey reports, data analytics, and strategic management. Requires understanding of IT industry trends, branding, campaigns, and consumer behavior. Maximum age: 55 years.</li>
+                    <li><strong>Assistant Program Officer HR Skills (PPS-07 - 1 Position):</strong> Minimum 16 years of education from an HEC-recognized university in Management Sciences, Human Resource, Business Administration, Computer Sciences, or IT. Minimum 02 years of overall experience in administration, document management, project management, or capacity development projects. Preference for candidates with PSDP project experience. Maximum age: 45 years.</li>
+                </ul>',
+                'vacant_positions'    => [
+                    [
+                        'name'      => 'Assistant Program Manager (HR Skills)',
+                        'vacancies' => '02 Positions',
+                        'education' => '16 Yrs in HR / Management / BBA / CS / IT',
+                        'scale'     => 'PPS-08',
+                        'location'  => 'Islamabad',
+                        'age_limit' => 'Max 45 Years',
+                    ],
+                    [
+                        'name'      => 'Research Consultant',
+                        'vacancies' => '01 Position',
+                        'education' => '16 Yrs in Economics / Research / Policy / MBA',
+                        'scale'     => 'PPS-08',
+                        'location'  => 'Islamabad',
+                        'age_limit' => 'Max 55 Years',
+                    ],
+                    [
+                        'name'      => 'Assistant Program Officer (HR Skills)',
+                        'vacancies' => '01 Position',
+                        'education' => '16 Yrs in HR / Management / BBA / CS / IT',
+                        'scale'     => 'PPS-07',
+                        'location'  => 'Islamabad',
+                        'age_limit' => 'Max 45 Years',
+                    ],
+                ],
+                'documents_required'  => [
+                    'Original CNIC card copy (Computerized National Identity Card)',
+                    'HEC-recognized educational degrees & detailed marks certificates (Minimum 16 years education)',
+                    'Post-qualification professional experience certificates & service letters',
+                    'Detailed Curriculum Vitae (CV) / Resume outlining PSDP/ADP project background',
+                    'Recent passport-size photographs',
+                    'Departmental NOC (No Objection Certificate) for government and semi-government servants',
+                ],
+                'mistakes_to_avoid'   => [
+                    'Do not submit applications via email or postal mail; only online submissions via njp.gov.pk or techdestination.com/careers are accepted.',
+                    'Do not apply after the official deadline (October 25, 2026); late submissions will be rejected immediately.',
+                    'Do not count pre-qualification experience; only post-qualification experience is evaluated.',
+                    'Government and semi-government employees must obtain departmental NOC before applying.',
+                    'Ensure all profile details on the National Job Portal match your official academic and experience credentials.',
+                ],
+                'selection_process'   => [
+                    'Online application submission through the National Job Portal (njp.gov.pk) or Tech Destination career portal.',
+                    'Initial administrative scrutiny and verification of educational credentials and post-qualification experience.',
+                    'Shortlisting of eligible candidates based on academic merit and PSDP/ADP project experience.',
+                    'Panel interview at PSEB Head Office, New State Life Tower, Blue Area, Islamabad (No TA/DA admissible).',
+                    'Final selection and contract offer under the PSDP Project "Revamping of IT Industry Landscape".',
+                ],
+                'how_to_apply_urdu'   => '<ol style="list-style-position: inside; padding-right: 15px;">
+                    <li>سب سے پہلے نیشنل جاب پورٹل <strong>njp.gov.pk</strong> یا ٹیک ڈیسٹینیشن کی آفیشل ویب سائٹ <strong>techdestination.com/careers</strong> پر جائیں۔</li>
+                    <li>مطلوبہ پوسٹ (اسسٹنٹ پروگرام مینیجر، ریسرچ کنسلٹنٹ یا اسسٹنٹ پروگرام آفیسر) کا انتخاب کریں۔</li>
+                    <li>اپنی 16 سالہ ڈگری، تجربے اور قومی شناختی کارڈ کی معلومات کے مطابق آن لائن درخواست فارم پر کریں۔</li>
+                    <li>صرف پوسٹ کوالیفکیشن تجربہ ہی قابل قبول ہوگا، لہٰذا درست تجربہ درج کریں۔</li>
+                    <li>سرکاری اور نیم سرکاری ملازمین متعلقہ محکمے سے این او سی (NOC) حاصل کر کے درخواست جمع کروائیں۔</li>
+                    <li>آن لائن درخواست جمع کروانے کی آخری تاریخ <strong>25 اکتوبر 2026</strong> ہے۔ ڈاک یا ای میل کے ذریعے بھیجی گئی درخواستیں قابل قبول نہیں ہوں گی۔</li>
+                </ol>',
+            ];
+        } elseif ($type === 'pu' || $type === 'punjabuniversity' || $type === 'punjab-university') {
+            $title = 'Punjab University PU Jobs 2026 - Advertisement No 14/2026';
+            $slugKey = Str::slug('Punjab University PU Jobs 2026 Advertisement No 14 Lahore');
+            $jobData = [
+                'posted_on'           => 'October 12, 2026',
+                'city'                => 'Lahore, Punjab',
+                'education'           => 'Middle / Matric / Primary / Literate',
+                'vacancies'           => '03 Positions (Driver, Female Mali, Cook)',
+                'apply_method'        => 'Online via PU Portal + Hard Copy Courier/Post',
+                'organization'        => 'University of the Punjab (PU Lahore)',
+                'salary'              => 'Daily Wages / Contingent Paid Staff (As per Punjab Govt Policy)',
+                'official_source_url' => 'http://www.pu.edu.pk/careers',
+                'official_apply_url'  => 'http://111.68.103.6/nonteaching',
+                'last_checked'        => 'October 12, 2026',
+                'deadline'            => 'October 21, 2026',
+                'also_apply_title'    => 'PPSC Jobs 2026 - Punjab Public Service Commission Advertisement No 18',
+                'also_apply_url'      => '/ppsc-jobs-2026-punjab-public-service-commission-advertisement-no-18',
+                'job_description'     => '<p>The <strong>University of the Punjab (PU Lahore)</strong> has announced official <strong>Advertisement No: 14/2026</strong> (IPL-10801) inviting applications from Pakistani nationals for multiple vacancies on a <strong>Daily Wages / Contingent Basis</strong> for a period of <strong>89 days</strong>. The hiring is being conducted under the Policy Framework for Work Charged Employees/Daily Wagers/Contingent Paid Staff issued by the Government of the Punjab, S&GAD (Regulations Wing) and implemented by the University of the Punjab.</p><p>Applications are invited for the vacant posts of <strong>Driver</strong> (Middle pass with valid LTV + HTV driving license), <strong>Mali (Female)</strong> (Primary pass preferred), and <strong>Cook</strong> (Literate). Interested candidates must submit their application online through the official University of the Punjab recruitment portal at <strong>http://111.68.103.6/nonteaching</strong> before <strong>October 21, 2026 (4:00 PM)</strong>, followed by submitting signed hard copies with attested credentials via registered post or courier to the Registrar Office, Admin Block, Quaid-i-Azam Campus, Lahore.</p>',
+                'who_can_apply'       => '<p>Pakistani male and female citizens fulfilling the educational criteria, practical skills, and physical requirements are eligible to apply. For the post of Driver, male candidates with Middle qualification and valid LTV + HTV driving licenses are eligible. The post of Mali is specifically reserved for female applicants (preference given to Primary pass). For Cook, literate individuals with culinary skills can apply. Applicants must note that these appointments are purely on a daily wages / contingent basis for 89 days paid out of Self-Supporting / Departmental Funds / Contingent Paid Staff Budget, with no provision for regular appointment or regularization.</p>',
+                'eligibility_criteria'=> '<ul>
+                    <li><strong>Driver (Contingent Paid Staff - 01 Post):</strong> Middle pass, preferably with Matriculation. Must possess a valid commercial driving license (LTV + HTV) for van, car, and heavy university transport vehicles.</li>
+                    <li><strong>Mali - Female (Contingent Paid Staff - 01 Post):</strong> Illiterate candidates are eligible; preference will be given to Primary pass candidates with gardening/horticulture experience. Strictly reserved for female applicants.</li>
+                    <li><strong>Cook (Contingent Paid Staff - 01 Post):</strong> Literate candidates with practical food preparation and kitchen management skills.</li>
+                    <li><strong>Terms of Engagement:</strong> Purely on a Daily Wages / Contingent Basis for a fixed period of 89 days under Punjab Government S&GAD policy. The hiring shall neither confer any right of regular appointment nor can it be regularized under any circumstances.</li>
+                </ul>',
+                'vacant_positions'    => [
+                    [
+                        'name'      => 'Driver',
+                        'vacancies' => '01 Position',
+                        'education' => 'Middle (Matric Preferred) + Valid LTV / HTV License',
+                        'scale'     => 'Contingent Paid Staff / Daily Wages',
+                        'location'  => 'PU Quaid-i-Azam Campus, Lahore',
+                        'age_limit' => 'As per Punjab Govt Rules',
+                    ],
+                    [
+                        'name'      => 'Mali (Female)',
+                        'vacancies' => '01 Position (Female Only)',
+                        'education' => 'Illiterate (Primary Pass Preferred)',
+                        'scale'     => 'Contingent Paid Staff / Daily Wages',
+                        'location'  => 'PU Quaid-i-Azam Campus, Lahore',
+                        'age_limit' => 'As per Punjab Govt Rules',
+                    ],
+                    [
+                        'name'      => 'Cook',
+                        'vacancies' => '01 Position',
+                        'education' => 'Literate with Cooking Experience',
+                        'scale'     => 'Contingent Paid Staff / Daily Wages',
+                        'location'  => 'PU Quaid-i-Azam Campus, Lahore',
+                        'age_limit' => 'As per Punjab Govt Rules',
+                    ],
+                ],
+                'documents_required'  => [
+                    'Signed printout of the online application form',
+                    'Attested copies of educational certificates / degrees (where applicable)',
+                    'Attested copy of Computerized National Identity Card (CNIC)',
+                    'Valid Driving License (LTV + HTV) for Driver position',
+                    'Attested copies of experience certificates and testimonials',
+                    'Recent passport-size photograph (1x1)',
+                ],
+                'mistakes_to_avoid'   => [
+                    'Do not submit applications by hand; applications submitted by hand will strictly NOT be accepted.',
+                    'Do not miss the online deadline; the online portal (http://111.68.103.6/nonteaching) will close promptly at 4:00 PM on October 21, 2026.',
+                    'Hard copies must reach the Registrar Office on or before October 21, 2026 during office working hours; no extra time is allowed for postal transit.',
+                    'Ensure all attached documents and testimonials are properly attested before mailing.',
+                    'Remember that this appointment is on a temporary 89-day contingent basis; candidates cannot claim regularization in any Court of Law.',
+                ],
+                'selection_process'   => [
+                    'Online registration and application submission on http://111.68.103.6/nonteaching.',
+                    'Submission of signed application hard copy with attested documents to the Office of the Registrar (Administration Branch-II, Room No. 33, Admin Block, Quaid-i-Azam Campus, Lahore) via registered post or courier.',
+                    'Scrutiny of documents and verification of LTV/HTV driving license credentials.',
+                    'Skill / driving practical test and interview for shortlisted applicants.',
+                    'All correspondence during the selection procedure will be made through the provided email (dra2hr@pu.edu.pk) and phone numbers ((042) 99231108, 99232014).',
+                ],
+                'how_to_apply_urdu'   => '<ol style="list-style-position: inside; padding-right: 15px;">
+                    <li>سب سے پہلے پنجاب یونیورسٹی کے آن لائن پورٹل <strong>http://111.68.103.6/nonteaching</strong> پر جا کر آن لائن درخواست فارم پر کریں۔ آن لائن کے علاوہ کوئی درخواست قبول نہیں کی جائے گی۔</li>
+                    <li>ڈرائیور کی آسامی کے لیے مڈل/میٹرک اور ایل ٹی وی + ایچ ٹی وی (LTV + HTV) لائسنس لازمی ہے۔ مالی کی آسامی صرف خواتین کے لیے مخصوص ہے۔</li>
+                    <li>آن لائن فارم کا پرنٹ آؤٹ لیں اور اس پر اپنے دستخط کریں۔</li>
+                    <li>دستخط شدہ آن لائن فارم کے ساتھ تمام تعلیمی اسناد، شناختی کارڈ (CNIC)، تجربہ سرٹیفکیٹ، ڈرائیونگ لائسنس کی تصدیق شدہ نقول اور پاسپورٹ سائز تصویر (1x1) منسلک کریں۔</li>
+                    <li>یہ تمام دستاویزات بذریعہ رجسٹرڈ ڈاک یا کورئیر سروس، دفتر رجسٹرار (ایڈمنسٹریشن برانچ-2، ایڈمن بلاک، کمرہ نمبر 33)، پنجاب یونیورسٹی قائد اعظم کیمپس، لاہور کو بھیجیں۔</li>
+                    <li>آن لائن پورٹل <strong>21 اکتوبر 2026 شام 4:00 بجے</strong> بند ہو جائے گا۔ دستی (By-hand) درخواستیں ہرگز وصول نہیں کی جائیں گی۔</li>
+                </ol>',
+            ];
         }
 
         $content = JobPostTemplateService::render($jobData);
@@ -859,7 +1022,8 @@ class CreateFreshJobCommand extends Command
 
         $category = null;
         if (class_exists(\Botble\Blog\Models\Category::class)) {
-            $category = \Botble\Blog\Models\Category::query()->where('name', 'Federal Jobs')->first()
+            $category = \Botble\Blog\Models\Category::query()->where('name', 'Punjab Jobs')->first()
+                ?: \Botble\Blog\Models\Category::query()->where('name', 'Federal Jobs')->first()
                 ?: \Botble\Blog\Models\Category::query()->where('name', 'Jobs')->first()
                 ?: \Botble\Blog\Models\Category::query()->first();
         }
