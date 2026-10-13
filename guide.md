@@ -308,7 +308,69 @@ cd ~/careerinpak.com && git fetch origin main && git reset --hard origin/main &&
 
 ---
 
-## 12. Quality Checkpoints Before Pushing Live
+## 12. Local → Live Post Sync (`post:push`)
+
+Posts are always built **locally**. Push them to the live site with the built-in sync channel — the live site stores them as **DRAFTS**, never published.
+
+### One-time setup
+
+**Step 1 — on the LIVE server (cPanel terminal):**
+
+```bash
+cd ~/careerinpak.com && php artisan post:sync-token
+```
+
+**Step 2 — on your LOCAL machine:** put the two values it prints into `.env`:
+
+```
+SYNC_LIVE_URL=https://careerinpak.com
+SYNC_LIVE_TOKEN=1|xxxxxxxxxxxxxxxx
+```
+
+### Everyday usage
+
+```bash
+# Preview the payload without sending anything
+php artisan post:push my-post-slug --dry-run
+
+# Push by slug or by local post ID
+php artisan post:push my-post-slug
+php artisan post:push 142
+```
+
+Output:
+
+```
+Created on live as a DRAFT.
+  Live ID : 142
+  URL     : https://careerinpak.com/my-post-slug
+  Status  : draft (publish it from the live admin panel)
+```
+
+### What syncs
+
+| Field | Behaviour |
+| :--- | :--- |
+| Title, HTML body, meta description | Copied verbatim — the body keeps its inline `!important` banner styles |
+| Slug | Identical on both sites, so the live URL never changes |
+| Category | Matched by name; falls back Punjab Jobs → Federal Jobs → Jobs |
+| Status | **Always forced to `draft` on live** — the sender cannot choose |
+| Featured / ad image | **Not synced.** Attach it on the live CMS before publishing |
+| View counter | Set when the post is first created; re-syncs never reset it |
+
+### Safety properties
+
+- Endpoint `POST /api/v1/sync/posts` requires a `post-sync` scoped token; anything else gets **401/403**.
+- Invalid payloads return **422** and create nothing.
+- Re-pushing the same post **updates** it instead of duplicating it (matched by slug).
+- Rotate a leaked token on the live site: `php artisan post:sync-token --revoke`.
+
+> [!IMPORTANT]
+> If `post:push` says **"Sync is not configured"**, run the two setup steps above. The token is issued on the live site and only pasted into the local `.env` — never commit it.
+
+---
+
+## 13. Quality Checkpoints Before Pushing Live
 
 - [x] **Live Draft Status:** Posts are ALWAYS saved as **Draft** (`--draft`) on live server for admin review (NEVER auto-published via CLI).
 - [x] **Title Format:** `[Organization Name] Jobs 2026 - [Position / Vacancies]`
