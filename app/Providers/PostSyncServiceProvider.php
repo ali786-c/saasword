@@ -3,6 +3,11 @@
 namespace App\Providers;
 
 use App\Http\Controllers\PostSyncController;
+use App\Http\Controllers\PostSyncDashboardController;
+use App\Http\Middleware\AuditSyncAuthentication;
+use Botble\Base\Facades\AdminHelper;
+use Botble\Base\Facades\DashboardMenu;
+use Botble\Base\Supports\DashboardMenuItem;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
@@ -51,8 +56,25 @@ class PostSyncServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Route::post('/api/v1/sync/posts', [PostSyncController::class, 'store'])
-            ->middleware(['auth:sanctum', 'throttle:30'])
+            ->middleware([AuditSyncAuthentication::class . ':sanctum', 'throttle:30'])
             ->name('api.sync.posts');
+
+        // Admin dashboard: how many pushes landed, which failed and why.
+        AdminHelper::registerRoutes(function (): void {
+            Route::get('/post-sync', [PostSyncDashboardController::class, 'index'])
+                ->name('post-sync.index');
+        });
+
+        DashboardMenu::beforeRetrieving(function (): void {
+            DashboardMenu::make()->registerItem(
+                DashboardMenuItem::make()
+                    ->id('cms-post-sync')
+                    ->priority(15)
+                    ->name('Post Sync')
+                    ->icon('ti ti-refresh')
+                    ->route('post-sync.index')
+            );
+        });
     }
 
     /**
