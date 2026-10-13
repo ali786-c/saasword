@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Console\Commands\GenerateSyncTokenCommand;
+use App\Models\PostSyncLog;
 use Botble\ACL\Models\User;
 use Botble\Base\Enums\BaseStatusEnum;
 use Botble\Blog\Models\Category;
@@ -32,6 +33,17 @@ class PostSyncEndpointTest extends TestCase
         Post::query()->where('name', 'like', 'Sync Endpoint Test%')->delete();
         Slug::query()->where('key', 'like', 'sync-endpoint-test-%')->delete();
         Category::query()->where('name', self::CATEGORY)->delete();
+
+        // Every request these tests make writes an audit row. Match on title
+        // OR slug: the invalid-slug case stores a malformed slug, and the
+        // 401 / missing-name cases have no title at all.
+        PostSyncLog::query()
+            ->where(function ($query): void {
+                $query
+                    ->where('title', 'like', 'Sync Endpoint Test%')
+                    ->orWhere('slug', 'like', 'sync-endpoint-test-%');
+            })
+            ->delete();
         $this->admin()->tokens()->where('name', 'sync-test-token')->delete();
 
         parent::tearDown();
