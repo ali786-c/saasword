@@ -26,4 +26,12 @@ return [
 
     'timeout' => (int) env('SYNC_TIMEOUT', 30),
 
+    /*
+    | Optional absolute path to a PEM CA bundle used to verify the live
+    | site's TLS certificate. Leave empty to let the provider auto-detect
+    | one (Git for Windows ships a usable ca-bundle.crt). Only needed on
+    | machines where PHP's curl extension has curl.cainfo unset.
+    */
+    'ca_bundle' => env('SYNC_CA_BUNDLE'),
+
 ];

@@ -17,8 +17,12 @@ use RuntimeException;
  *
  * - One-way only (local -> live). The live site is authoritative for nothing
  *   but its own publish decision, which stays with the admin.
- * - The receiver ALWAYS stores status=draft. The sender never gets to choose
- *   the live status, so a compromised or buggy sender cannot publish anything.
+ * - A NEW post always lands as status=draft, so the sender can never publish
+ *   anything straight to production.
+ * - An EXISTING post keeps whatever status the live site already gave it.
+ *   Forcing a draft here would silently unpublish an indexed live URL (404).
+ *   The sender can still ask for a review hold with `force_draft`, which can
+ *   only ever move a post TO draft — never to published.
  * - Identity is the slug, not the local post ID: both installs then serve the
  *   identical URL (SEO-safe, matches the migration guide's slug preservation)
  *   and re-pushing the same post updates it instead of duplicating it.
@@ -44,6 +48,7 @@ class PostSyncService
         'category',
         'is_featured',
         'views',
+        'force_draft',
     ];
 
     /**
@@ -87,8 +92,6 @@ class PostSyncService
             'name' => $payload['name'],
             'description' => (string) ($payload['description'] ?? ''),
             'content' => $payload['content'],
-            // Never trust the sender's status: live posts await admin review.
-            'status' => BaseStatusEnum::DRAFT,
             'is_featured' => ! empty($payload['is_featured']) ? 1 : 0,
             'author_id' => $authorId,
             'author_type' => User::class,
@@ -99,12 +102,21 @@ class PostSyncService
         if ($post) {
             $created = false;
 
+            // Preserve the live status by default: re-syncing must never take a
+            // published page offline. `force_draft` is the only status the
+            // sender may request, and it can only move a post TO draft.
+            if (! empty($payload['force_draft'])) {
+                $attributes['status'] = BaseStatusEnum::DRAFT;
+            }
+
             // `views` is intentionally NOT updated on an existing post: the live
             // site owns its own counter, and re-syncing must not reset it.
             $post->fill($attributes);
             $post->save();
         } else {
             $created = true;
+            // New posts always await admin review — the sender never chooses.
+            $attributes['status'] = BaseStatusEnum::DRAFT;
             $attributes['views'] = max(0, (int) ($payload['views'] ?? 0));
 
             $post = Post::query()->create($attributes);

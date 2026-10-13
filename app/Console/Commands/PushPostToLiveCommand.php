@@ -6,7 +6,7 @@ use App\Services\PostSyncService;
 use Botble\Blog\Models\Post;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\BadResponseException;
-use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\Exception\TransferException;
 use Illuminate\Console\Command;
 
 /**
@@ -24,10 +24,11 @@ class PushPostToLiveCommand extends Command
     protected $signature = 'post:push
                             {post : Local post ID or slug to push}
                             {--dry-run : Print the JSON payload without sending it}
+                            {--draft : Also pull an ALREADY-PUBLISHED live post back to draft for review (new posts are always drafts)}
                             {--url= : Override SYNC_LIVE_URL}
                             {--token= : Override SYNC_LIVE_TOKEN}';
 
-    protected $description = 'Push a local post to the live site, where it is stored as a draft for admin review';
+    protected $description = 'Push a local post to the live site; new posts always arrive there as drafts for admin review';
 
     public function handle(PostSyncService $sync, Client $client): int
     {
@@ -38,6 +39,13 @@ class PushPostToLiveCommand extends Command
         }
 
         $payload = $sync->payloadFor($post);
+
+        if ($this->option('draft')) {
+            // Request a review hold on an existing live post. The receiver
+            // only ever honours this in the draft direction — it can never
+            // publish anything, so it is safe to let the sender ask for it.
+            $payload['force_draft'] = true;
+        }
 
         if ($this->option('dry-run')) {
             $this->line(json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
@@ -80,8 +88,20 @@ class PushPostToLiveCommand extends Command
             }
 
             return self::FAILURE;
-        } catch (ConnectException $exception) {
+        } catch (TransferException $exception) {
+            // Base class for ConnectException, RequestException (SSL/network)
+            // and everything else Guzzle throws. Catching only ConnectException
+            // let SSL failures escape as a raw stack trace.
             $this->error('Could not reach the live site: ' . $exception->getMessage());
+
+            if (str_contains($exception->getMessage(), 'cURL error 60')) {
+                $this->newLine();
+                $this->line('  PHP could not verify the SSL certificate because it has no CA bundle.');
+                $this->line('  Fix (pick one):');
+                $this->line('    1. Set SYNC_CA_BUNDLE in .env to a ca-bundle.crt / cacert.pem path, or');
+                $this->line('    2. Set curl.cainfo in php.ini to that same file.');
+                $this->line('  (Git for Windows ships one at C:\Program Files\Git\usr\ssl\certs\ca-bundle.crt)');
+            }
 
             return self::FAILURE;
         }

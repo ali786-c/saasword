@@ -47,6 +47,8 @@ class PostSyncController extends Controller
             'category' => ['nullable', 'string', 'max:191'],
             'is_featured' => ['nullable', 'boolean'],
             'views' => ['nullable', 'integer', 'min:0', 'max:100000000'],
+            // Can only force a post TO draft for review, never to published.
+            'force_draft' => ['nullable', 'boolean'],
         ]);
 
         if ($validator->fails()) {

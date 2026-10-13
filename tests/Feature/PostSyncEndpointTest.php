@@ -184,6 +184,81 @@ class PostSyncEndpointTest extends TestCase
         $this->assertStringContainsString('#e53935', $post->getRawOriginal('content'));
     }
 
+    public function test_existing_published_post_is_not_unpublished_by_a_resync(): void
+    {
+        Sanctum::actingAs($this->admin(), [GenerateSyncTokenCommand::ABILITY]);
+
+        $live = $this->existingLivePost(BaseStatusEnum::PUBLISHED);
+
+        $payload = $this->payload();
+        $payload['status'] = 'published';
+
+        $response = $this->postJson(self::ENDPOINT, $payload);
+
+        $response->assertStatus(200);
+        $response->assertJson(['ok' => true, 'created' => false]);
+
+        $post = Post::query()->find($live->getKey());
+
+        // Re-syncing must never take an indexed live URL offline.
+        $this->assertSame('published', $post->getRawOriginal('status'));
+        // ...but the content update still lands.
+        $this->assertSame('<p>Sync endpoint test body.</p>', $post->getRawOriginal('content'));
+    }
+
+    public function test_force_draft_flag_pulls_a_published_live_post_back_to_draft(): void
+    {
+        Sanctum::actingAs($this->admin(), [GenerateSyncTokenCommand::ABILITY]);
+
+        $live = $this->existingLivePost(BaseStatusEnum::PUBLISHED);
+
+        $payload = $this->payload();
+        $payload['force_draft'] = true;
+
+        $this->postJson(self::ENDPOINT, $payload)->assertStatus(200);
+
+        $post = Post::query()->find($live->getKey());
+
+        $this->assertSame('draft', $post->getRawOriginal('status'));
+    }
+
+    public function test_sender_cannot_request_publish_only_draft(): void
+    {
+        Sanctum::actingAs($this->admin(), [GenerateSyncTokenCommand::ABILITY]);
+
+        $live = $this->existingLivePost(BaseStatusEnum::DRAFT);
+
+        $payload = $this->payload();
+        // The only status the sender may influence is `force_draft`; an explicit
+        // `status` field is ignored entirely.
+        $payload['status'] = 'published';
+        $payload['force_draft'] = false;
+
+        $this->postJson(self::ENDPOINT, $payload)->assertStatus(200);
+
+        $post = Post::query()->find($live->getKey());
+
+        $this->assertSame('draft', $post->getRawOriginal('status'));
+    }
+
+    protected function existingLivePost(string $status): Post
+    {
+        $post = Post::query()->create([
+            'name' => self::TITLE,
+            'content' => '<p>Live content</p>',
+            'status' => $status,
+        ]);
+
+        Slug::query()->create([
+            'key' => self::SLUG,
+            'reference_id' => $post->getKey(),
+            'reference_type' => get_class($post),
+            'prefix' => null,
+        ]);
+
+        return $post;
+    }
+
     protected function payload(): array
     {
         return [

@@ -84,6 +84,32 @@ class PostSyncPushCommandTest extends TestCase
         $this->assertSame(self::TITLE, $sent['name']);
         $this->assertSame(self::SLUG, $sent['slug']);
         $this->assertArrayNotHasKey('status', $sent, 'The sender must never send a status.');
+        $this->assertArrayNotHasKey('force_draft', $sent, 'Without --draft the live status must be preserved.');
+    }
+
+    public function test_draft_flag_requests_a_review_hold(): void
+    {
+        $post = $this->createLocalPost();
+
+        $this->handler->append(new Response(200, [], json_encode([
+            'ok' => true,
+            'created' => false,
+            'post_id' => 900,
+            'url' => 'https://live.example/' . self::SLUG,
+            'status' => 'draft',
+        ])));
+
+        $this->artisan('post:push', [
+            'post' => (string) $post->getKey(),
+            '--draft' => true,
+            '--url' => 'https://live.example',
+            '--token' => '1|secret-token',
+        ])->assertExitCode(0);
+
+        $sent = json_decode((string) $this->requests[0]['request']->getBody(), true);
+
+        $this->assertTrue((bool) ($sent['force_draft'] ?? false));
+        $this->assertArrayNotHasKey('status', $sent);
     }
 
     public function test_dry_run_sends_nothing(): void

@@ -31,10 +31,20 @@ class PostSyncServiceProvider extends ServiceProvider
         // HTTP client used by `post:push`, bound so tests can swap in a Guzzle
         // MockHandler instead of ever reaching the live site.
         $this->app->bind(Client::class, function () {
-            return new Client([
+            $config = [
                 'timeout' => (int) config('sync.timeout', 30),
                 'connect_timeout' => 15,
-            ]);
+            ];
+
+            // Some PHP for Windows builds ship with curl.cainfo and
+            // openssl.cafile both empty, so every push dies with
+            // "cURL error 60: unable to get local issuer certificate".
+            // Point Guzzle at a real bundle when we can find one.
+            if ($caBundle = $this->caBundlePath()) {
+                $config['verify'] = $caBundle;
+            }
+
+            return new Client($config);
         });
     }
 
@@ -43,5 +53,60 @@ class PostSyncServiceProvider extends ServiceProvider
         Route::post('/api/v1/sync/posts', [PostSyncController::class, 'store'])
             ->middleware(['auth:sanctum', 'throttle:30'])
             ->name('api.sync.posts');
+    }
+
+    /**
+     * Absolute path to a PEM CA bundle Guzzle can verify against, or null to
+     * fall back to Guzzle's own default discovery.
+     */
+    protected function caBundlePath(): ?string
+    {
+        $configured = (string) config('sync.ca_bundle', '');
+
+        if ($configured !== '' && is_file($configured)) {
+            return $configured;
+        }
+
+        foreach (['curl.cainfo', 'openssl.cafile'] as $ini) {
+            $value = (string) ini_get($ini);
+
+            if ($value !== '' && is_file($value)) {
+                return $value;
+            }
+        }
+
+        foreach ($this->candidateCaBundles() as $path) {
+            if (is_file($path)) {
+                return $path;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Well-known locations that commonly hold a CA bundle. Git for Windows
+     * ships the certificate set cURL expects, so it is the usual fallback.
+     *
+     * @return array<int, string>
+     */
+    protected function candidateCaBundles(): array
+    {
+        $candidates = [];
+
+        foreach (['ProgramFiles', 'ProgramFiles(x86)', 'ProgramW6432'] as $variable) {
+            $root = getenv($variable);
+
+            if ($root) {
+                $candidates[] = $root . '\\Git\\usr\\ssl\\certs\\ca-bundle.crt';
+                $candidates[] = $root . '\\Git\\mingw64\\ssl\\certs\\ca-bundle.crt';
+            }
+        }
+
+        $phpDir = dirname((string) PHP_BINARY);
+        $candidates[] = $phpDir . DIRECTORY_SEPARATOR . 'extras' . DIRECTORY_SEPARATOR . 'ssl' . DIRECTORY_SEPARATOR . 'cacert.pem';
+        $candidates[] = $phpDir . DIRECTORY_SEPARATOR . 'cacert.pem';
+
+        return $candidates;
     }
 }
